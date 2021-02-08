@@ -13,7 +13,7 @@ const config = require("./config.json");
 const DB_PW = config.dbpw;
 const token = config.token;
 const MongoDB = require('mongodb');
-const DBClient = new MongoDB.MongoClient(`mongodb+srv://int:${DB_PW}@cluster0.gk8if.mongodb.net/<dbname>?retryWrites=true&w=majority`, {
+const DBClient = new MongoDB.MongoClient(`mongodb+srv://int:${DB_PW}@cluster0.gk8if.mongodb.net/intbot?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });

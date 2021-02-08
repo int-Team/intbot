@@ -3,5 +3,5 @@ node_modules
 .env
 
 ffmpeg
-
+config.json
 json.sqlite

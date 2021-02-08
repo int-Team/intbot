@@ -7,7 +7,7 @@ module.exports = {
     description: 'JavaScript 코드를 바로 실행해요. (개발자만 가능)',
     usage: '인트야 eval <실행할 코드>',
     run: async (client, message, args, ops) => {
-        const dev = ["687866011013218349"]
+        const dev = ["687866011013218349", "552103947662524416"]
         if (!dev.includes(message.author.id)) return message.channel.send(`${client.user.username} 개발자만 사용할 수 있어요.`);
         let input = args.slice(1).join(' ');
         if (!input) return message.channel.send('내용을 써 주세요!');
