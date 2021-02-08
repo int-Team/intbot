@@ -1,0 +1,32 @@
+{
+    "name": "intbot",
+    "version": "1.0.0",
+    "description": "intbot",
+    "main": "app.js",
+    "scripts": {
+      "start": "node app.js"
+    },
+    "author": "int",
+    "license": "MIT",
+    "dependencies": {
+      "@discordjs/opus": "^0.3.3",
+      "ascii-table": "latest",
+      "axios": "latest",
+      "body-parser": "latest",
+      "discord.js": "latest",
+      "dotenv": "latest",
+      "ejs": "latest",
+      "erlpack": "^0.1.3",
+      "express": "latest",
+      "ffmpeg": "^0.0.4",
+      "ffmpeg-static": "^4.2.7",
+      "mongodb": "latest",
+      "morgan": "latest",
+      "node-fetch": "latest",
+      "serve-favicon": "latest",
+      "util": "latest",
+      "youtube-search-api": "^1.0.8",
+      "ytdl-core": "^4.4.5",
+      "zlib-sync": "^0.1.7"
+    }
+  }
