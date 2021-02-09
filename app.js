@@ -143,7 +143,7 @@ client.on('ready', () => {
                 token: require('./config.json').koreanbots
             }
         });
-    }, 180000);
+    }, 200000);
 });
 
 client.on('message', async message => {

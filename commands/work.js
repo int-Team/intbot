@@ -38,7 +38,7 @@ module.exports = {
                     if ((await client.db.findOne({_id: message.author.id})).lastWorkMoney && new Date() - 1 + 1 - (await client.db.findOne({_id: message.author.id})).lastWorkMoney < 300000) {
                         const embed = new Discord.MessageEmbed()
                         .setTitle('워 워 쉬세요 일하다가 죽어요ㅎㅎ')
-                        .setDescription(`${(300000 - (new Date() - 1 + 1 - ((await client.db.findOne({_id: message.author.id}))).lastGotMoney)) / 1000|0}초 만 쉬고 오세요 !`)
+                        .setDescription(`${(300000 - (new Date() - 1 + 1 - ((await client.db.findOne({_id: message.author.id}))).lastWorkMoney)) / 1000|0}초 만 쉬고 오세요 !`)
                         .setColor('RANDOM')
                         .setFooter(message.author.tag, message.author.displayAvatarURL())
                         .setTimestamp()
@@ -46,7 +46,7 @@ module.exports = {
                     } else {
                         await client.db.updateOne({_id: message.author.id}, {
                             $set: {
-                                lastGotMoney: new Date() - 1 + 1,
+                                lastWorkMoney: new Date() - 1 + 1,
                                 money: ((await client.db.findOne({_id: message.author.id})).money + 3000)
                             }
                         });
@@ -62,7 +62,7 @@ module.exports = {
                 if ((await client.db.findOne({_id: message.author.id})).lastWorkMoney && new Date() - 1 + 1 - (await client.db.findOne({_id: message.author.id})).lastWorkMoney < 3600000) {
                         const embed = new Discord.MessageEmbed()
                         .setTitle('워 워 쉬세요 일하다가 죽어요ㅎㅎ')
-                        .setDescription(`${(3600000 - (new Date() - 1 + 1 - ((await client.db.findOne({_id: message.author.id}))).lastGotMoney)) / 1000|0}초 만 쉬고 오세요 !!\nKOREANBOTS에서 [여기](https://koreanbots.dev/bots/${client.user.id})를 눌러 하트를 추가하면 클타임이 5분이에요!`)
+                        .setDescription(`${(3600000 - (new Date() - 1 + 1 - ((await client.db.findOne({_id: message.author.id}))).lastWorkMoney)) / 1000|0}초 만 쉬고 오세요 !!\nKOREANBOTS에서 [여기](https://koreanbots.dev/bots/${client.user.id})를 눌러 하트를 추가하면 클타임이 5분이에요!`)
                         .setColor('RED')
                         .setFooter(message.author.tag, message.author.displayAvatarURL())
                         .setTimestamp()
@@ -70,7 +70,7 @@ module.exports = {
                     } else {
                         await client.db.updateOne({_id: message.author.id}, {
                             $set: {
-                                lastGotMoney: new Date() - 1 + 1,
+                                lastWorkMoney: new Date() - 1 + 1,
                                 money: ((await client.db.findOne({_id: message.author.id})).money + 3000)
                             }
                         });

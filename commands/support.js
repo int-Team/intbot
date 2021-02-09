@@ -28,7 +28,7 @@ module.exports = {
         });
         collector.on('end', async collected => {
             if (collected.first().emoji.name == '✅') {
-                client.channels.cache.get("751430821843304500").send(setMention(),{
+                client.channels.cache.get("808313435854077952").send(setMention(),{
                     embed: new Discord.MessageEmbed()
                     .setTitle(`${message.author.tag} 문의`)
                     .setDescription(args.slice(2).join(' '))
