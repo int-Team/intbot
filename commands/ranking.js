@@ -18,6 +18,11 @@ module.exports = {
             if(option == "돈"){
                 var rankArr = client.db.sort({money:-1}).limit(5).toArray();
                 var discordFields = [];
+                var embed = {
+                   title: `${option} 랭킹`,
+                   color: 'RANDOM',
+                   footer: message.author.tag
+                }
                 for (const i in rankArr) {
                    try {
                       var userInfo = await client.users.fetch(rankArr[i]._id);
