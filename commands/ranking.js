@@ -13,8 +13,6 @@ module.exports = {
      * 
      * @param {Discord.Client} client 
      * @param {Discord.Message} message 
-     * @param {*} args 
-     * @param {*} ops 
      */
     run: async (client, message, args, ops) => {
         const option = args[1]
