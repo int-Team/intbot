@@ -13,10 +13,10 @@ const config = require("./config.json");
 const DB_PW = config.dbpw;
 const token = config.token;
 const MongoDB = require('mongodb');
-const DBClient = new MongoDB.MongoClient(`mongodb://127.0.0.1:27017/`, {
+const DBClient = new MongoDB.MongoClient(`mongodb+srv://int:${DB_PW}@cluster0.gk8if.mongodb.net/intbot?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
-});
+})
 client.db = undefined;
 client.dbchannels = undefined;
 DBClient.connect().then(() => {
