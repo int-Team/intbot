@@ -5,8 +5,17 @@ module.exports = {
     description: '도박을 해요.',
     usage: '인트야 도박',
     run: async (client, message, args, ops) => {
+        const developers = [
+            "687866011013218349",
+            "745758911012929550",
+            "714736989106208791",
+            "418677556322107412",
+            "552103947662524416",
+            "647736678815105037"
+        ]
         const amount = args[1]
         if(Number(amount)<0) return message.channel.send("자연수만 지원됩니다.")
+        if (developers.includes(message.author.id)) return message.channel.send(`${client.user.username}님은 인트봇의 개발자라 도박이 불가능해요!`);
         if (!(await client.db.findOne({_id: message.author.id}))) {
             const embed = new Discord.MessageEmbed()
             .setTitle('인트봇의 서비스에 가입되어있지 않아요.')
