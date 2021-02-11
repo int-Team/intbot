@@ -15,7 +15,7 @@ module.exports = {
         ]
         const amount = args[1]
         if(Number(amount)<0) return message.channel.send("자연수만 지원됩니다.")
-        if (developers.includes(message.author.id)) return message.channel.send(`${client.user.username}님은 인트봇의 개발자라 도박이 불가능해요!`);
+        if (developers.includes(message.author.id)) return message.channel.send(`인트봇의 개발자라 도박이 불가능해요!`);
         if (!(await client.db.findOne({_id: message.author.id}))) {
             const embed = new Discord.MessageEmbed()
             .setTitle('인트봇의 서비스에 가입되어있지 않아요.')
