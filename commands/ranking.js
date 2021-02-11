@@ -1,4 +1,12 @@
 const Discord = require('discord.js');
+const developers = [
+    "687866011013218349",
+    "745758911012929550",
+    "714736989106208791",
+    "418677556322107412",
+    "552103947662524416",
+    "647736678815105037"
+]
 const xpmoney = {
    "돈": {money:-1},
    "레벨": {level:-1}
@@ -46,7 +54,23 @@ module.exports = {
  * @param {Discord.Message} message 
  */
 const getRank = async (option, client, message) => {
-    let rankArr = await client.db.find().sort(xpmoney[option]).limit(5).toArray();
+    let rankArr = await client.db.find().sort(xpmoney[option]).toArray();
+    let realRankArr = [];
+
+    for (var i in rankArr) {
+        if (realRankArr.length == 5) {
+            break;
+        } else {
+            if (!developers.includes(rankArr[i]._id)) {
+                realRankArr.push(rankArr[i]);
+            } else {
+                continue;
+            }
+        }
+    }
+    
+    rankArr = realRankArr;
+
     let 단위, 돈이야뭐야;
     if (option == "돈") {
         단위 = "원";
