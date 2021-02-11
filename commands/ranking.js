@@ -28,11 +28,11 @@ module.exports = {
             message.channel.send(embed);
         } else {
             if(xpmoney[option] != undefined){
-                var embed = await getRank(option, client, message);
+                let embed = await getRank(option, client, message);
                 console.log(embed);
                 return message.channel.send({embed});
             } else if (option == "자신") {
-                var embed = await getMyRank(message.author.id, client);
+                let embed = await getMyRank(message.author.id, client);
                 return message.channel.send(embed);
             } else {
                 return message.channel.send("`인트야 랭킹 [돈/레벨/자신]` 중 한개를 선택하여 주세요.")
@@ -48,8 +48,8 @@ module.exports = {
  * @param {Discord.Message} message 
  */
 const getRank = async (option, client, message) => {
-    var rankArr = await client.db.find().sort(xpmoney[option]).limit(5).toArray();
-    var 단위, 돈이야뭐야;
+    let rankArr = await client.db.find().sort(xpmoney[option]).limit(5).toArray();
+    let 단위, 돈이야뭐야;
     if (option == "돈") {
         단위 = "원";
         돈이야뭐야 = "money";
@@ -57,20 +57,20 @@ const getRank = async (option, client, message) => {
         단위 = "경험치";
         돈이야뭐야 = "xp";
     }
-    var discordFields = [];
+    let discordFields = [];
 
 
     for (var i in rankArr) {
         i = Number(i);
         try {
-            var userInfo = await client.users.fetch(rankArr[i]._id);
+            let userInfo = await client.users.fetch(rankArr[i]._id);
             discordFields.push({name: `${i+1}. ${userInfo.username}`, value: rankArr[i][돈이야뭐야] + " " + 단위});
         } catch (e) {
             discordFields.push({name: `${i+1}. Unknown User`, value: rankArr[i][돈이야뭐야] + " " + 단위});
         }
     }
 
-    var embed = {
+    let embed = {
         title: `${option} 랭킹`,
         color: 'RANDOM',
         fields: discordFields,
@@ -90,10 +90,10 @@ const getRank = async (option, client, message) => {
  * @param {Discord.Client} client 
  */
 const getMyRank = async (id, client) => {
-    var user = await client.users.fetch(id);
-    var moneyRankArr = await client.db.find().sort(xpmoney.돈).toArray();
-    var levelRankArr = await client.db.find().sort(xpmoney.레벨).toArray();
-    var rank = {};
+    let user = await client.users.fetch(id);
+    let moneyRankArr = await client.db.find().sort(xpmoney.돈).toArray();
+    let levelRankArr = await client.db.find().sort(xpmoney.레벨).toArray();
+    let rank = {};
     rank.level = {};
     rank.money = {};
     rank.money.rank = moneyRankArr.findIndex(e => {
@@ -108,7 +108,7 @@ const getMyRank = async (id, client) => {
     rank.money.count = await (await client.db.findOne({_id: id})).money;
 
 
-    var embed = new Discord.MessageEmbed()
+    let embed = new Discord.MessageEmbed()
     .setTitle(`${user.tag} 님의 랭킹`)
     .setColor('RANDOM')
     .addField(`돈 랭킹: ${rank.money.rank} 위`, `보유자산: ${rank.money.count}`, false, true)
