@@ -13,9 +13,9 @@ module.exports = {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(cmd.name)
                     .setColor('RANDOM')
-                    .addField('Aliases', cmd.aliases.map(x => `\`${x}\``).join(', '))
-                    .addField('Description', cmd.description)
-                    .addField('Usage(`<>` 안은 필수, `[]` 안은 선택)', cmd.usage)
+                    .addField('인식하는 명령어', cmd.aliases.map(x => `\`${x}\``).join(', '))
+                    .addField('설명', cmd.description)
+                    .addField('사용법', cmd.usage)
                     .setFooter(message.author.tag, message.author.displayAvatarURL())
                     .setTimestamp();
                 message.channel.send({
