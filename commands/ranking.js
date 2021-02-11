@@ -1,9 +1,21 @@
 const Discord = require('discord.js');
+const xpmoney = {
+   "돈": {money:-1},
+   "레벨": {xp:-1}
+};
+
 module.exports = {
     name: '랭킹',
     aliases: ['ranking', 'rank', 'fodzld', 'ㄱ무ㅏㅑㅜㅎ', 'ㄱ무ㅏ'],
     description: '현재 랭킹 상태를 보여줘요',
     usage: '인트야 랭킹 [돈/레벨/자신]',
+    /**
+     * 
+     * @param {Discord.Client} client 
+     * @param {Discord.Message} message 
+     * @param {*} args 
+     * @param {*} ops 
+     */
     run: async (client, message, args, ops) => {
         const option = args[1]
         if (!(await client.db.findOne({_id: message.author.id}))) {
@@ -16,35 +28,84 @@ module.exports = {
             message.channel.send(embed);
         } else {
             if(xpmoney[option] != undefined){
-                var embed = await getRank(option);
-                message.reply({embed});
-            }
-            else {
+                var embed = await getRank(option, client, message);
+                console.log(embed);
+                return message.channel.send({embed});
+            } else if (option == "자신") {
+                var embed = await getMyRank(message.author.id, client);
+                return message.channel.send(embed);
+            } else {
                 return message.channel.send("`인트야 랭킹 [돈/레벨/자신]` 중 한개를 선택하여 주세요.")
             }
         }
     }
 }
-const xpmoney = {
-   "돈": {money:-1},
-   "레벨": {level:-1}
+
+/**
+ * 
+ * @param {*} option 
+ * @param {Discord.Client} client
+ * @param {Discord.Message} message 
+ */
+const getRank = async (option, client, message) => {
+    var rankArr = await client.db.find().sort(xpmoney[option]).limit(5).toArray();
+    var discordFields = [];
+
+    for (var i in rankArr) {
+        i = Number(i);
+        try {
+            var userInfo = await client.users.fetch(rankArr[i]._id);
+            discordFields.push({name: `${i+1}. ${userInfo.username}`, value: rankArr[i].money + " 원"});
+        } catch (e) {
+            discordFields.push({name: `${i+1}. Unknown User`, value: rankArr[i].money + " 원"});
+        }
+    }
+
+    var embed = {
+        title: `${option} 랭킹`,
+        color: 'RANDOM',
+        fields: discordFields,
+        timestamp: new Date(),
+        footer: {
+            text: `${message.author.tag}`,
+            icon_url: `${message.author.displayAvatarURL({
+                dynamic: true
+            })}`,
+        },
+    }
+    return embed;
 }
-const getRank = async option => {
-   var rankArr = client.db.sort(xpmoney[option]).limit(5).toArray();
-                var discordFields = [];
-                var embed = {
-                   title: `${option} 랭킹`,
-                   color: 'RANDOM',
-                   footer: message.author.tag
-                }
-                for (const i in rankArr) {
-                   try {
-                      var userInfo = await client.users.fetch(rankArr[i]._id);
-                      discordFields.push({name: `${i+1}. ${userInfo.username}`, value: rankArr[i].money + " 원"});
-                   } catch (e) {
-                      discordFields.push({name: `${i+1}. Unknown User`, value: rankArr[i].money + " 원"});
-                   }
-                }
-                embed.fields = discordFields;
-                return embed;
+
+
+/**
+ * @param {Discord.Client} client 
+ */
+const getMyRank = async (id, client) => {
+    var user = await client.users.fetch(id);
+    var moneyRankArr = await client.db.find().sort(xpmoney.돈).toArray();
+    var levelRankArr = await client.db.find().sort(xpmoney.레벨).toArray();
+    var rank = {};
+    rank.level = {};
+    rank.money = {};
+    rank.money.rank = moneyRankArr.findIndex(e => {
+        return e._id == id;
+    })
+    rank.level.rank = levelRankArr.findIndex(e => {
+        return e._id == id;
+    })
+    rank.level.rank += 1;
+    rank.money.rank += 1;
+    rank.level.count = await (await client.db.findOne({_id: id})).xp;
+    rank.money.count = await (await client.db.findOne({_id: id})).money;
+
+
+    var embed = new Discord.MessageEmbed()
+    .setTitle(`${user.tag} 님의 랭킹`)
+    .setColor('RANDOM')
+    .addField(`돈 랭킹: ${rank.money.rank} 위`, `보유자산: ${rank.money.count}`, false, true)
+    .addField(`레벨 랭킹: ${rank.level.rank} 위`, `경험치: ${rank.level.count}`, false, true)
+    .setFooter(user.tag, user.displayAvatarURL())
+    .setTimestamp();
+
+    return embed;
 }
