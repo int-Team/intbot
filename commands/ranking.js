@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const xpmoney = {
    "돈": {money:-1},
-   "레벨": {xp:-1}
+   "레벨": {level:-1}
 };
 
 module.exports = {
@@ -52,8 +52,8 @@ const getRank = async (option, client, message) => {
         단위 = "원";
         돈이야뭐야 = "money";
     } else {
-        단위 = "경험치";
-        돈이야뭐야 = "xp";
+        단위 = "레벨";
+        돈이야뭐야 = "level";
     }
     let discordFields = [];
 
@@ -110,7 +110,7 @@ const getMyRank = async (id, client) => {
     .setTitle(`${user.tag} 님의 랭킹`)
     .setColor('RANDOM')
     .addField(`돈 랭킹: ${rank.money.rank} 위`, `보유자산: ${rank.money.count}`, false, true)
-    .addField(`레벨 랭킹: ${rank.level.rank} 위`, `경험치: ${rank.level.count}`, false, true)
+    .addField(`레벨 랭킹: ${rank.level.rank} 위`, `레벨: ${rank.level.count}`, false, true)
     .setFooter(user.tag, user.displayAvatarURL())
     .setTimestamp();
 
