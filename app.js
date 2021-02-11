@@ -16,7 +16,7 @@ const MongoDB = require('mongodb');
 const DBClient = new MongoDB.MongoClient(`mongodb+srv://int:${DB_PW}@cluster0.gk8if.mongodb.net/intbot?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
-})
+});
 client.db = undefined;
 client.dbchannels = undefined;
 DBClient.connect().then(() => {
@@ -91,7 +91,7 @@ client.on('ready', () => {
                 client.user.setPresence({
                     status: 'online',
                     activity: {
-                        name: `명령 받기!`,
+                        name: `접두사는 인트야 입니다!`,
                         type: 'PLAYING'
                     }
                 });
@@ -100,7 +100,7 @@ client.on('ready', () => {
                 client.user.setPresence({
                     status: 'online',
                     activity: {
-                        name: `심심하면 저와 놀아요!`,
+                        name: `이 봇은 사실 아직 베타 버전이랍니다!`,
                         type: 'PLAYING'
                     }
                 });
@@ -109,7 +109,7 @@ client.on('ready', () => {
                 client.user.setPresence({
                     status: 'online',
                     activity: {
-                        name: `인트봇의 문의/신고는 인트야 서포트!`,
+                        name: `인트봇의 문의/신고는 인트야 문의 [내용]!`,
                         type: 'PLAYING'
                     }
                 });
