@@ -102,7 +102,7 @@ const getMyRank = async (id, client) => {
     })
     rank.level.rank += 1;
     rank.money.rank += 1;
-    rank.level.count = await (await client.db.findOne({_id: id})).xp;
+    rank.level.count = await (await client.db.findOne({_id: id})).level;
     rank.money.count = await (await client.db.findOne({_id: id})).money;
 
 
