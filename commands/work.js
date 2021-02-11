@@ -19,7 +19,7 @@ module.exports = {
         var workname = ['어떤유저의 컴퓨터를 수리를 하여', '똥같은 웹사이트를 만들어 ', '인트 사살 미션을 성공하여', '뉴스를 적어', 'Docker 컨테이너를 만들어'];
         var randommsg = Math.floor(Math.random() * workname.length);
         let noKbotsAcn
-        if (developers.includes(message.author.id)) return message.channel.send(`인트봇의 개발자라 도박이 불가능해요!`);
+        if (developers.includes(message.author.id)) return message.channel.send(`인트봇의 개발자는 팀 안에서나 일하세요!`);
         if (!(await client.db.findOne({_id: message.author.id}))) {
             const embed = new Discord.MessageEmbed()
                 .setTitle('인트봇의 돈 서비스에 가입되어있지 않아요.')
