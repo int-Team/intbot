@@ -15,23 +15,8 @@ module.exports = {
             .setTimestamp()
             message.channel.send(embed);
         } else {
-            if(option == "돈"){
-                var rankArr = client.db.sort({money:-1}).limit(5).toArray();
-                var discordFields = [];
-                var embed = {
-                   title: `${option} 랭킹`,
-                   color: 'RANDOM',
-                   footer: message.author.tag
-                }
-                for (const i in rankArr) {
-                   try {
-                      var userInfo = await client.users.fetch(rankArr[i]._id);
-                      discordFields.push({name: `${i+1}. ${userInfo.username}`, value: rankArr[i].money + " 원"});
-                   } catch (e) {
-                      discordFields.push({name: `${i+1}. Unknown User`, value: rankArr[i].money + " 원"});
-                   }
-                }
-                embed.fields = discordFields;
+            if(xpmoney[option] != undefined){
+                var embed = await getRank(option);
                 message.reply({embed});
             }
             else {
@@ -40,8 +25,12 @@ module.exports = {
         }
     }
 }
+const xpmoney = {
+   "돈": {money:-1},
+   "레벨": {level:-1}
+}
 const getRank = async option => {
-   var rankArr = client.db.sort({money:-1}).limit(5).toArray();
+   var rankArr = client.db.sort(xpmoney[option]).limit(5).toArray();
                 var discordFields = [];
                 var embed = {
                    title: `${option} 랭킹`,
