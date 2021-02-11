@@ -16,16 +16,17 @@ module.exports = {
             message.channel.send(embed);
         } else {
             if(option == "돈"){
-                const showPage = function(page){
-                    return client.db.find().sort( { money: -1 } ).skip((page-1)*2).limit(1);
+                var rankArr = client.db.sort({money:-1}).limit(5).toArray();
+                var discordFields = [];
+                for (const i in rankArr) {
+                   try {
+                      var userInfo = await client.users.fetch(rankArr[i]._id);
+                      discordFields.push({name: `${i+1}. ${userInfo.username}`, value: rankArr[i].money + " 원"});
+                   } catch (e) {
+                      discordFields.push({name: `${i+1}. Unknown User`, value: rankArr[i].money + " 원"});
+                   }
                 }
-                const embed = new Discord.MessageEmbed()
-                    .setTitle('돈 랭킹')
-                    .setColor('RANDOM')
-                    .addField(`${showPage(2)}`)
-                    .setFooter(message.author.tag, message.author.displayAvatarURL())
-                    .setTimestamp()
-                message.channel.send(embed);
+
             }
             else {
                 return message.channel.send("`인트야 랭킹 [돈/레벨/자신]` 중 한개를 선택하여 주세요.")
