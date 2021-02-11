@@ -49,15 +49,21 @@ module.exports = {
  */
 const getRank = async (option, client, message) => {
     var rankArr = await client.db.find().sort(xpmoney[option]).limit(5).toArray();
+    var 단위;
+    if (option == "돈") {
+        단위 = "원";
+    } else {
+        단위 = "경험치";
+    }
     var discordFields = [];
 
     for (var i in rankArr) {
         i = Number(i);
         try {
             var userInfo = await client.users.fetch(rankArr[i]._id);
-            discordFields.push({name: `${i+1}. ${userInfo.username}`, value: rankArr[i].money + " 원"});
+            discordFields.push({name: `${i+1}. ${userInfo.username}`, value: rankArr[i].money + " " + 단위});
         } catch (e) {
-            discordFields.push({name: `${i+1}. Unknown User`, value: rankArr[i].money + " 원"});
+            discordFields.push({name: `${i+1}. Unknown User`, value: rankArr[i].money + " " + 단위});
         }
     }
 
