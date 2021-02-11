@@ -4,13 +4,22 @@ const axios = require('axios').default;
 module.exports = {
     name: '일하기',
     aliases: ['노동 ', '일', '알바', 'work', '재가',  ],
-    description: '일을하여 돈을 모으세요!.',
+    description: '일을 하여 돈을 모으세요!.',
     usage: '인트야 일하기',
     run: async (client, message, args, ops) => {
+        const developers = [
+            "687866011013218349",
+            "745758911012929550",
+            "714736989106208791",
+            "418677556322107412",
+            "552103947662524416",
+            "647736678815105037"
+        ]
         const koreanbottoken = require('../config.json').koreanbots;
         var workname = ['어떤유저의 컴퓨터를 수리를 하여', '똥같은 웹사이트를 만들어 ', '인트 사살 미션을 성공하여', '뉴스를 적어', 'Docker 컨테이너를 만들어'];
         var randommsg = Math.floor(Math.random() * workname.length);
         let noKbotsAcn
+        if (developers.includes(message.author.id)) return message.channel.send(`인트봇의 개발자라 도박이 불가능해요!`);
         if (!(await client.db.findOne({_id: message.author.id}))) {
             const embed = new Discord.MessageEmbed()
                 .setTitle('인트봇의 돈 서비스에 가입되어있지 않아요.')
