@@ -31,7 +31,8 @@ module.exports = {
                       discordFields.push({name: `${i+1}. Unknown User`, value: rankArr[i].money + " 원"});
                    }
                 }
-
+                embed.fields = discordFields;
+                message.reply({embed});
             }
             else {
                 return message.channel.send("`인트야 랭킹 [돈/레벨/자신]` 중 한개를 선택하여 주세요.")
