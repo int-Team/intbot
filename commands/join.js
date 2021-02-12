@@ -26,7 +26,7 @@ module.exports = {
             });
             collector.on('end', async collected => {
                 if (collected.first().emoji.name == '✅') {
-            await client.db.insertOne({_id: message.author.id, money: 0, level: 0, xp: 0, });
+            await client.db.insertOne({_id: message.author.id, money: 0, level: 0, xp: 0, goods: []});
                     message.channel.send(new Discord.MessageEmbed()
                         .setTitle('가입 완료!')
                         .setColor('RANDOM')

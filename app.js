@@ -24,25 +24,29 @@ DBClient.connect().then(() => {
     client.dbchannels = DBClient.db('intbot').collection('channels');
 });
 
+
 const express = require('express');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 let app = express();
-const router = require('./router/main')(app);
 const prefix = "인트야"
 
-let port = 8000;
-
+let port = 8000
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 
-app.use('/public', express.static('public'));
+app.use(express.static('public'));
+app.use(bodyParser.urlencoded({extended: false}));
+
+
+const router = require('./router/main')(app);
 
 let server = app.listen(port, () => {
-  console.log(`Server on : ${port}`);
+    console.log(`Server on : ${port}`);
 })
+
 
 fs.readdir('./commands/', (err, list) => {
     for (let file of list) {
@@ -65,6 +69,8 @@ fs.readdir('./commands/', (err, list) => {
     }
     console.log(table.toString());
 });
+
+
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.username}\n-----------------------`);
     setInterval(() => {
@@ -146,6 +152,7 @@ client.on('ready', () => {
     }, 200000);
 });
 
+
 client.on('message', async message => {
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const cmd = args.shift().toLowerCase();
@@ -207,5 +214,6 @@ client.on('message', async message => {
     }
 
 });
+
 
 client.login(token);
