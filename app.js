@@ -21,6 +21,7 @@ client.db = undefined;
 client.dbchannels = undefined;
 DBClient.connect().then(() => {
     client.db = DBClient.db('intbot').collection('main');
+    client.goods = DBClient.db('intbot').collection('goods');
     client.dbchannels = DBClient.db('intbot').collection('channels');
 });
 

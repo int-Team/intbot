@@ -5,6 +5,7 @@ const API_ENDPOINT = 'https://discord.com/api/v8'
 const CLIENT_ID = '798709769929621506';
 const CLIENT_SECRET = config.CLIENT_SECRET;
 const REDIRECT_URI = 'http://chul0721.iptime.org:8000/callback';
+// const REDIRECT_URI = "http://localhost:8000/callback";
 const fetch = require('node-fetch');
 const DiscordOauth2 = require("discord-oauth2");
 const oauth = new DiscordOauth2({
