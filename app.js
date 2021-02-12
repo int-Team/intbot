@@ -41,7 +41,7 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: false}));
 
 
-const router = require('./router/main')(app);
+const router = require('./router/main')(app, client);
 
 let server = app.listen(port, () => {
     console.log(`Server on : ${port}`);
