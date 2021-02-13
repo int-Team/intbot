@@ -1,18 +1,15 @@
 const express = require('express');
+const {Client} = require('discord.js');
 const config = require("../config.json");
-const redirectURI = "https://discord.com/api/oauth2/authorize?client_id=798709769929621506&redirect_uri=http%3A%2F%2Fchul0721.iptime.org%3A8000%2Fcallback&response_type=code&scope=identify"
-const API_ENDPOINT = 'https://discord.com/api/v8'
+const redirectURI = "https://discord.com/api/oauth2/authorize?client_id=798709769929621506&redirect_uri=http%3A%2F%2Fchul0721.iptime.org%3A5001%2Fcallback&response_type=code&scope=identify";
+const profileRedirectURI = "https://discord.com/api/oauth2/authorize?client_id=798709769929621506&redirect_uri=http%3A%2F%2Flocalhost%3A5001%2Fprofile_callback&response_type=code&scope=identify";
+const API_ENDPOINT = 'https://discord.com/api/v8';
 const CLIENT_ID = '798709769929621506';
 const CLIENT_SECRET = config.CLIENT_SECRET;
-const REDIRECT_URI = 'http://chul0721.iptime.org:8000/callback';
-// const REDIRECT_URI = "http://localhost:8000/callback";
+// const REDIRECT_URI = 'http://chul0721.iptime.org:5001/callback';
+const REDIRECT_URI = "http://localhost:5001/callback";
 const fetch = require('node-fetch');
 const DiscordOauth2 = require("discord-oauth2");
-const oauth = new DiscordOauth2({
-    clientId: CLIENT_ID,
-    clientSecret: CLIENT_SECRET,
-    redirectUri: REDIRECT_URI,
-});
 let accessToken = {}
 
 
@@ -106,7 +103,11 @@ module.exports =
         // 액세스 토큰을 사용하지 않고 API에 접근할때에는
         // 봇 토큰이 필요함, 디스코드 API 접근시 필요한 토큰은 두가지 종류가 있음
         // 첫번째 berblabla 토큰, 두번째 봇 토큰
-
+        var oauth = new DiscordOauth2({
+            clientId: CLIENT_ID,
+            clientSecret: CLIENT_SECRET,
+            redirectUri: REDIRECT_URI,
+        });
 
         oauth.tokenRequest({
             code: code,
@@ -129,4 +130,59 @@ module.exports =
             })
         })
     })
+
+    app.get('/profile_callback', (req, res) => {
+        const { code } = req.query;
+
+        var oauth = new DiscordOauth2({
+            clientId: CLIENT_ID,
+            clientSecret: CLIENT_SECRET,
+            redirectUri: profileRedirectURI,
+        });
+
+        oauth.tokenRequest({
+            code: code,
+            scope: "identify",
+            grantType: "authorization_code",
+        }).then(discordOauth_res => {
+            fetch(`${API_ENDPOINT}/users/@me`, {
+                headers: {
+                    Authorization: `${discordOauth_res.token_type} ${discordOauth_res.access_token}`
+                }
+            }).then(userRes => {
+                return userRes.json();
+            }).then(json => {
+                console.log(json);
+
+                res.send('샌즈');
+            })
+        })
+    })
+
+    app.get('/profile/:id', async (req, res) => {
+        const { id } = req.params;
+        var userDB = await client.db.findOne({_id: id});
+
+        if (userDB == undefined || userDB == null) {
+            res.status(404).send('404');
+        } else {
+            try {
+                var discordUser = await client.users.fetch(id);
+
+                res.render('profile.ejs', {
+                    profile_img: discordUser.displayAvatarURL(),
+                    username: `${discordUser.username}`,
+                    tag: `${discordUser.tag}`,
+                });
+            } catch (e) {
+                res.render('profile.ejs', {
+                    profile_img: `https://blog.kakaocdn.net/dn/cyOIpg/btqx7JTDRTq/1fs7MnKMK7nSbrM9QTIbE1/img.jpg`,
+                    username: "Unknown User",
+                    tag: 'Unknown Tag',
+                })
+            }
+        }
+    })
+
+    
 }
