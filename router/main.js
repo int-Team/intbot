@@ -23,6 +23,7 @@ module.exports =
  */
 (app, client) => {
     app.get('/', (req,res) => {
+        console.log('req');
         res.render('../views/index.html');
     });
 

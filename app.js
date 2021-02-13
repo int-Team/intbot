@@ -33,7 +33,7 @@ const bodyParser = require('body-parser');
 let app = express();
 const prefix = "인트야"
 
-let port = 8000
+let port = 5001;
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
@@ -42,9 +42,9 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: false}));
 
 
-const router = require('./router/main')(app, client);
+require('./router/main')(app, client);
 
-let server = app.listen(port, () => {
+app.listen(port, () => {
     console.log(`Server on : ${port}`);
 })
 
