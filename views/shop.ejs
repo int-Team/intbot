@@ -15,7 +15,7 @@
     <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
       <h1 class="display-4">상점</h1><br>
       <p class="lead">인트봇에서 얻은 돈으로 상품을 사세요.</p>
-      <p class="lead"><b><%= username %></b> 님의 돈: <b><%= money %> 원</b></p>
+      <p class="lead"><b><%= user.name %></b> 님의 돈: <b><%= user.money %> 원</b></p>
     </div>
 
     <div class="container">
@@ -31,23 +31,22 @@
               <li>테스트 상품입니다.</li>
               <li>&nbsp;</li>
             </ul>
-            <form action="/buy_process" method="POST">
-                <div class="g-recaptcha" data-sitekey="6LcRp0YaAAAAAEOKYhYWW5m7ZZhmpo6xX6BtSQzi"></div>
-                <input type="hidden" name="goods_id" value="test1">
-                <input type="hidden" name="id" value="<%= id %>">
-                <button type="submit" class="btn btn-lg btn-block btn-outline-primary">구매</button>
-            </form>
-            
+            <button class="btn btn-primary " onclick="location.href='/buy_process?code=<%= code %>&itemID=test1'">구입</button>
           </div>
         </div>
       </div>
     </div>
-    <script>
-        setInterval(() => {
-        if (($("form").children('input[name=id]').length) == 0 || ($("form").children('input[name=id]').attr("value")) != "<%= id%>") {
-                $("form").append(`<input type="hidden" name="id" value="<%= id %>">`);
-            }
-        }, 1);
-    </script>
   </body>
+
+  <!-- <script>
+    let onBuy = async itemID => {
+      fetch
+      fetch(`/buy_process?itemID=${itemID}`)
+      .then(j => {
+        return j.json();
+      }).then(res => {
+        
+      })
+    }
+  </script> -->
 </html>

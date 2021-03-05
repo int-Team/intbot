@@ -3,15 +3,14 @@ const { Client } = require("discord.js");
 const config = require("../config.json");
 const redirectURI =
   "https://discord.com/api/oauth2/authorize?client_id=798709769929621506&redirect_uri=http%3A%2F%2Fchul0721.iptime.org%3A5001%2Fcallback&response_type=code&scope=identify";
-
+const CLIENT_SECRET = config.CLIENT_SECRET;
 const API_ENDPOINT = "https://discord.com/api/v8";
 const CLIENT_ID = "798709769929621506";
-const CLIENT_SECRET = config.CLIENT_SECRET;
-const REDIRECT_URI = 'http://chul0721.iptime.org:5001/callback';
+const REDIRECT_URI = 'http://localhost:5001/callback';
 // const REDIRECT_URI = "http://asdf/callback";
-const REDIRECT_URI_PROFILE = "http://chul0721.iptime.org:5001/profile_callback";
-const fetch = require("node-fetch");
+const REDIRECT_URI_PROFILE = "http://localhost:5001/profile_callback";
 const DiscordOauth2 = require("discord-oauth2");
+const { default: fetch } = require("node-fetch");
 let accessToken = {};
 
 module.exports =
@@ -25,107 +24,114 @@ module.exports =
       res.render("../views/index.html");
     });
 
-    app.post("/shop/:id", async (req, res, nextf) => {
-        try {
-            if (
-            req.body.id == undefined ||
-            isNaN(req.body.id) ||
-            req.params.id != req.body.id
-            ) {
-                return res.redirect(redirectURI);
-            }
-            const { id, username } = req.body;
-            var userDB = await client.db.findOne({ _id: req.body.id });
-            console.log(userDB);
-            var money = userDB.money;
-            console.log(money);
-            res.render("../views/shop.ejs", {
-                username: username,
-                id: id,
-                money: money
-            });
-      } catch (e) {
-        res.send(
-          `<script>alert("이런! 문제가 발생했어요, 아마도 인트봇의 돈 서비스에 가입 하지 않아 생긴일 같아요! ${e}");location.href="${redirectURI}";</script>`
-        );
-      }
-    });
+    app.get("/shop/:code", async (req, res, next) => {
+      try {
+        const { code } = req.params;
 
-    app.post("/buy_process", async (req, res) => {
-      const { id, goods_id } = req.body;
-      const recaptcha_res = req.body["g-recaptcha-response"];
+        if (!code)  res.send(`<script>alert('이런! 뭔가 잘못된것같아요, 다시 로그인해 보아요!');location.href='https://discord.com/oauth2/authorize?client_id=798709769929621506&redirect_uri=http%3A%2F%2Flocalhost%3A5001%2Fcallback&response_type=code&scope=identify';</script>`)
 
-      console.log(req.body);
+        var oauth = new DiscordOauth2({
+          clientId: CLIENT_ID,
+          clientSecret: `${CLIENT_SECRET}`,
+          redirectUri: REDIRECT_URI,
+        });
 
-      if (recaptcha_res == undefined || recaptcha_res == "") {
-        return res.send(
-          `<script>alert("리캡챠 인증을 해주세요!");history.back();</script>`
-        );
-      }
-
-      fetch("https://www.google.com/recaptcha/api/siteverify", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `secret=${config.RECAPTCHA_SECRET}&response=${recaptcha_res}`,
-      })
-        .then((re_res) => {
-          return re_res.json();
-        })
-        .then(async (json) => {
-          const { success } = json;
-
-          if (success) {
-            let userDB = await client.db.findOne({ _id: `${id}` });
-            if (userDB == undefined) {
-              return res.send(
-                `<script>alert("이런! 문제가 발생했어요, 아마도 인트봇의 돈 서비스에 가입 하지 않아 생긴일 같아요");history.back();</script>`
-              );
-            } else {
-              let goodsDB = await client.goods.findOne({ _id: `${goods_id}` });
-              const total = userDB.money - goodsDB.price;
-
-              if (total < 0) {
-                return res.send(
-                  `<script>alert("돈이 부족합니다.");history.back();</script>`
-                );
-              } else {
-                    if (userDB.goods.includes(goods_id)) {
-                        return res.send(
-                            `<script>alert("이미 상품을 보유하고 있습니다!");history.back();</script>`
-                        );
-                    } else {
-                        await client.db.findOneAndUpdate(
-                            { _id: `${id}` },
-                            {
-                                $push: {
-                                goods: goods_id,
-                                },
-                                $set: {
-                                money: Number(total),
-                                },
-                            }
-                        );
-                        return res.send(
-                        `<script>alert("성공적으로 구입했어요!");history.back();</script>`
-                        );
-                    }
-              }
-            }
-          } else {
-            return res.send(
-              `<script>alert("올바르지 않은 리캡챠 토큰입니다!");history.back();</script>`
-            );
+        const token = await oauth
+        .tokenRequest({
+          code: code,
+          scope: "identify",
+          grantType: "authorization_code",
+        });
+        
+        let userJSON = await fetch(`${API_ENDPOINT}/users/@me`, {
+          headers: {
+            Authorization: `${token.token_type} ${token.access_token}`,
           }
         });
+        userJSON = await userJSON.json();
+        let userDB = await client.db.findOne({_id: userJSON.id});
+
+        client.goods.insertOne({
+          _id: `${code}`,
+          refresh_token: `${token.refresh_token}`,
+          type: `${token.token_type}`
+        });
+
+        res.render('shop', {
+          code: `${code}`,
+          user: {
+            name: `${userJSON.username}#${userJSON.discriminator}`,
+            money: `${userDB.money}`
+          }
+        });
+      } catch (e) {
+        console.log(e);
+        res.send(`<script>alert('이런! 뭔가 잘못된것같아요, 다시 로그인해 보아요!');location.href='https://discord.com/oauth2/authorize?client_id=798709769929621506&redirect_uri=http%3A%2F%2Flocalhost%3A5001%2Fcallback&response_type=code&scope=identify';</script>`)
+      }
     });
 
-    app.get("/shop/:id", (a, b) => {
-      return b.redirect(redirectURI);
+    app.get("/buy_process", async (req, res) => {
+      const { code, itemID } = req.query;
+      console.log(req.query);
+
+      if (!code || !itemID) return res.redirect(`https://discord.com/oauth2/authorize?client_id=798709769929621506&redirect_uri=http%3A%2F%2Flocalhost%3A5001%2Fcallback&response_type=code&scope=identify`);
+      let goodsDB = await client.goods.findOne({_id: `${itemID}`});
+      if (!goodsDB) return res.send(`<script>alert('유효하지않은 상품입니다!');history.back();</script>`);
+      let tokenDB = await client.goods.findOne({_id: `${code}`});
+      if (!tokenDB) return res.redirect(`https://discord.com/oauth2/authorize?client_id=798709769929621506&redirect_uri=http%3A%2F%2Flocalhost%3A5001%2Fcallback&response_type=code&scope=identify`);
+
+      try {
+        var oauth = new DiscordOauth2({
+          clientId: CLIENT_ID,
+          clientSecret: `${CLIENT_SECRET}`,
+          redirectUri: REDIRECT_URI,
+        });
+
+        let token = await oauth
+        .tokenRequest({
+          refreshToken: `${tokenDB.refresh_token}`,
+          scope: "identify",
+          grantType: `refresh_token`,
+        });
+
+        let userJSON = await fetch(`${API_ENDPOINT}/users/@me`, {
+          headers: {
+            Authorization: `${token.token_type} ${token.access_token}`,
+          }
+        });
+        userJSON = await userJSON.json();
+        console.log(userJSON);
+        let userDB = await client.db.findOne({_id: userJSON.id});
+        
+        if (!userDB) return res.send(`<script>alert('뭔가 잘못된것 같아요, 아마도 인트의 돈 서비스의 가입하지 않아 생긴 일 같아요');history.back();</script>`);
+
+        let total = userDB.money - goodsDB.price;
+
+        if (total < 0) return res.send(`<script>alert('돈이 부족합니다!');history.back();</script>`);
+
+        client.db.findOneAndUpdate({_id: userJSON.id}, {
+          $push: {
+            goods: itemID,
+          }
+        });
+
+        client.goods.deleteOne({_id: code});
+
+        return res.send(`<script>alert('성공적으로 구입했습니다!');location.href="/profile/${userJSON.id}";</script>`);
+      } catch (e) {
+        console.log(e);
+        res.send(`<script>alert('이런! 뭔가 잘못된것같아요, 다시 로그인해 보아요!');location.href='https://discord.com/oauth2/authorize?client_id=798709769929621506&redirect_uri=http%3A%2F%2Flocalhost%3A5001%2Fcallback&response_type=code&scope=identify';</script>`);
+      }
     });
+
+    // app.get("/shop/:id", (a, b) => {
+    //   return b.redirect(redirectURI);
+    // });
 
     app.get("/callback", (req, res) => {
       const { code } = req.query;
-      console.log("asdf");
+      res.redirect(`/shop/${code}`);
+      return;
       var oauth = new DiscordOauth2({
         clientId: CLIENT_ID,
         clientSecret: CLIENT_SECRET,
