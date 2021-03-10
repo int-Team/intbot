@@ -15,7 +15,7 @@ module.exports = {
             "552103947662524416"
         ]
         const koreanbottoken = require('../config.json').koreanbots;
-        var workname = ['어떤유저의 컴퓨터를 수리를 하여', '똥같은 웹사이트를 만들어 ', '인트 사살 미션을 성공하여', '뉴스를 적어', 'Docker 컨테이너를 만들어'];
+        var workname = ['어떤유저의 컴퓨터를 수리를 하여', '똥같은 웹사이트를 만들어 ', '인트 사살 미션을 성공하여', '뉴스를 적어', 'Docker 컨테이너를 만들어', '주식 투자해서', 'CU에 알바해서', '복권 당첨해서'];
         var randommsg = Math.floor(Math.random() * workname.length);
         let noKbotsAcn
         if (developers.includes(message.author.id)) return message.channel.send(`인트봇의 개발자는 팀 안에서나 일하세요!`);
@@ -47,7 +47,7 @@ module.exports = {
                         const embed = new Discord.MessageEmbed()
                         .setTitle('워 워 쉬세요 일하다가 죽어요ㅎㅎ')
                         .setDescription(`${(300000 - (new Date() - 1 + 1 - ((await client.db.findOne({_id: message.author.id}))).lastWorkMoney)) / 1000|0}초 만 쉬고 오세요 !`)
-                        .setColor('RANDOM')
+                        .setColor('YELLOW')
                         .setFooter(message.author.tag, message.author.displayAvatarURL())
                         .setTimestamp()
                         return message.channel.send(embed);
@@ -71,7 +71,7 @@ module.exports = {
                         const embed = new Discord.MessageEmbed()
                         .setTitle('워 워 쉬세요 일하다가 죽어요ㅎㅎ')
                         .setDescription(`${(3600000 - (new Date() - 1 + 1 - ((await client.db.findOne({_id: message.author.id}))).lastWorkMoney)) / 1000|0}초 만 쉬고 오세요 !!\nKOREANBOTS에서 [여기](https://koreanbots.dev/bots/${client.user.id})를 눌러 하트를 추가하면 클타임이 5분이에요!`)
-                        .setColor('RED')
+                        .setColor('YELLOW')
                         .setFooter(message.author.tag, message.author.displayAvatarURL())
                         .setTimestamp()
                         return message.channel.send(embed);
