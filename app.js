@@ -74,6 +74,7 @@ fs.readdir('./commands/', (err, list) => {
 
 
 client.on('ready', () => {
+    let serverNum = client.guilds.cache.size;
     console.log(`Logged in as ${client.user.username}\n-----------------------`);
     setInterval(() => {
         switch (Math.floor(Math.random() * 6)) {
@@ -143,14 +144,17 @@ client.on('ready', () => {
         }
     }, 10000);
     setInterval(() => {
-        axios.post(`https://api.koreanbots.dev/bots/servers`, {
-            servers: client.guilds.cache.size
-        }, {
-            headers: {
-                'Content-Type': "application/json",
-                token: require('./config.json').koreanbots
-            }
-        });
+        if(client.guilds.cache.size !== serverNum){
+            axios.post(`https://api.koreanbots.dev/bots/servers`, {
+                servers: client.guilds.cache.size
+            }, {
+                headers: {
+                    'Content-Type': "application/json",
+                    token: require('./config.json').koreanbots
+                }
+            });
+            serverNum = client.guilds.cache.size;
+        }
     }, 200000);
 });
 
