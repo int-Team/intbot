@@ -28,8 +28,8 @@
         "querystring": "^0.2.0",
         "serve-favicon": "latest",
         "util": "latest",
-        "youtube-search-api": "^1.0.8",
-        "ytdl-core": "^4.4.5",
+        "youtube-search-api": "latest",
+        "ytdl-core": "latest",
         "zlib-sync": "^0.1.7"
     }
 }

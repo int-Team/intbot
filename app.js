@@ -154,6 +154,8 @@ client.on('ready', () => {
                 }
             });
             serverNum = client.guilds.cache.size;
+        } else {
+            return
         }
     }, 200000);
 });
