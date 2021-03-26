@@ -7,7 +7,7 @@
 
 <hr/>
 <div>
-<img src="./profile/profile.webp" style="text-align:center;">
+<img src="./public/profile.webp" style="text-align:center;">
 </div>
 
 [이곳](https://discord.com/api/oauth2/authorize?client_id=798709769929621506&permissions=3264064&scope=bot)을 눌러 초대하여 사용해보세요!
