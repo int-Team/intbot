@@ -143,6 +143,7 @@ client.on('ready', () => {
                 break;
         }
     }, 10000);
+    /*
     setInterval(() => {
         if(client.guilds.cache.size !== serverNum){
             axios.post(`https://api.koreanbots.dev/bots/servers`, {
@@ -158,6 +159,7 @@ client.on('ready', () => {
             return
         }
     }, 200000);
+    */
 });
 
 
