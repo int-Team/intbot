@@ -1,55 +1,63 @@
+// Dependencies
 const Discord = require('discord.js');
 const MusicClient = require('./struct/Client');
-const { Collection } = require('discord.js');
-const client = new MusicClient();
 const fs = require('fs');
-require('dotenv').config();
 const ascii = require('ascii-table');
 const table = new ascii().setHeading('Command', 'Load Status');
+const { DB_PW, token } = require("./config.json");
+const MongoDB = require('mongodb');
+
+
+// Variables 
+require('dotenv').config();
+const PORT = process.env.PORT || 5001;
+const prefix = "인트야";
+
+// Discord bot client
+const client = new MusicClient();
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
-const axios = require('axios').default;
-const config = require("./config.json");
-const DB_PW = config.dbpw;
-const token = config.token;
-const MongoDB = require('mongodb');
+
+
+// Database (mongodb+srv://int:${DB_PW}@cluster0.gk8if.mongodb.net/intbot?retryWrites=true&w=majority)
+client.db = undefined;
+client.dbchannels = undefined;
 const DBClient = new MongoDB.MongoClient(`mongodb+srv://int:${DB_PW}@cluster0.gk8if.mongodb.net/intbot?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
-//mongodb+srv://int:${DB_PW}@cluster0.gk8if.mongodb.net/intbot?retryWrites=true&w=majority
-client.db = undefined;
-client.dbchannels = undefined;
 DBClient.connect().then(() => {
     client.db = DBClient.db('intbot').collection('main');
     client.goods = DBClient.db('intbot').collection('goods');
     client.dbchannels = DBClient.db('intbot').collection('channels');
 });
 
-
+// Web
 const express = require('express');
-const favicon = require('serve-favicon');
 const logger = require('morgan');
-const bodyParser = require('body-parser');
-let app = express();
-const prefix = "인트야"
+const session = require('express-session');
+const app = express();
 
-let port = 5001;
+// Web: Middlewares
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
-
 app.use(express.static('public'));
-app.use(bodyParser.urlencoded({extended: false}));
-
+app.use(logger('dev'));
+app.use(express.urlencoded({extended: false}));
+app.use(session({
+    secret: "asdfasfmklam3mkm;'MKGH:@90-t",
+    resave: false,
+    saveUninitialized: true,
+}));
 
 require('./router/main')(app, client);
 
-app.listen(port, () => {
-    console.log(`Server on : ${port}`);
+app.listen(PORT, () => {
+    console.log(`Server on : ${PORT}`);
 })
 
-
+// Discord bot setting
 fs.readdir('./commands/', (err, list) => {
     for (let file of list) {
         try {
@@ -72,10 +80,8 @@ fs.readdir('./commands/', (err, list) => {
     console.log(table.toString());
 });
 
-
 client.on('ready', () => {
-    let serverNum = client.guilds.cache.size;
-    console.log(`Logged in as ${client.user.username}\n-----------------------`);
+    console.log(`Logged on ${client.user.username}\n-----------------------`);
     setInterval(() => {
         switch (Math.floor(Math.random() * 6)) {
             case 0:
@@ -162,31 +168,34 @@ client.on('ready', () => {
     */
 });
 
-
 client.on('message', async message => {
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
-    const cmd = args.shift().toLowerCase();
     if (message.author.bot) return;
-    if (!(await client.db.findOne({_id: message.author.id}))) return;
 
-    if((await client.db.findOne({_id: message.author.id})).xp >= 100){
+    let user = await client.db.findOne({_id: message.author.id});
+    let channel = await client.dbchannels.findOne({_id: message.guild.id});
+
+    if (!user)
+        return;
+    if(user.xp >= 100){
         await client.db.updateOne({_id: message.author.id}, {
             $set: {
-                level: ((await client.db.findOne({_id: message.author.id})).level + 1),
-                xp: ((await client.db.findOne({_id: message.author.id})).xp = 0)
+                level: user.level + 1,
+                xp: user.xp = 0,
             }
-        })
-        if(!(await client.dbchannels.findOne({_id: message.guild.id}).alarm)) return;
-        message.channel.send(`${(await client.db.findOne({_id: message.author.id})).level}으로 레벨업 하셨습니다.`)
+        });
+        if(channel.alarm)
+            return;
+        
+        message.channel.send(`${user.level}으로 레벨업 하셨습니다.`);
     } else {
         await client.db.updateOne({_id: message.author.id}, {
             $set: {
-                xp: ((await client.db.findOne({_id: message.author.id})).xp + 1)
+                xp: user.xp + 1,
             }
         });
     }
 });
-
 
 client.on('message', async message => {
     if (message.author.bot) return;
@@ -222,7 +231,6 @@ client.on('message', async message => {
             }
         }
     }
-
 });
 
 

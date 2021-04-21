@@ -19,6 +19,7 @@
         "ejs": "latest",
         "erlpack": "^0.1.3",
         "express": "latest",
+        "express-session": "^1.17.1",
         "ffmpeg": "^0.0.4",
         "ffmpeg-static": "^4.2.7",
         "mongodb": "latest",

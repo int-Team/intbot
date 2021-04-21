@@ -32,7 +32,7 @@ module.exports =
 
         var oauth = new DiscordOauth2({
           clientId: CLIENT_ID,
-          clientSecret: `${CLIENT_SECRET}`,
+          clientSecret: CLIENT_SECRET,
           redirectUri: REDIRECT_URI,
         });
 
@@ -124,78 +124,11 @@ module.exports =
       }
     });
 
-    // app.get("/shop/:id", (a, b) => {
-    //   return b.redirect(redirectURI);
-    // });
-
     app.get("/callback", (req, res) => {
-      const { code } = req.query;
-      res.redirect(`/shop/${code}`);
-      return;
-      var oauth = new DiscordOauth2({
-        clientId: CLIENT_ID,
-        clientSecret: CLIENT_SECRET,
-        redirectUri: REDIRECT_URI,
-      });
-
-      oauth
-        .tokenRequest({
-          code: code,
-          scope: "identify",
-          grantType: "authorization_code",
-        })
-        .then((discordOauth_res) => {
-          accessToken.token = discordOauth_res.access_token;
-          accessToken.token_type = discordOauth_res.token_type;
-          fetch(`${API_ENDPOINT}/users/@me`, {
-            headers: {
-              Authorization: `${accessToken.token_type} ${accessToken.token}`,
-            },
-          })
-            .then((userRes) => {
-              return userRes.json();
-            })
-            .then((json) => {
-              res.send(`<form action="/shop/${json.id}" method="post">
-                <input type="hidden" name="id" value="${json.id}">
-                <input type="hidden" name="username" value="${json.username}">
-            </form><script>document.querySelector("form").submit()</script>`);
-            });
-        });
+      return res.redirect(`/shop/${req.query.code}`);
     });
 
-    app.get("/profile_callback", (req, res) => {
-      const { code } = req.query;
-
-      var oauth = new DiscordOauth2({
-        clientId: CLIENT_ID,
-        clientSecret: CLIENT_SECRET,
-        redirectUri: REDIRECT_URI_PROFILE,
-      });
-
-      oauth
-        .tokenRequest({
-          code: code,
-          scope: "identify",
-          grantType: "authorization_code",
-        })
-        .then((discordOauth_res) => {
-          accessToken.token = discordOauth_res.access_token;
-          accessToken.token_type = discordOauth_res.token_type;
-          fetch(`${API_ENDPOINT}/users/@me`, {
-            headers: {
-              Authorization: `${accessToken.token_type} ${accessToken.token}`,
-            },
-          })
-            .then(userRes => {
-              return userRes.json();
-            })
-            .then(json => {
-              console.log(json);
-              res.redirect(`/profile/${json.id}`)
-            });
-        });
-    });
+    
 
     app.get("/profile/:id", async (req, res) => {
       const { id } = req.params;
@@ -238,10 +171,6 @@ module.exports =
         }
       }
     });
-
-    app.get("/profile", (req, res) => {
-      res.redirect(`https://discord.com/oauth2/authorize?client_id=798709769929621506&redirect_uri=http%3A%2F%2Fchul0721.iptime.org:5001%2Fprofile_callback&response_type=code&scope=identify`)
-    })
 };
 
 
@@ -267,7 +196,6 @@ const getMyRank = async (id, client) => {
     rank.level.count = await (await client.db.findOne({_id: id})).level;
     rank.money.count = await (await client.db.findOne({_id: id})).money;
     rank.xp.count = await (await client.db.findOne({_id: id})).xp;
-
 
     return rank;
 }
