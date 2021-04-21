@@ -1,8 +1,8 @@
 const Discord = require('discord.js');
 module.exports = {
-    name: '돈',
-    aliases: ['money', 'ㅡㅐㅜ됴', 'ehs'],
-    description: '현재 가진 돈을 확인해요.',
+    name: '도박',
+    aliases: ['dobak' ,'ehqkr' , '112', 'tlsrh'],
+    description: '돈을 배팅해서 돈을 벌어요',
     usage: '인트야 돈',
     run: async (client, message, args, ops) => {
         function getRandomInt(min, max) {
