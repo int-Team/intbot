@@ -25,12 +25,14 @@
         "mongodb": "latest",
         "morgan": "latest",
         "node-fetch": "^2.6.1",
-        "pug": "^3.0.1",
         "querystring": "^0.2.0",
         "serve-favicon": "latest",
         "util": "latest",
         "youtube-search-api": "latest",
         "ytdl-core": "latest",
         "zlib-sync": "^0.1.7"
+    },
+    "devDependencies": {
+        "eslint": "^7.24.0"
     }
 }
