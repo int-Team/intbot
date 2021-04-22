@@ -4,7 +4,7 @@
     "description": "intbot",
     "main": "app.js",
     "scripts": {
-        "start": "node app.js"
+        "start": "node struct/Shard.js"
     },
     "author": "int",
     "license": "MIT",
@@ -19,17 +19,20 @@
         "ejs": "latest",
         "erlpack": "^0.1.3",
         "express": "latest",
+        "express-session": "^1.17.1",
         "ffmpeg": "^0.0.4",
         "ffmpeg-static": "^4.2.7",
         "mongodb": "latest",
         "morgan": "latest",
         "node-fetch": "^2.6.1",
-        "pug": "^3.0.1",
         "querystring": "^0.2.0",
         "serve-favicon": "latest",
         "util": "latest",
         "youtube-search-api": "latest",
         "ytdl-core": "latest",
         "zlib-sync": "^0.1.7"
+    },
+    "devDependencies": {
+        "eslint": "^7.24.0"
     }
 }
