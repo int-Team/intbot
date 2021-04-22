@@ -4,7 +4,7 @@
     "description": "intbot",
     "main": "app.js",
     "scripts": {
-        "start": "node app.js"
+        "start": "node struct/Shard.js"
     },
     "author": "int",
     "license": "MIT",
