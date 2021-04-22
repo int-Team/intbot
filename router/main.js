@@ -6,7 +6,6 @@ const Oauth = new DiscordOauth2({
     clientSecret: process.env.CLIENT_SECRET,
     redirectUri: process.env.REDIRECT_URI
 });
-// 세션챗 와바
 
 module.exports =
   /**
