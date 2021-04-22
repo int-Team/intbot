@@ -1,67 +1,73 @@
-const Discord = require('discord.js');
-const MusicClient = require('./struct/Client');
-const { Collection } = require('discord.js');
+// Dependencies
+const Discord = require("discord.js");
+const MusicClient = require("./struct/Client");
+const fs = require("fs");
+const ascii = require("ascii-table");
+const table = new ascii().setHeading("Command", "Load Status");
+const { DB_PW, token, prefix } = require("./config.json");
+const MongoDB = require("mongodb");
+
+
+// Variables 
+require("dotenv").config();
+const PORT = process.env.PORT || 5001;
+
+// Discord bot client
 const client = new MusicClient();
-const fs = require('fs');
-require('dotenv').config();
-const ascii = require('ascii-table');
-const table = new ascii().setHeading('Command', 'Load Status');
-client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
-const axios = require('axios').default;
-const config = require("./config.json");
-const DB_PW = config.dbpw;
-const token = config.token;
-const MongoDB = require('mongodb');
-const DBClient = new MongoDB.MongoClient(`mongodb+srv://int:${DB_PW}@cluster0.gk8if.mongodb.net/intbot?retryWrites=true&w=majority`, {
+
+
+// Database (mongodb+srv://int:${DB_PW}@cluster0.gk8if.mongodb.net/intbot?retryWrites=true&w=majority)
+client.db = undefined;
+client.dbchannels = undefined;
+const DBClient = new MongoDB.MongoClient(`mongodb://inttest:intbabo1@cluster0-shard-00-00.pd6jy.mongodb.net:27017,cluster0-shard-00-01.pd6jy.mongodb.net:27017,cluster0-shard-00-02.pd6jy.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-1ywkc2-shard-0&authSource=admin&retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
-//mongodb+srv://int:${DB_PW}@cluster0.gk8if.mongodb.net/intbot?retryWrites=true&w=majority
-client.db = undefined;
-client.dbchannels = undefined;
 DBClient.connect().then(() => {
-    client.db = DBClient.db('intbot').collection('main');
-    client.goods = DBClient.db('intbot').collection('goods');
-    client.dbchannels = DBClient.db('intbot').collection('channels');
+    client.db = DBClient.db("intbot").collection("main");
+    client.goods = DBClient.db("intbot").collection("goods");
+    client.dbchannels = DBClient.db("intbot").collection("channels");
 });
 
+// Web
+const express = require("express");
+const logger = require("morgan");
+const session = require("express-session");
+const app = express();
 
-const express = require('express');
-const favicon = require('serve-favicon');
-const logger = require('morgan');
-const bodyParser = require('body-parser');
-let app = express();
-const prefix = "인트야"
+// Web: Middlewares
+app.set("views", __dirname + "/views");
+app.set("view engine", "ejs");
+app.engine("html", require("ejs").renderFile);
+app.use(express.static("public"));
+app.use(logger("dev"));
+app.use(express.urlencoded({extended: false}));
+app.use(session({
+    secret: "asdfasfmklam3mkm;'MKGH:@90-t",
+    resave: false,
+    saveUninitialized: true,
+}));
 
-let port = 5001;
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
-app.engine('html', require('ejs').renderFile);
+require("./router/main")(app, client);
 
-app.use(express.static('public'));
-app.use(bodyParser.urlencoded({extended: false}));
-
-
-require('./router/main')(app, client);
-
-app.listen(port, () => {
-    console.log(`Server on : ${port}`);
+app.listen(PORT, () => {
+    console.log(`Server on : ${PORT}`);
 })
 
-
-fs.readdir('./commands/', (err, list) => {
+// Discord bot setting
+fs.readdir("./commands/", (err, list) => {
     for (let file of list) {
         try {
             let pull = require(`./commands/${file}`);
             if (pull.name && pull.run && pull.aliases) {
-                table.addRow(file, '✅');
+                table.addRow(file, "✅");
                 for (let alias of pull.aliases) {
                     client.aliases.set(alias, pull.name);
                 }
                 client.commands.set(pull.name, pull);
             } else {
-                table.addRow(file, '❌ -> Error');
+                table.addRow(file, "❌ -> Error");
                 continue;
             }
         } catch (e) { 
@@ -72,72 +78,70 @@ fs.readdir('./commands/', (err, list) => {
     console.log(table.toString());
 });
 
-
-client.on('ready', () => {
-    let serverNum = client.guilds.cache.size;
-    console.log(`Logged in as ${client.user.username}\n-----------------------`);
+client.on("ready", () => {
+    console.log(`Logged on ${client.user.username}\n-----------------------`);
     setInterval(() => {
         switch (Math.floor(Math.random() * 6)) {
             case 0:
                 client.user.setPresence({
-                    status: 'online',
+                    status: "online",
                     activity: {
                         name: `${client.guilds.cache.size}개의 서버에서 활동중!`,
-                        type: 'PLAYING'
+                        type: "PLAYING"
                     }
                 });
                 break;
             case 1:
                 client.user.setPresence({
-                    status: 'online',
+                    status: "online",
                     activity: {
-                        name: `이 말은 10초마다 바뀐다는 사실을 아셨나요?`,
-                        type: 'PLAYING'
+                        name: "이 말은 10초마다 바뀐다는 사실을 아셨나요?",
+                        type: "PLAYING"
                     }
                 });
                 break;
             case 2:
                 client.user.setPresence({
-                    status: 'online',
+                    status: "online",
                     activity: {
-                        name: `접두사는 인트야 입니다!`,
-                        type: 'PLAYING'
+                        name: "접두사는 인트야 입니다!",
+                        type: "PLAYING"
                     }
                 });
                 break;
             case 3:
                 client.user.setPresence({
-                    status: 'online',
+                    status: "online",
                     activity: {
-                        name: `이 봇은 사실 아직 베타 버전이랍니다!`,
-                        type: 'PLAYING'
+                        name: "이 봇은 사실 아직 베타 버전이랍니다!",
+                        type: "PLAYING"
                     }
                 });
                 break;
             case 4:
                 client.user.setPresence({
-                    status: 'online',
+                    status: "online",
                     activity: {
-                        name: `인트봇의 문의/신고는 인트야 문의 [내용]!`,
-                        type: 'PLAYING'
+                        name: "인트봇의 문의/신고는 인트야 문의 [내용]!",
+                        type: "PLAYING"
                     }
                 });
                 break;
             case 5:
                 client.user.setPresence({
-                    status: 'online',
+                    status: "online",
                     activity: {
-                        name: `인트야 초대로 인트봇을 자신의 서버에 초대해보세요!`,
-                        type: 'PLAYING'
+                        name: "인트야 초대로 인트봇을 자신의 서버에 초대해보세요!",
+                        type: "PLAYING"
                     }
                 });
                 break;
             case 6:
                 client.user.setPresence({
-                    status: 'online',
+                    status: "online",
                     activity: {
-                        name: `인트야 도움`,
-                        type: 'PLAYING'
+                        name: "인트야 도움",
+                        type: "PLAYING"
                     }
                 });
                 break;
@@ -162,36 +166,38 @@ client.on('ready', () => {
     */
 });
 
-
-client.on('message', async message => {
-    const args = message.content.slice(prefix.length).trim().split(/ +/g);
-    const cmd = args.shift().toLowerCase();
+client.on("message", async message => {
     if (message.author.bot) return;
-    if (!(await client.db.findOne({_id: message.author.id}))) return;
 
-    if((await client.db.findOne({_id: message.author.id})).xp >= 100){
+    let user = await client.db.findOne({_id: message.author.id});
+    let channel = await client.dbchannels.findOne({_id: message.guild.id});
+
+    if (!user)
+        return;
+    if(user.xp >= 100){
         await client.db.updateOne({_id: message.author.id}, {
             $set: {
-                level: ((await client.db.findOne({_id: message.author.id})).level + 1),
-                xp: ((await client.db.findOne({_id: message.author.id})).xp = 0)
+                level: user.level + 1,
+                xp: user.xp = 0,
             }
-        })
-        if(!(await client.dbchannels.findOne({_id: message.guild.id}).alarm)) return;
-        message.channel.send(`${(await client.db.findOne({_id: message.author.id})).level}으로 레벨업 하셨습니다.`)
+        });
+        if(channel.alarm)
+            return;
+        
+        message.channel.send(`${user.level}으로 레벨업 하셨습니다.`);
     } else {
         await client.db.updateOne({_id: message.author.id}, {
             $set: {
-                xp: ((await client.db.findOne({_id: message.author.id})).xp + 1)
+                xp: user.xp + 1,
             }
         });
     }
 });
 
-
-client.on('message', async message => {
+client.on("message", async message => {
     if (message.author.bot) return;
     if (!message.content.startsWith(prefix)) return;
-    let args = message.content.substr(prefix.length).trim().split(' ');
+    let args = message.content.substr(prefix.length).trim().split(" ");
     if (client.commands.get(args[0])) {
         client.commands.get(args[0]).run(client, message, args);
     } else if (client.aliases.get(args[0])) {
@@ -210,8 +216,8 @@ client.on('message', async message => {
         for (let curr of valids) {
             let cnt = 0;
             let i = 0;
-            for (let curlet of curr.split('')) {
-                if (curlet[i] && typed.split('')[i] && curlet[i] == typed.split('')[i]) {
+            for (let curlet of curr.split("")) {
+                if (curlet[i] && typed.split("")[i] && curlet[i] == typed.split("")[i]) {
                     cnt++;
                 }
                 i++;
@@ -222,7 +228,6 @@ client.on('message', async message => {
             }
         }
     }
-
 });
 
 

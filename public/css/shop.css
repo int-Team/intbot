@@ -1,29 +1,34 @@
-html {
-    font-size: 14px;
-  }
-  @media (min-width: 768px) {
-    html {
-      font-size: 16px;
-    }
-  }
+body {
+  background-color: #2C2F33;
+  color: #fff;
+}
 
-  
-  
-  .container {
-    max-width: 960px;
-  }
-  
-  .pricing-header {
-    max-width: 700px;
-  }
-  
-  .card-deck .card {
-    min-width: 220px;
-  }
-  
-  .border-top { border-top: 1px solid #e5e5e5; }
-  .border-bottom { border-bottom: 1px solid #e5e5e5; }
-  
-  .box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
-  
+.item-container {
+  margin-top: 40px;
+  margin-left: 5em;
+  margin-right: 5em;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10%, auto));
+  grid-template-rows: repeat(3, 300px);
+  gap: 25px 25px;
+}
 
+.item {
+  background-color: #23272A;
+  border-radius: 15px;
+  border: 1px solid black;
+  padding: 18px;
+}
+
+.item .item-title {
+  font-size: 24px;
+}
+
+.item .item-description {
+  font-size: 18px;
+}
+
+.discord-purple {
+  background-color: #7289DA;
+  color: #fff;
+}
