@@ -5,79 +5,84 @@ module.exports = {
     description: '도박을 해요.',
     usage: '인트야 도박',
     run: async (client, message, args, ops) => {
+		let embedJSON = {
+            title: "주식 상황",
+            color: "GREEN",
+            timestamp: new Date()
+        }
         const developers = [
-            "687866011013218349",
             "745758911012929550",
             "714736989106208791",
-            "418677556322107412",
-            "552103947662524416"
+            "418677556322107412"
         ]
-        const amount = args[1]
-        if(Number(amount)<0) return message.channel.send("자연수만 지원됩니다.")
-        if (developers.includes(message.author.id)) return message.channel.send(`인트봇의 개발자라 도박이 불가능해요!`);
-        if (!(await client.db.findOne({_id: message.author.id}))) {
-            const embed = new Discord.MessageEmbed()
-            .setTitle('인트봇의 서비스에 가입되어있지 않아요.')
-            .setDescription('`인트야 가입`을 이용해서 먼저 가입해주세요!')
-            .setColor('RANDOM')
-            .setFooter(message.author.tag, message.author.displayAvatarURL())
-            .setTimestamp()
-            message.channel.send(embed);
-        } else {
-            if ((await client.db.findOne({_id: message.author.id})).money < amount) {
-                const embed = new Discord.MessageEmbed()
-                .setTitle('돈이 부족해요.')
-                .setDescription(`저런....`)
-                .setColor('RANDOM')
-                .setFooter(message.author.tag, message.author.displayAvatarURL())
-                .setTimestamp()
-                message.channel.send(embed);
-            } else if(isInt(amount)){
-                const num = Math.floor(Math.random() * Math.floor(100))
-                if(num < 49){
-                    await client.db.updateOne({_id: message.author.id}, {
-                        $set: {
-                            money: Number(((await client.db.findOne({_id: message.author.id})).money) + Number(amount))
-                        }
-                    });
-                    const embed = new Discord.MessageEmbed()
-                    .setTitle('도박 성공!')
-                    .setDescription(`현재 보유 금액은 ${(await client.db.findOne({_id: message.author.id})).money}원이에요.`)
-                    .setColor('RANDOM')
-                    .setFooter(message.author.tag, message.author.displayAvatarURL())
-                    .setTimestamp()
-                    message.channel.send(embed);
-                } else if(num < 51) {
-                    await client.db.updateOne({_id: message.author.id}, {
-                        $set: {
-                            money: Number(((await client.db.findOne({_id: message.author.id})).money) + (Number(amount) * 10))
-                        }
-                    });
-                    const embed = new Discord.MessageEmbed()
-                    .setTitle('잭팟이 터졌다!!')
-                    .setDescription(`현재 보유 금액은 ${(await client.db.findOne({_id: message.author.id})).money}원이에요.`)
-                    .setColor('RANDOM')
-                    .setFooter(message.author.tag, message.author.displayAvatarURL())
-                    .setTimestamp()
-                    message.channel.send(embed);
-                } else if(num < 100) {
-                    await client.db.updateOne({_id: message.author.id}, {
-                        $set: {
-                            money: ((await client.db.findOne({_id: message.author.id})).money - amount)
-                        }
-                    });
-                    const embed = new Discord.MessageEmbed()
-                    .setTitle('저런... 도박에 실패했어요')
-                    .setDescription(`현재 보유 금액은 ${(await client.db.findOne({_id: message.author.id})).money}원이에요.`)
-                    .setColor('RANDOM')
-                    .setFooter(message.author.tag, message.author.displayAvatarURL())
-                    .setTimestamp()
-                    message.channel.send(embed);
-                }
-            } else{
-                message.channel.send("자연수만 지원됩니다.")
-            }
-        }
+
+			const amount = args[1]
+			if(Number(amount)<0) return message.channel.send("자연수만 지원됩니다.")
+			if (developers.includes(message.author.id)) return message.channel.send(`인트봇의 개발자라 도박이 불가능해요!`);
+		
+			if (!(await client.db.findOne({_id: message.author.id}))) {
+				const embed = new Discord.MessageEmbed()
+				.setTitle('인트봇의 서비스에 가입되어있지 않아요.')
+				.setDescription('`인트야 가입`을 이용해서 먼저 가입해주세요!')
+				.setColor('RED')
+				.setFooter(message.author.tag, message.author.displayAvatarURL())
+				.setTimestamp()
+				message.channel.send(embed);
+			} else {
+				if ((await client.db.findOne({_id: message.author.id})).money < amount) {
+					const embed = new Discord.MessageEmbed()
+					.setTitle('돈이 부족해요.')
+					.setDescription(`저런....`)
+					.setColor('RED')
+					.setFooter(message.author.tag, message.author.displayAvatarURL())
+					.setTimestamp()
+					message.channel.send(embed);
+				} else if(isInt(amount)){
+					const num = Math.floor(Math.random() * Math.floor(200))
+					if(num < 9){
+						await client.db.updateOne({_id: message.author.id}, {
+							$set: {
+								money: Number(((await client.db.findOne({_id: message.author.id})).money) + Number(amount))
+							}
+						});
+						const embed = new Discord.MessageEmbed()
+						.setTitle('도박 성공!')
+						.setDescription(`현재 보유 금액은 ${(await client.db.findOne({_id: message.author.id})).money}원이에요.`)
+						.setColor('GREEN')
+						.setFooter(message.author.tag, message.author.displayAvatarURL())
+						.setTimestamp()
+						message.channel.send(embed);
+					} else if(num < 55) {
+						await client.db.updateOne({_id: message.author.id}, {
+							$set: {
+								money: Number(((await client.db.findOne({_id: message.author.id})).money) + (Number(amount) * 10))
+							}
+						});
+						const embed = new Discord.MessageEmbed()
+						.setTitle('잭팟이 터졌다!!')
+						.setDescription(`현재 보유 금액은 ${(await client.db.findOne({_id: message.author.id})).money}원이에요.`)
+						.setColor('RANDOM')
+						.setFooter(message.author.tag, message.author.displayAvatarURL())
+						.setTimestamp()
+						message.channel.send(embed);
+					} else if(num < 200) {
+						await client.db.updateOne({_id: message.author.id}, {
+							$set: {
+								money: ((await client.db.findOne({_id: message.author.id})).money - amount)
+							}
+						});
+						const embed = new Discord.MessageEmbed()
+						.setTitle('저런... 도박에 실패했어요')
+						.setDescription(`현재 보유 금액은 ${(await client.db.findOne({_id: message.author.id})).money}원이에요.`)
+						.setColor('YELLOW')
+						.setFooter(message.author.tag, message.author.displayAvatarURL())
+						.setTimestamp()
+						message.channel.send(embed);
+					}
+				} else {
+					message.channel.send("자연수만 지원됩니다.")
+				}
+			} 
     }
 }
 

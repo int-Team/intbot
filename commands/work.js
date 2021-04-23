@@ -8,13 +8,12 @@ module.exports = {
     usage: '인트야 일하기',
     run: async (client, message, args, ops) => {
         const developers = [
-            "687866011013218349",
             "745758911012929550",
             "714736989106208791",
             "418677556322107412",
             "552103947662524416"
         ]
-        const koreanbottoken = require('../config.json').koreanbots;
+        const koreanbottoken = process.env.KTOKEN;
         var workname = ['어떤유저의 컴퓨터를 수리를 하여', '똥같은 웹사이트를 만들어 ', '인트 사살 미션을 성공하여', '뉴스를 적어', 'Docker 컨테이너를 만들어', '주식 투자해서', 'CU에 알바해서', '복권 당첨해서'];
         var randommsg = Math.floor(Math.random() * workname.length);
         let noKbotsAcn
@@ -30,14 +29,14 @@ module.exports = {
         } else {
             axios.get(`https://api.koreanbots.dev/bots/voted/${message.author.id}`, {
                 headers: {
-                    token: require('../config.json').koreanbots
+                    token: koreanbottoken
                 }
             }).catch(() => {
 
             })
             if ((await axios.get(`https://api.koreanbots.dev/bots/voted/${message.author.id}`, {
                 headers: {
-                    token: require('../config.json').koreanbots
+                    token: koreanbottoken
                 },
                 validateStatus: function (status) {
                     return status == 404 || 200;

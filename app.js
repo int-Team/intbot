@@ -6,13 +6,13 @@ const ascii = require("ascii-table");
 const table = new ascii().setHeading("Command", "Load Status");
 const MongoDB = require("mongodb");
 
+
+// Variables 
+require('dotenv').config();
+const PORT = process.env.PORT || 5001;
 const DB_PW = process.env.DB_PW
 const token = process.env.BOT_TOKEN
 const prefix = '인트야'
-
-// Variables 
-require("dotenv").config();
-const PORT = process.env.PORT || 5001;
 
 // Discord bot client
 const client = new MusicClient();
@@ -29,6 +29,9 @@ DBClient.connect().then(() => {
     client.db = DBClient.db("intbot").collection("main");
     client.goods = DBClient.db("intbot").collection("goods");
     client.dbchannels = DBClient.db("intbot").collection("channels");
+	client.stock = DBClient.db("intbot").collection("stock")
+	
+	console.log("[DataBase] MongoDB Connected.")
 });
 
 // Web
@@ -79,8 +82,50 @@ fs.readdir("./commands/", (err, list) => {
     console.log(table.toString());
 });
 
+
+// Stock
+const min = 50 - 20;
+const stock = 50;
+
+function float2int(value) {
+    return value | 0;
+}
+setInterval(() => {
+
+    client.stock.findOneAndUpdate(
+        { _id: 'work' },
+        { $set: { money: float2int(Math.random() * (min * -2) + min) + stock } }
+    );
+
+    client.stock.findOneAndUpdate(
+        { _id: 'bot' },
+        { $set: { money: float2int(Math.random() * (min * -2) + min) + stock } }
+    );
+
+    client.stock.findOneAndUpdate(
+        { _id: 'kimbab' },
+        { $set: { money: float2int(Math.random() * (min * -2) + min) + stock } }
+    );
+
+    client.stock.findOneAndUpdate(
+        { _id: 'penguin' },
+        { $set: { money: float2int(Math.random() * (min * -2) + min) + stock } }
+    );
+
+    client.stock.findOneAndUpdate(
+        { _id: 'mcint' },
+        { $set: { money: float2int(Math.random() * (min * -2) + min) + stock } }
+    );
+
+    client.stock.findOneAndUpdate(
+        { _id: 'sujang' },
+        { $set: { money: float2int(Math.random() * (min * -2) + min) + stock } }
+    );
+    console.log("[200] Ok")
+}, 300000);
+// Ready!
 client.on("ready", () => {
-    console.log(`Logged on ${client.user.username}\n-----------------------`);
+    console.log(`[Bot] Logged on ${client.user.username}`);
     setInterval(() => {
         switch (Math.floor(Math.random() * 6)) {
             case 0:
@@ -167,7 +212,9 @@ client.on("ready", () => {
 
 client.on("message", async message => {
     if (message.author.bot) return;
-
+	if(!await client.db.findOne({_id: message.author.id})) {
+		return;
+	}
     let user = await client.db.findOne({_id: message.author.id});
     let channel = await client.dbchannels.findOne({_id: message.guild.id});
 

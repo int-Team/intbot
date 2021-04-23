@@ -7,7 +7,7 @@ module.exports = {
     description: '1시간에 한번씩 돈을 받아요.',
     usage: '인트야 돈받기',
     run: async (client, message, args, ops) => {
-        const koreanbottoken = require('../config.json').koreanbots;
+        const koreanbottoken = process.env.KTOKEN;
         let noKbotsAcn
         if (!(await client.db.findOne({_id: message.author.id}))) {
             const embed = new Discord.MessageEmbed()
@@ -20,14 +20,14 @@ module.exports = {
         } else {
             axios.get(`https://api.koreanbots.dev/bots/voted/${message.author.id}`, {
                 headers: {
-                    token: require('../config.json').koreanbots
+                    token: koreanbottoken
                 }
-            }).catch(() => {
-
+            }).catch( (e) => {
+				message.channel.send(`저런... 개발중에 뭘 잘못 건든거 같네요. 개발자들이 이 오류를 보면 얼마나 스트래쓰를 받을지는 모르겠지만 일단 보낼께요. \n${e}`)
             })
             if ((await axios.get(`https://api.koreanbots.dev/bots/voted/${message.author.id}`, {
                 headers: {
-                    token: require('../config.json').koreanbots
+                    token: koreanbottoken
                 },
                 validateStatus: function (status) {
                     return status == 404 || 200;
