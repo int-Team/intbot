@@ -6,19 +6,28 @@ const ascii = require("ascii-table");
 const table = new ascii().setHeading("Command", "Load Status");
 const MongoDB = require("mongodb");
 
-const DB_PW = process.env.DB_PW
-const token = process.env.BOT_TOKEN
-const prefix = '인트야'
+
 
 // Variables 
 require("dotenv").config();
 const PORT = process.env.PORT || 5001;
+const DB_PW = process.env.DB_PW
+const token = process.env.BOT_TOKEN
+const prefix = '인트야'
 
 // Discord bot client
 const client = new MusicClient();
 client.aliases = new Discord.Collection();
+client.developers = [
+    "687866011013218349",
+    "745758911012929550",
+    "714736989106208791",
+    "418677556322107412",
+    "552103947662524416",
+    "647736678815105037"
+]
 
-
+// Database
 client.db = undefined;
 client.dbchannels = undefined;
 const DBClient = new MongoDB.MongoClient(`mongodb+srv://int:${DB_PW}@cluster0.gk8if.mongodb.net/intbot?retryWrites=true&w=majority`, {

@@ -1,12 +1,4 @@
 const Discord = require('discord.js');
-const developers = [
-    "687866011013218349",
-    "745758911012929550",
-    "714736989106208791",
-    "418677556322107412",
-    "552103947662524416",
-    "647736678815105037"
-]
 const xpmoney = {
    "돈": {money:-1},
    "레벨": {level:-1}
@@ -61,7 +53,7 @@ const getRank = async (option, client, message) => {
         if (realRankArr.length == 5) {
             break;
         } else {
-            if (!developers.includes(rankArr[i]._id)) {
+            if (!client.developers.includes(rankArr[i]._id)) {
                 realRankArr.push(rankArr[i]);
             } else {
                 continue;
