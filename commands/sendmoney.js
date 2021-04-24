@@ -11,8 +11,8 @@ module.exports = {
 
 
         const userID = args[1].replace(/[<@!]/g, '').replace('>', '');
-        let count = Number(args[2]);
-        let toUserDB = await client.db.findOne({_id: userID});
+		let count = Number(args[2]) ;
+		let toUserDB = await client.db.findOne({_id: userID});
         let meUserDB = await client.db.findOne({_id: message.author.id});
         if (userID == message.author.id) return message.reply(new MessageEmbed()
                 .setColor("YELLOW")
@@ -37,7 +37,7 @@ module.exports = {
                 let embed = new MessageEmbed()
                 .setTitle('정말로 송금할까요?')
                 .setColor("YELLOW")
-                .setDescription(`${dscUSER.tag} 님 에게 ${count} 만큼의 돈을 주고 ${total} 만큼의 이 남습니다!`)
+                .setDescription(`${dscUSER.tag} 님 에게 ${count} 만큼의 돈을 주고 ${total} 만큼의 이 남습니다! 수수료로 200원이 차감됩니다.`)
                 .setTimestamp()
                 .setFooter(`${message.author.tag}\u200b`, message.author.displayAvatarURL({
                     dynamic: true,
@@ -57,7 +57,7 @@ module.exports = {
                     if (reaction.emoji.name === '✅') {
                         client.db.findOneAndUpdate({_id: message.author.id}, {
                             $set: {
-                                money: total
+                                money: total - 200
                             }
                         })
                         client.db.findOneAndUpdate({_id: userID}, {
@@ -68,7 +68,7 @@ module.exports = {
                         embed.setTitle("송금ㅣ성공")
                         .setDescription(`성공적으로 유저에게 돈을 보냈습니다`)
                         .addField(`${dscUSER.tag}`, `${toUserDB.money + count} money`)
-                        .addField(`${message.author.tag}`, `${total} money`)
+                        .addField(`${message.author.tag}`, `${total - 200} money`)
                         .setColor("GREEN")
                         .setFooter(`${message.author.tag}\u200b`, message.author.displayAvatarURL({
                             dynamic: true,

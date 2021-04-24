@@ -14,24 +14,60 @@ const DB_PW = process.env.DB_PW
 const token = process.env.BOT_TOKEN
 const prefix = '인트야'
 
+
+// Functions
+function float2int(value) {
+    return value | 0;
+}
+
+
 // Discord bot client
 const client = new MusicClient();
 client.aliases = new Discord.Collection();
+client.developers = [
+    "687866011013218349",
+    "745758911012929550",
+    "714736989106208791",
+    "418677556322107412",
+    "552103947662524416",
+    "647736678815105037"
+]
 
-
+// Database
 client.db = undefined;
 client.dbchannels = undefined;
 const DBClient = new MongoDB.MongoClient(`mongodb+srv://int:${DB_PW}@cluster0.gk8if.mongodb.net/intbot?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
+
 DBClient.connect().then(() => {
     client.db = DBClient.db("intbot").collection("main");
     client.goods = DBClient.db("intbot").collection("goods");
     client.dbchannels = DBClient.db("intbot").collection("channels");
-	client.stock = DBClient.db("intbot").collection("stock")
+	client.stock = DBClient.db("intbot").collection("stock");
 	
-	console.log("[DataBase] MongoDB Connected.")
+	console.log("[DataBase] MongoDB Connected.");
+	
+	setInterval(async () => {
+		const stock_v = 50;
+		const stock_min = stock_v - 20;
+
+		const stocks = await client.stock.find().toArray()
+		client.lastStockUpdate = Date.now()
+
+		for (let stock of stocks) {
+			client.stock.updateOne({_id: stock._id}, {
+				$set: {
+					money: float2int(Math.random() * (stock_min * -2) + stock_min) + stock_v,
+					previous: stock.money,
+				}
+			})
+		}
+
+		console.log("[Stock] Update")
+	}, 3000);
+	client.login(token);
 });
 
 // Web
@@ -83,46 +119,6 @@ fs.readdir("./commands/", (err, list) => {
 });
 
 
-// Stock
-const min = 50 - 20;
-const stock = 50;
-
-function float2int(value) {
-    return value | 0;
-}
-setInterval(() => {
-
-    client.stock.findOneAndUpdate(
-        { _id: 'work' },
-        { $set: { money: float2int(Math.random() * (min * -2) + min) + stock } }
-    );
-
-    client.stock.findOneAndUpdate(
-        { _id: 'bot' },
-        { $set: { money: float2int(Math.random() * (min * -2) + min) + stock } }
-    );
-
-    client.stock.findOneAndUpdate(
-        { _id: 'kimbab' },
-        { $set: { money: float2int(Math.random() * (min * -2) + min) + stock } }
-    );
-
-    client.stock.findOneAndUpdate(
-        { _id: 'penguin' },
-        { $set: { money: float2int(Math.random() * (min * -2) + min) + stock } }
-    );
-
-    client.stock.findOneAndUpdate(
-        { _id: 'mcint' },
-        { $set: { money: float2int(Math.random() * (min * -2) + min) + stock } }
-    );
-
-    client.stock.findOneAndUpdate(
-        { _id: 'sujang' },
-        { $set: { money: float2int(Math.random() * (min * -2) + min) + stock } }
-    );
-    console.log("[200] Ok")
-}, 300000);
 // Ready!
 client.on("ready", () => {
     console.log(`[Bot] Logged on ${client.user.username}`);
@@ -227,7 +223,7 @@ client.on("message", async message => {
                 xp: user.xp = 0,
             }
         });
-        if(channel.alarm)
+        if(channel.alram)
             return;
         
         message.channel.send(`${user.level}으로 레벨업 하셨습니다.`);
@@ -275,6 +271,3 @@ client.on("message", async message => {
         }
     }
 });
-
-
-client.login(token);
