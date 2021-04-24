@@ -11,13 +11,13 @@ module.exports = {
                 message.channel.send('해당 명령어가 없어요. `인트야 도움`를 입력해 모든 명령어를 확인해보세요.');
             } else {
                 const embed = new Discord.MessageEmbed()
-                    .setTitle(cmd.name)
-                    .setColor('RANDOM')
-                    .addField('인식하는 명령어', cmd.aliases.map(x => `\`${x}\``).join(', '))
-                    .addField('설명', cmd.description)
-                    .addField('사용법', cmd.usage)
-                    .setFooter(message.author.tag, message.author.displayAvatarURL())
-                    .setTimestamp();
+                .setTitle(cmd.name)
+                .setColor('RANDOM')
+                .addField('인식하는 명령어', cmd.aliases.map(x => `\`${x}\``).join(', '))
+                .addField('설명', cmd.description)
+                .addField('사용법', cmd.usage)
+                .setFooter(message.author.tag, message.author.displayAvatarURL())
+                .setTimestamp();
                 message.channel.send({
                     embed: embed
                 });
