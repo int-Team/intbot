@@ -47,7 +47,7 @@ DBClient.connect().then(() => {
     client.dbchannels = DBClient.db("intbot").collection("channels");
 	client.stock = DBClient.db("intbot").collection("stock");
 	
-	console.log("[DataBase] MongoDB Connected.");
+	console.log("[Database] MongoDB Connected.");
 	
 	setInterval(async () => {
 		const stock_v = 50;
@@ -67,6 +67,7 @@ DBClient.connect().then(() => {
 
 		console.log("[Stock] Update")
 	}, 300000);
+	
 	client.login(token);
 });
 
@@ -84,7 +85,7 @@ app.use(express.static("public"));
 app.use(logger("dev"));
 app.use(express.urlencoded({extended: false}));
 app.use(session({
-    secret: "asdfasfmklam3mkm;'MKGH:@90-t",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
 }));
