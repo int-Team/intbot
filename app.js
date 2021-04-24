@@ -25,7 +25,7 @@ client.developers = [
     "418677556322107412",
     "552103947662524416",
     "647736678815105037"
-]
+];
 
 // Database
 client.db = undefined;
