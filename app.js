@@ -66,7 +66,7 @@ DBClient.connect().then(() => {
 		}
 
 		console.log("[Stock] Update")
-	}, 3000);
+	}, 300000);
 	client.login(token);
 });
 
