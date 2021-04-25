@@ -21,51 +21,53 @@ module.exports = {
         if (!stock_result[0])
             return message.reply('해당 주식이 없습니다')
         
-        
         let user = await client.db.findOne({ _id: message.author.id });
 		let stock = await client.stock.findOne({ _id: stock_result[0]._id });
 		
         if (!user.stock)
-            return message.reply("이런 주식을 사지 않은거 같은데.. `.주식`을 보고 `.매수 [주식 이름] [수량]`로 주식을 사보세요.")
+            return message.reply("이런! 주식을 사지 않은거 같은데.. `인트야 주식`을 보고 `인트야 매수 [주식 이름] [수량]`로 주식을 사보세요!")
+        if (!user.stock[stock.code])
+            return message.reply("해당 주식을 가지고 있지 않아요!")
         
-		user = await client.db.findOne({ _id: message.author.id });
-		var num = 0
-    	var mon = 0
-		var dived = 0
-    	var total = 0
-		var all = user.stock[stock_result[0].code] || 0
+        let 팔려고하는주식_수량 = 0;
+        let 팔려고하는주식_돌려받을금액 = 0;
+        let 남은주식 = 0;
+        let 돈_잔고 = 0;
 		if (['전부', '올인', '모두', 'all', '올'].includes(args[2])) {
-			num = all;
-			total = num * stock.money;
-			dived = Number(user.money) + total;
+			팔려고하는주식_수량 = user.stock[stock.code];
+            팔려고하는주식_돌려받을금액 = user.stock[stock.code] * stock.money;
+            남은주식 = 0;
+            돈_잔고 = user.money + 팔려고하는주식_돌려받을금액
 		} else if (['반인', '반', 'half', '핲', '하프'].includes(args[2])) {
-			num = Math.floor(all / 2)
-			total = num * stock.money;
-			dived = Number(user.money) + total;
-		} else if (
-			isNaN(Number(args[2])) ||
-			!Number.isInteger(Number(args[2])) ||
-			Number(args[2]) < 1 ||
-			Number(args[2]) == Infinity
-		) {
-			return message.reply('사용법: ```.매수 [주식 이름] (0 이상의 숫자 Infinity 이하)```');
+			팔려고하는주식_수량 = Math.floor(user.stock[stock.code] / 2)
+			팔려고하는주식_돌려받을금액 = 팔려고하는주식_수량 * stock.money;
+            남은주식 = user.stock[stock.code] - 팔려고하는주식_수량;
+            돈_잔고 = user.money + 팔려고하는주식_돌려받을금액
 		} else {
-			num = Number(args[2]);
-			total = num * stock.money;
-			dived = Number(user.money) + total;
-		}
-		if (num > all) return
-			message.reply("판매하실 주식을 소지하고 있지 않습니다.")
-		
-		if (!user.stock[stock_result[0].code]) user.stock[stock_result[0].code] = num
-		else user.stock[stock_result[0].code] -= num
+            if (isNaN(args[2]))
+                return message.reply(`사용법\`\`\`인트야 매도 [주식] [수량]\`\`\``);
+            args[2] = Number(args[2]);
+            if (args[2] >= Infinity) 
+                return message.reply(`사용법\`\`\`인트야 매도 [주식] [수량]\`\`\``);
+            if (args[2] - user.stock[stock.code] < 0)
+                return message.reply('주식이 부족해요!')
+            
+            팔려고하는주식_수량 = args[2];
+            팔려고하는주식_돌려받을금액 = 팔려고하는주식_수량 * stock.money;
+            남은주식 = user.stock[stock.code] - 팔려고하는주식_수량;
+            돈_잔고 = user.money + 팔려고하는주식_돌려받을금액
+        }
 		
 		const chkSell = new MessageEmbed()
 			.setTitle('🧾청구서')
 			.setDescription(
 				`매도하려는 주식 : ${
 					stock_result[0].name
-				}\n수량 : ${num}\n받을 금액 : ${total} :coin:\n계속하시려면 💳 이모지로 반응하세요.`
+				}\n수량 : ${
+                    팔려고하는주식_수량
+                }\n받을 금액 : ${
+                    팔려고하는주식_돌려받을금액
+                } :coin:\n계속하시려면 💳 이모지로 반응하세요.`
 			)
 			.setTimestamp()
 			.setColor('YELLOW')
@@ -80,36 +82,33 @@ module.exports = {
 		const filter = (reaction, u) => reaction.emoji.name === '💳' && u.id === message.author.id;
         
         ask.react('💳');
-        ask
-        .awaitReactions(filter, { max: 1, time: 10000, error: ['time'] })
+        ask.awaitReactions(filter, { max: 1, time: 10000, error: ['time'] })
         .then(
             async collected => {
+                const emoji = collected.first().emoji;
+                
                 let embed = new MessageEmbed();
-                let emoji = collected.get('💳')._emoji; //TypeError: Cannot read property '_emoji' of undefined
                 if (emoji.name === '💳') {
-                    embed.setTitle("💳판매완료")
+                    embed.setTitle("💳 판매완료")
                         .setDescription(
                             `주식 : ${
                                 stock_result[0].name
                             }\n수량 : ${
-                                num
-                            }주\n받을 금액 금액 : ${
-                                total
+                                팔려고하는주식_수량
+                            }주\n받을 금액 : ${
+                                팔려고하는주식_돌려받을금액
                             } :coin:\n잔고 : ${
-                                dived
+                                돈_잔고
                             } :coin:`
                         )
                         .setColor('GREEN')
                         .setTimestamp();
 
-                    if (!user.stock[stock_result[0].code])
-                        user.stock[stock_result[0].code] = Number(num);
-                    else
-                        user.stock[stock_result[0].code] -= Number(num)
+                    user.stock[stock.code] -= Number(팔려고하는주식_수량);
                     
                     await client.db.updateOne({_id: message.author.id}, {
                         $set: {
-                            money: dived,
+                            money: 돈_잔고,
                             stock: user.stock,
                         }
                     });

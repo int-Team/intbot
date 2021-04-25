@@ -25,20 +25,20 @@ module.exports = {
                 previousStockPM = "---";
 			else if (!isNaN(previousStockPM))
                 previousStockPM = "+";        
-			previousStockPM += " ";
             if (previousStockPM == "+")
-                  previousStockPM2 = "▲"
+                  previousStockPM2 = "▲";
             else if (previousStockPM == "-")
-                previousStockPM2 = "▼"
+                previousStockPM2 = "▼";
             else
-                previousStockPM2 = "~"
+                previousStockPM2 = "~";
             
+            previousStockPM += " ";
             let previousStockStr = `${previousStockPM}(${previousStockPM2} ${previousStock})`
 
 			embed
 			.addField(
 			`**${stock.name} (${stock.code})**`,
-			`\`\`\`diff\n${stock.money}\n${previousStockStr}\`\`\``// 버그 고칠려고 했다가 클났네
+			`\`\`\`diff\n${stock.money}\n${previousStockStr}\`\`\``
 			)
 		}
 		embed.addField("\u200b", `마지막 주식 변동 : ${lastUpdate.getHours() + 9}시 ${lastUpdate.getMinutes()}분 ${lastUpdate.getSeconds()}초`)
