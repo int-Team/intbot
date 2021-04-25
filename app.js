@@ -5,7 +5,7 @@ const fs = require("fs");
 const ascii = require("ascii-table");
 const table = new ascii().setHeading("Command", "Load Status");
 const MongoDB = require("mongodb");
-
+const Dokdo = require('dokdo')
 
 // Variables 
 require('dotenv').config();
@@ -52,6 +52,7 @@ DBClient.connect().then(() => {
 		const stock_min = stock_v - 20;
 
 		const stocks = await client.stock.find().toArray()
+		let stockAvg = 0;
 		client.lastStockUpdate = Date.now()
 
 		for (let stock of stocks) {
@@ -61,10 +62,11 @@ DBClient.connect().then(() => {
 					previous: stock.money,
 				}
 			})
+			stockAvg += stock.money
 		}
-
-		console.log("[Stock] Update")
-	}, 300000);
+		
+		console.log("[Stock] Update", stockAvg / stocks.length)
+	}, 100000);
 	
 	client.login(token);
 });
@@ -116,8 +118,14 @@ fs.readdir("./commands/", (err, list) => {
     }
     console.log(table.toString());
 });
+// Dokdo
+
+client.on('message', async message => {
+		const DokdoHandler = new Dokdo(client, { aliases: ['dokdo', 'dok', '독도', '독'], prefix: '인트야 ', owners: client.developers , noPerm: (message) => message.reply('🚫 해당 명령어는 인트봇 관리자 전용 명령어입니다.')})
 
 
+		  DokdoHandler.run(message)
+})
 // Ready!
 client.on("ready", () => {
     console.log(`[Bot] Logged on ${client.user.username}`);
