@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const util = require('util');
-const config = require('../config.json')
+
 module.exports = {
     name: '실행', 
     aliases: ['eval', 'compile', '컴파일', 'evaluate', 'ㄷㅍ미', '채ㅡㅔㅑㅣㄷ', 'ㄷㅍ미ㅕㅁㅅㄷ'],
@@ -42,7 +42,7 @@ ${input}`;
             if (output.length >= 1020) {
                 output = `${output.substr(0, 1010)}...`;
             }
-            output = output.replace(new RegExp(config.token, 'gi'), 'Secret');
+            output = output.replace(new RegExp(process.env.BOT_TOKEN, 'gi'), 'Hamster TOP Secret Information');
             const embed2 = new Discord.MessageEmbed()
                 .setTitle('Eval result')
                 .setColor(0x00ffff)

@@ -12,7 +12,7 @@ module.exports = {
             } else {
                 const embed = new Discord.MessageEmbed()
                 .setTitle(cmd.name)
-                .setColor('RANDOM')
+                .setColor('YELLOW')
                 .addField('인식하는 명령어', cmd.aliases.map(x => `\`${x}\``).join(', '))
                 .addField('설명', cmd.description)
                 .addField('사용법', cmd.usage)
@@ -25,7 +25,7 @@ module.exports = {
         } else {
             const embed = new Discord.MessageEmbed()
                 .setTitle(`${client.user.username} 도움말`)
-                .setColor('RANDOM')
+                .setColor('GREEN')
                 .setFooter(message.author.tag, message.author.displayAvatarURL())
                 .setTimestamp()
                 .setThumbnail(client.user.displayAvatarURL())

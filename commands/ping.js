@@ -7,13 +7,13 @@ module.exports = {
     run: async (client, message, args, ops) => {
         const embed = new Discord.MessageEmbed()
             .setTitle('Pinging...')
-            .setColor('RANDOM')
+            .setColor('ORANGE')
             .setTimestamp()
         let m = await message.channel.send({
             embed: embed
         });
         embed.setTitle('PONG!')
-            .setColor('RANDOM')
+            .setColor('GREEN')
             .setTimestamp()
             .addField('Latency', `${m.createdAt - message.createdAt}ms`)
             .addField('API Latency', `${client.ws.ping}ms`)
