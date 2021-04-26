@@ -532,9 +532,9 @@ discord-oauth2@^2.6.0:
   resolved "https://registry.npmjs.org/discord-oauth2/-/discord-oauth2-2.6.0.tgz"
   integrity sha512-9lEt1Rp9rruFPiVQOPbe2rKJXB40fO2u9Ozjz3n/TlVYnIxCTeohVkNI/c5AoLFDZcSxFc2MtDTf9iG0X7BkRg==
 
-discord.js@latest:
+discord.js@^12.5.3:
   version "12.5.3"
-  resolved "https://registry.npmjs.org/discord.js/-/discord.js-12.5.3.tgz"
+  resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-12.5.3.tgz#56820d473c24320871df9ea0bbc6b462f21cf85c"
   integrity sha512-D3nkOa/pCkNyn6jLZnAiJApw2N9XrIsXUAdThf01i7yrEuqUmDGc7/CexVWwEcgbQR97XQ+mcnqJpmJ/92B4Aw==
   dependencies:
     "@discordjs/collection" "^0.1.6"
