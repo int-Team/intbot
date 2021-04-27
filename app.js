@@ -129,6 +129,7 @@ client.on('message', async message => {
 // Ready!
 client.on("ready", () => {
     console.log(`[Bot] Logged on ${client.user.username}`);
+	client.lastStockUpdate = Date.now()
     setInterval(() => {
         switch (Math.floor(Math.random() * 6)) {
             case 0:
