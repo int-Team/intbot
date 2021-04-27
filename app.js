@@ -52,7 +52,7 @@ DBClient.connect().then(() => {
 		const stock_min = stock_v - 2000;
 
 		const stocks = await client.stock.find().toArray()
-		let stockAvg = 0;
+		let stockAvg = 3000;
 		client.lastStockUpdate = Date.now()
 
 		for (let stock of stocks) {
@@ -66,7 +66,7 @@ DBClient.connect().then(() => {
 		}
 		
 		console.log("[Stock] Update", stockAvg / stocks.length)
-	}, 600000);
+	}, 60000);
 	
 	client.login(token);
 });
@@ -118,6 +118,29 @@ fs.readdir("./commands/", (err, list) => {
     }
     console.log(table.toString());
 });
+
+// READY Stock Update
+client.on("ready", async () => {
+	client.lastStockUpdate = Date.now()
+	const stock_v = 5000;
+	const stock_min = stock_v - 2000;
+
+	const stocks = await client.stock.find().toArray()
+	let stockAvg = 30000;
+	client.lastStockUpdate = Date.now()
+
+	for (let stock of stocks) {
+		client.stock.updateOne({_id: stock._id}, {
+			$set: {
+				money: float2int(Math.random() * (stock_min * -2) + stock_min) + stock_v,
+				previous: stock.money,
+			}
+		})
+		stockAvg += stock.money
+	}
+		
+		console.log("[Stock] Update", stockAvg / stocks.length)
+})
 // Dokdo
 
 client.on('message', async message => {
@@ -129,7 +152,7 @@ client.on('message', async message => {
 // Ready!
 client.on("ready", () => {
     console.log(`[Bot] Logged on ${client.user.username}`);
-	client.lastStockUpdate = Date.now()
+	
     setInterval(() => {
         switch (Math.floor(Math.random() * 6)) {
             case 0:
