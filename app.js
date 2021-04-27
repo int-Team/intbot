@@ -49,7 +49,7 @@ DBClient.connect().then(() => {
 	
 	setInterval(async () => {
 		const stock_v = 5000;
-		const stock_min = stock_v - 20;
+		const stock_min = stock_v - 2000;
 
 		const stocks = await client.stock.find().toArray()
 		let stockAvg = 0;
