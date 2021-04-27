@@ -66,7 +66,7 @@ DBClient.connect().then(() => {
 		}
 		
 		console.log("[Stock] Update", stockAvg / stocks.length)
-	}, 60000);
+	}, 600000);
 	
 	client.login(token);
 });
