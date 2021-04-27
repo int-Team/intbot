@@ -48,7 +48,7 @@ DBClient.connect().then(() => {
 	console.log("[Database] MongoDB Connected.");
 	
 	setInterval(async () => {
-		const stock_v = 50;
+		const stock_v = 5000;
 		const stock_min = stock_v - 20;
 
 		const stocks = await client.stock.find().toArray()
@@ -66,7 +66,7 @@ DBClient.connect().then(() => {
 		}
 		
 		console.log("[Stock] Update", stockAvg / stocks.length)
-	}, 100000);
+	}, 600000);
 	
 	client.login(token);
 });
