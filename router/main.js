@@ -2,7 +2,7 @@ require('dotenv').config();
 const DiscordOauth2 = require("discord-oauth2");
 const Oauth = new DiscordOauth2({
     version: 'v8',
-    clientId: '798709769929621506',
+    clientId: '735713553629315193',
     clientSecret: process.env.CLIENT_SECRET,
     redirectUri: process.env.REDIRECT_URI
 });
@@ -95,7 +95,7 @@ module.exports =
         if (!userDB)
             return res.send(`<script>alert("인트봇 서비스에 가입한 유저가 아니에요!");location.back();</script>`);
         if (userDB.money < merch.price)
-            return res.send(`<script>alert("인트봇 머니가 부족해요!");location.back();</script>`);
+            return res.send(`<script>alert("인트봇 머니가 부족해요!");location.back();location.back();</script>`);
 
         await client.db.updateOne({_id: req.session.user_id}, {
             $set: {
@@ -128,6 +128,7 @@ module.exports =
                   res.render("profile.ejs", {
                       profile_img: discordUser.displayAvatarURL(),
                       username: `${discordUser.username}`,
+					  status: `${client.status}`,
                       tag: `${discordUser.tag}`,
                       money: rank.money.count,
                       level: rank.level.count,
@@ -136,6 +137,7 @@ module.exports =
                       level_rank: rank.level.rank,
                       xp_rank: rank.xp.rank,
                       goods: userDB.goods,
+					  status: client.status,
                   });
               } catch (e) {
                   console.log(e);
