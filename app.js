@@ -13,7 +13,7 @@ require('dotenv').config();
 const PORT = process.env.PORT || 5001;
 const DB_PW = process.env.DB_PW
 const token = process.env.BOT_TOKEN
-const prefix = '바보인트야'
+const prefix = '인트야'
 client.status = '오프라인'
 
 // Functions
@@ -121,7 +121,7 @@ fs.readdir("./commands/", (err, list) => {
 });
 
 // READY Stock Update
-/*client.on("ready", async () => {
+client.on("ready", async () => {
 	client.lastStockUpdate = Date.now()
 	const stock_v = 5000;
 	const stock_min = stock_v - 2000;
@@ -141,7 +141,7 @@ fs.readdir("./commands/", (err, list) => {
 	}
 		
 		console.log("[Stock] Update", stockAvg / stocks.length)
-})*/
+})
 // Dokdo
 
 client.on('message', async message => {
