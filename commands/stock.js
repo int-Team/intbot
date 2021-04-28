@@ -11,7 +11,7 @@ module.exports = {
 
 		let embed = new Discord.MessageEmbed()
 			.setTitle('주식 현황')
-			.setDescription(`다음 변동까지 ${Math.abs((10000 - (Date.now() - client.lastStockUpdate)) / 1000)} 초`)
+			.setDescription(`다음 변동까지 ${600 - Math.abs((10000 - (Date.now() - client.lastStockUpdate)) / 1000)} 초`)
 			.setColor("GREEN")
 			.setFooter('확인한 시간')
 			.setTimestamp();
@@ -39,9 +39,9 @@ module.exports = {
 			.addField(
 			`**${stock.name} (${stock.code})**`,
 			`\`\`\`diff\n${stock.money}\n${previousStockStr}\`\`\``
-			)
+			, true)
 		}
-		embed.addField("\u200b", `마지막 주식 변동 : ${lastUpdate.getHours() + 9}시 ${lastUpdate.getMinutes()}분 ${lastUpdate.getSeconds()}초`)
+		embed.addField("\u200b", `마지막 주식 변동 : ${lastUpdate.getHours() + 9}시 ${lastUpdate.getMinutes()}분 ${lastUpdate.getSeconds()}초`, true)
 
 		message.channel.send(embed)
   }

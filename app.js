@@ -6,21 +6,22 @@ const ascii = require("ascii-table");
 const table = new ascii().setHeading("Command", "Load Status");
 const MongoDB = require("mongodb");
 const Dokdo = require('dokdo')
+const client = new MusicClient();
 
 // Variables 
 require('dotenv').config();
 const PORT = process.env.PORT || 5001;
 const DB_PW = process.env.DB_PW
 const token = process.env.BOT_TOKEN
-const prefix = '인트야'
-
+const prefix = '바보인트야'
+client.status = '오프라인'
 
 // Functions
 function float2int(value) {
     return value | 0;
 }
 // Discord bot client
-const client = new MusicClient();
+
 client.aliases = new Discord.Collection();
 client.developers = [
     "687866011013218349",
@@ -120,7 +121,7 @@ fs.readdir("./commands/", (err, list) => {
 });
 
 // READY Stock Update
-client.on("ready", async () => {
+/*client.on("ready", async () => {
 	client.lastStockUpdate = Date.now()
 	const stock_v = 5000;
 	const stock_min = stock_v - 2000;
@@ -140,7 +141,7 @@ client.on("ready", async () => {
 	}
 		
 		console.log("[Stock] Update", stockAvg / stocks.length)
-})
+})*/
 // Dokdo
 
 client.on('message', async message => {
@@ -151,6 +152,7 @@ client.on('message', async message => {
 })
 // Ready!
 client.on("ready", () => {
+	client.status = '정상 운영중...'
     console.log(`[Bot] Logged on ${client.user.username}`);
 	
     setInterval(() => {
@@ -228,7 +230,7 @@ client.on("ready", () => {
             }, {
                 headers: {
                     'Content-Type': "application/json",
-                    token: require('./config.json').koreanbots
+                    token: process.env.KTOKEN
                 }
             });
         } else {
@@ -239,32 +241,35 @@ client.on("ready", () => {
 
 client.on("message", async message => {
     if (message.author.bot) return;
-	if(!await client.db.findOne({_id: message.author.id})) {
+	if(!await client.db.findOne({_id: message.author.id}) ) {
 		return;
-	}
-    let user = await client.db.findOne({_id: message.author.id});
-    let channel = await client.dbchannels.findOne({_id: message.guild.id});
+	} else if(!await client.dbchannels.findOne({_id: message.guild.id}) ) {
+		return;
+	} else {
+		let user = await client.db.findOne({_id: message.author.id});
+		let channel = await client.dbchannels.findOne({_id: message.guild.id});
 
-    if (!user)
-        return;
-    if(user.xp >= 100){
-        await client.db.updateOne({_id: message.author.id}, {
-            $set: {
-                level: user.level + 1,
-                xp: user.xp = 0,
-            }
-        });
-        if(channel.alram)
-            return;
-        
-        message.channel.send(`${user.level}으로 레벨업 하셨습니다.`);
-    } else {
-        await client.db.updateOne({_id: message.author.id}, {
-            $set: {
-                xp: user.xp + 1,
-            }
-        });
-    }
+		if (!user)
+			return;
+		if(user.xp >= 100){
+			await client.db.updateOne({_id: message.author.id}, {
+				$set: {
+					level: user.level + 1,
+					xp: user.xp = 0,
+				}
+			});
+			if(channel.alram)
+				return;
+
+			message.channel.send(`${user.level}으로 레벨업 하셨습니다.`);
+		} else {
+			await client.db.updateOne({_id: message.author.id}, {
+				$set: {
+					xp: user.xp + 1,
+				}
+			});
+		}
+	}
 });
 
 client.on("message", async message => {
@@ -302,3 +307,10 @@ client.on("message", async message => {
         }
     }
 });
+
+if(client.status == '오프라인'){
+	console.log("[Bot] Client Connecting");
+	client.login(token);
+	return;
+}
+	
