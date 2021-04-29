@@ -13,7 +13,7 @@ require('dotenv').config();
 const PORT = process.env.PORT || 5001;
 const DB_PW = process.env.DB_PW
 const token = process.env.BOT_TOKEN
-const prefix = '인트야'
+const prefix = process.env.PREFIX;
 client.status = '오프라인'
 
 // Functions
@@ -70,6 +70,9 @@ DBClient.connect().then(() => {
 	}, 600000);
 	
 	client.login(token);
+    app.listen(PORT, () => {
+        console.log(`Server on : ${PORT}`);
+    });
 });
 
 // Web
@@ -92,10 +95,6 @@ app.use(session({
 }));
 
 require("./router/main")(app, client);
-
-app.listen(PORT, () => {
-    console.log(`Server on : ${PORT}`);
-})
 
 // Discord bot setting
 fs.readdir("./commands/", (err, list) => {
@@ -140,15 +139,19 @@ client.on("ready", async () => {
 		stockAvg += stock.money
 	}
 		
-		console.log("[Stock] Update", stockAvg / stocks.length)
+	console.log("[Stock] Update", stockAvg / stocks.length)
 })
 // Dokdo
 
 client.on('message', async message => {
-		const DokdoHandler = new Dokdo(client, { aliases: ['dokdo', 'dok', '독도', '독'], prefix: '야 ', owners: client.developers , noPerm: (message) => message.reply('🚫 해당 명령어는 인트봇 관리자 전용 명령어입니다.')})
+    const DokdoHandler = new Dokdo(client, {
+        aliases: ['dokdo', 'dok', '독도', '독'],
+        prefix: '야 ',
+        owners: client.developers ,
+        noPerm: (message) => message.reply('🚫 해당 명령어는 인트봇 관리자 전용 명령어입니다.')
+    })
 
-
-		  DokdoHandler.run(message)
+    DokdoHandler.run(message)
 })
 // Ready!
 client.on("ready", () => {

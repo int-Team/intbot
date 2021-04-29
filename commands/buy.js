@@ -6,6 +6,8 @@ async function find(str, client) {
     return s.filter(r => r._id.includes(str) || r.name.includes(str) || r.code.includes(str))
 }
 
+const numberWithCommas = x => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
 module.exports = {
 	name: '매수',
 	aliases: ['aotn', 'buy'],
@@ -77,7 +79,7 @@ module.exports = {
 			.setDescription(
 				`매수하려는 주식 : ${
 					res[0].name
-				}\n수량 : ${num}\n지불할 금액 : ${total} :coin:\n계속하시려면 💳 이모지로 반응하세요.`
+				}\n수량 : ${numberWithCommas(num)}\n지불할 금액 : ${numberWithCommas(total)} :coin:\n계속하시려면 💳 이모지로 반응하세요.`
 			)
 			.setTimestamp()
 			.setColor('YELLOW')
@@ -91,10 +93,10 @@ module.exports = {
 		const ask = await message.channel.send(chkBuy);
 		const filter = (reaction, u) => reaction.emoji.name === '💳' && u.id === message.author.id;
         
-        ask.react('💳');
+        await ask.react('💳');
         ask
-        .awaitReactions(filter, { max: 1, time: 10000, error: ['time'] })
-        .then(
+		.awaitReactions(filter, { max: 1, time: 10000, error: ['time'] })
+		.then(
             async collected => {
                 let embed = new MessageEmbed();
                 let emoji = collected.first().emoji;
@@ -104,11 +106,11 @@ module.exports = {
                             `주식 : ${
                                 res[0].name
                             }\n수량 : ${
-                                num
+                                numberWithCommas(num)
                             }주\n지출 : ${
-                                total
+                                numberWithCommas(total)
                             } :coin:\n잔고 : ${
-                                dived
+                                numberWithCommas(dived)
                             } :coin:`
                         )
                         .setColor('GREEN')

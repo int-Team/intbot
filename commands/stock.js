@@ -33,12 +33,12 @@ module.exports = {
                 previousStockPM2 = "~";
             
             previousStockPM += " ";
-            let previousStockStr = `${previousStockPM}(${previousStockPM2} ${previousStock})`
+            let previousStockStr = `${previousStockPM}(${previousStockPM2} ${numberWithCommas(previousStock)})`
 
 			embed
 			.addField(
 			`**${stock.name} (${stock.code})**`,
-			`\`\`\`diff\n${stock.money}\n${previousStockStr}\`\`\``
+			`\`\`\`diff\n${numberWithCommas(stock.money)}\n${previousStockStr}\`\`\``
 			, true)
 		}
 		embed.addField("\u200b", `마지막 주식 변동 : ${lastUpdate.getHours() + 9}시 ${lastUpdate.getMinutes()}분 ${lastUpdate.getSeconds()}초`, true)

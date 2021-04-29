@@ -6,6 +6,8 @@ async function find(str, client) {
     return s.filter(r => r._id.includes(str) || r.name.includes(str) || r.code.includes(str))
 }
 
+const numberWithCommas = x => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
 module.exports = {
 	name: '매도',
 	aliases: ['aoeh', 'sell'],
@@ -64,9 +66,9 @@ module.exports = {
 				`매도하려는 주식 : ${
 					stock_result[0].name
 				}\n수량 : ${
-                    팔려고하는주식_수량
+                    numberWithCommas(팔려고하는주식_수량)
                 }\n받을 금액 : ${
-                    팔려고하는주식_돌려받을금액
+                    numberWithCommas(팔려고하는주식_돌려받을금액)
                 } :coin:\n계속하시려면 💳 이모지로 반응하세요.`
 			)
 			.setTimestamp()
@@ -94,11 +96,11 @@ module.exports = {
                             `주식 : ${
                                 stock_result[0].name
                             }\n수량 : ${
-                                팔려고하는주식_수량
+                                numberWithCommas(팔려고하는주식_수량)
                             }주\n받을 금액 : ${
-                                팔려고하는주식_돌려받을금액
+                                numberWithCommas(팔려고하는주식_돌려받을금액)
                             } :coin:\n잔고 : ${
-                                돈_잔고
+                                numberWithCommas(돈_잔고)
                             } :coin:`
                         )
                         .setColor('GREEN')

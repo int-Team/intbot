@@ -2,7 +2,7 @@ require('dotenv').config();
 const DiscordOauth2 = require("discord-oauth2");
 const Oauth = new DiscordOauth2({
     version: 'v8',
-    clientId: '735713553629315193',
+    clientId: '798709769929621506',
     clientSecret: process.env.CLIENT_SECRET,
     redirectUri: process.env.REDIRECT_URI
 });
@@ -32,7 +32,7 @@ module.exports =
 
             const token = await Oauth.tokenRequest({
                 code,
-                scope: ['identify'],
+                scope: 'identify',
                 grantType: 'authorization_code',
             });
             const user = await Oauth.getUser(token.access_token);
@@ -103,7 +103,7 @@ module.exports =
 
         await client.db.updateOne({_id: req.session.user_id}, {
             $set: {
-                money: (userDB.money - merch.price),
+                money: Number(userDB.money - merch.price),
             },
             $push: {
                 goods: merch._id
@@ -118,74 +118,82 @@ module.exports =
         res.redirect('/');
     });
 
-      app.get("/profile/:id", async (req, res) => {
-          const { id } = req.params;
-          var userDB = await client.db.findOne({ _id: id });
+    app.get("/profile/:id", async (req, res) => {
+        const { id } = req.params;
+        const userDB = await client.db.findOne({_id: id});
 
-          if (userDB == undefined || userDB == null) {
-              res.status(404).send("<h1>이런! 찾으시려는 유저가 없는것 같아요..</h1>");
-          } else {
-              try {
-                  var discordUser = await client.users.fetch(id);
-                  var rank = await getMyRank(discordUser.id, client);
+        if (!client.users.cache.has(id) || !userDB)
+            return res.send(`<script>alert("찾으시는 유저가 없습니다");history.back();</script>`);
 
-                  res.render("profile.ejs", {
-                      profile_img: discordUser.displayAvatarURL(),
-                      username: `${discordUser.username}`,
-					  status: `${client.status}`,
-                      tag: `${discordUser.tag}`,
-                      money: rank.money.count,
-                      level: rank.level.count,
-                      xp: rank.xp.count,
-                      money_rank: rank.money.rank,
-                      level_rank: rank.level.rank,
-                      xp_rank: rank.xp.rank,
-                      goods: userDB.goods,
-					  status: client.status,
-                  });
-              } catch (e) {
-                  console.log(e);
+        try {
+            let user = await client.users.fetch(id);
+            let rank = await getMyRank(user.id, client);
 
-                  res.render("profile.ejs", {
-                      profile_img: "https://blog.kakaocdn.net/dn/cyOIpg/btqx7JTDRTq/1fs7MnKMK7nSbrM9QTIbE1/img.jpg",
-                      username: "Unknown User",
-                      tag: "Unknown Tag",
-                      money: "unknown",
-                      level: "unknown",
-                      xp: "unknown",
-                      money_rank: "unknown",
-                      level_rank: "unknown",
-                      xp_rank: "unknown",
-                      goods: []
-                  });
-              }
-          }
+            res.render("profile.ejs", {
+                profile_img: user.displayAvatarURL(),
+                username: `${user.username}`,
+                status: `${client.status}`,
+                tag: `${user.tag}`,
+                money: rank.money.count,
+                level: rank.level.count,
+                xp: rank.level.count,
+                money_rank: rank.money.rank,
+                level_rank: rank.level.rank,
+                xp_rank: rank.level.rank,
+                goods: userDB.goods,
+                status: client.status,
+            });
+        } catch (e) {
+            console.log(e);
+
+            res.render("profile.ejs", {
+                profile_img: "https://blog.kakaocdn.net/dn/cyOIpg/btqx7JTDRTq/1fs7MnKMK7nSbrM9QTIbE1/img.jpg",
+                username: "Unknown User",
+                tag: "Unknown Tag",
+                money: "unknown",
+                level: "unknown",
+                xp: "unknown",
+                money_rank: "unknown",
+                level_rank: "unknown",
+                xp_rank: "unknown",
+                goods: [],
+                status: client.status,
+            });
+        }
       });
   };
 
 
-const getMyRank = async (id, client) => {
-    let moneyRankArr = await client.db.find().sort({money: -1}).toArray();
-    let levelRankArr = await client.db.find().sort({level: -1}).toArray();
+/**
+ * @param {Discord.Client} client 
+ */
+ const getMyRank = async (id, client) => {
+    const xpmoney = {
+        "돈": { money:-1 },
+        "레벨": { level:-1 }
+    };
+    let user = await client.users.fetch(id);
+    let userDB = await client.db.findOne({_id: id});
+    let moneyRankArr = await client.db.find().sort(xpmoney.돈).toArray();
+    let levelRankArr = await client.db.find().sort(xpmoney.레벨).toArray();
     let rank = {};
+
     rank.level = {};
     rank.money = {};
-    rank.xp = {};
     rank.money.rank = moneyRankArr.findIndex(e => {
         return e._id == id;
-    });
+    })
     rank.level.rank = levelRankArr.findIndex(e => {
         return e._id == id;
-    });
-    rank.xp.rank = levelRankArr.findIndex(e => {
-        return e._id == id;
-    });
+    })
     rank.level.rank += 1;
     rank.money.rank += 1;
-    rank.xp.rank += 1;
-    rank.level.count = await (await client.db.findOne({_id: id})).level;
-    rank.money.count = await (await client.db.findOne({_id: id})).money;
-    rank.xp.count = await (await client.db.findOne({_id: id})).xp;
+    rank.level.count = numberWithCommas(userDB.level);
+    rank.money.count = numberWithCommas(userDB.money);
 
     return rank;
-};
+}
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
