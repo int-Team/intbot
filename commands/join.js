@@ -27,9 +27,11 @@ module.exports = {
             collector.on('end', async collected => {
                 if (collected.first().emoji.name == '✅') {
             await client.db.insertOne({_id: message.author.id, money: 0, level: 0, xp: 0, goods: []});
+			await client.db.updateOne({_id: message.author.id}, { $set: { money: 10000 }});
                     message.channel.send(new Discord.MessageEmbed()
                         .setTitle('가입 완료!')
-                        .setColor('RANDOM')
+                        .setColor('GREEN')
+						.setDescription("초반 지원금 1만을 드릴께요")
                         .setFooter(message.author.tag, message.author.displayAvatarURL())
                         .setTimestamp()
                     );

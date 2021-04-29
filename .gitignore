@@ -1,4 +1,4 @@
-node_modules
-
-.env
+node_modules/
 json.sqlite
+.env
+goorm.manifest

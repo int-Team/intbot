@@ -5,27 +5,71 @@ const fs = require("fs");
 const ascii = require("ascii-table");
 const table = new ascii().setHeading("Command", "Load Status");
 const MongoDB = require("mongodb");
+const Dokdo = require('dokdo')
+const client = new MusicClient();
 
 // Variables 
-require("dotenv").config();
+require('dotenv').config();
 const PORT = process.env.PORT || 5001;
-const DB_PW = process.env.DB_PW;
+const DB_PW = process.env.DB_PW
+const token = process.env.BOT_TOKEN
+const prefix = '인트야'
+client.status = '오프라인'
 
+// Functions
+function float2int(value) {
+    return value | 0;
+}
 // Discord bot client
-const client = new MusicClient();
+
 client.aliases = new Discord.Collection();
+client.developers = [
+    "687866011013218349",
+    "745758911012929550",
+    "714736989106208791",
+    "418677556322107412",
+    "552103947662524416",
+    "647736678815105037"
+];
 
-
+// Database
 client.db = undefined;
 client.dbchannels = undefined;
 const DBClient = new MongoDB.MongoClient(`mongodb+srv://int:${DB_PW}@cluster0.gk8if.mongodb.net/intbot?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
+
 DBClient.connect().then(() => {
     client.db = DBClient.db("intbot").collection("main");
     client.goods = DBClient.db("intbot").collection("goods");
     client.dbchannels = DBClient.db("intbot").collection("channels");
+	client.stock = DBClient.db("intbot").collection("stock");
+	
+	console.log("[Database] MongoDB Connected.");
+	
+	setInterval(async () => {
+		const stock_v = 5000;
+		const stock_min = stock_v - 2000;
+
+		const stocks = await client.stock.find().toArray()
+		let stockAvg = 3000;
+		client.lastStockUpdate = Date.now()
+
+		for (let stock of stocks) {
+			client.stock.updateOne({_id: stock._id}, {
+				$set: {
+					money: float2int(Math.random() * (stock_min * -2) + stock_min) + stock_v,
+					previous: stock.money,
+				}
+			})
+			stockAvg += stock.money
+		}
+		
+		console.log("[Stock] Update", stockAvg / stocks.length)
+	}, 600000);
+	
+	client.login(token);
 });
 
 // Web
@@ -42,7 +86,7 @@ app.use(express.static("public"));
 app.use(logger("dev"));
 app.use(express.urlencoded({extended: false}));
 app.use(session({
-    secret: "asdfasfmklam3mkm;'MKGH:@90-t",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
 }));
@@ -76,8 +120,41 @@ fs.readdir("./commands/", (err, list) => {
     console.log(table.toString());
 });
 
+// READY Stock Update
+client.on("ready", async () => {
+	client.lastStockUpdate = Date.now()
+	const stock_v = 5000;
+	const stock_min = stock_v - 2000;
+
+	const stocks = await client.stock.find().toArray()
+	let stockAvg = 30000;
+	client.lastStockUpdate = Date.now()
+
+	for (let stock of stocks) {
+		client.stock.updateOne({_id: stock._id}, {
+			$set: {
+				money: float2int(Math.random() * (stock_min * -2) + stock_min) + stock_v,
+				previous: stock.money,
+			}
+		})
+		stockAvg += stock.money
+	}
+		
+		console.log("[Stock] Update", stockAvg / stocks.length)
+})
+// Dokdo
+
+client.on('message', async message => {
+		const DokdoHandler = new Dokdo(client, { aliases: ['dokdo', 'dok', '독도', '독'], prefix: '야 ', owners: client.developers , noPerm: (message) => message.reply('🚫 해당 명령어는 인트봇 관리자 전용 명령어입니다.')})
+
+
+		  DokdoHandler.run(message)
+})
+// Ready!
 client.on("ready", () => {
-    console.log(`Logged on ${client.user.username}\n-----------------------`);
+	client.status = '정상 운영중...'
+    console.log(`[Bot] Logged on ${client.user.username}`);
+	
     setInterval(() => {
         switch (Math.floor(Math.random() * 6)) {
             case 0:
@@ -147,49 +224,52 @@ client.on("ready", () => {
     }, 10000);
     /*
     setInterval(() => {
-        if(client.guilds.cache.size !== serverNum){
+        if(client.guilds.cache.size){
             axios.post(`https://api.koreanbots.dev/bots/servers`, {
                 servers: client.guilds.cache.size
             }, {
                 headers: {
                     'Content-Type': "application/json",
-                    token: require('./config.json').koreanbots
+                    token: process.env.KTOKEN
                 }
             });
-            serverNum = client.guilds.cache.size;
         } else {
             return
         }
-    }, 200000);
-    */
+    }, 200000);*/
 });
 
 client.on("message", async message => {
     if (message.author.bot) return;
+	if(!await client.db.findOne({_id: message.author.id}) ) {
+		return;
+	} else if(!await client.dbchannels.findOne({_id: message.guild.id}) ) {
+		return;
+	} else {
+		let user = await client.db.findOne({_id: message.author.id});
+		let channel = await client.dbchannels.findOne({_id: message.guild.id});
 
-    let user = await client.db.findOne({_id: message.author.id});
-    let channel = await client.dbchannels.findOne({_id: message.guild.id});
+		if (!user)
+			return;
+		if(user.xp >= 100){
+			await client.db.updateOne({_id: message.author.id}, {
+				$set: {
+					level: user.level + 1,
+					xp: user.xp = 0,
+				}
+			});
+			if(channel.alram)
+				return;
 
-    if (!user)
-        return;
-    if(user.xp >= 100){
-        await client.db.updateOne({_id: message.author.id}, {
-            $set: {
-                level: user.level + 1,
-                xp: user.xp = 0,
-            }
-        });
-        if(channel.alarm)
-            return;
-        
-        message.channel.send(`${user.level}으로 레벨업 하셨습니다.`);
-    } else {
-        await client.db.updateOne({_id: message.author.id}, {
-            $set: {
-                xp: user.xp + 1,
-            }
-        });
-    }
+			message.channel.send(`${user.level}으로 레벨업 하셨습니다.`);
+		} else {
+			await client.db.updateOne({_id: message.author.id}, {
+				$set: {
+					xp: user.xp + 1,
+				}
+			});
+		}
+	}
 });
 
 client.on("message", async message => {
@@ -228,5 +308,8 @@ client.on("message", async message => {
     }
 });
 
-
-client.login(process.env.BOT_TOKEN);
+if (client.status == '오프라인') {
+	console.log("[Bot] Client Connecting");
+	client.login(token);
+	return;
+}

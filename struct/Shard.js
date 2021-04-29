@@ -1,8 +1,8 @@
 const { ShardingManager } = require('discord.js');
-const conifg = require('../config.json')
+require('dotenv').conifg({path: '../.env'})
 
-const shard = new ShardingManager('./app.js', {
-  token: conifg.token,
+const shard = new ShardingManager('../app.js', {
+  token: process.env.BOT_TOKEN,
   autoSpawn: true
 });
 

@@ -2,7 +2,7 @@ require('dotenv').config();
 const DiscordOauth2 = require("discord-oauth2");
 const Oauth = new DiscordOauth2({
     version: 'v8',
-    clientId: '798709769929621506',
+    clientId: '735713553629315193',
     clientSecret: process.env.CLIENT_SECRET,
     redirectUri: process.env.REDIRECT_URI
 });
@@ -15,6 +15,10 @@ module.exports =
 (app, client) => {
     app.get("/", (req, res) => {
         res.render("index");
+    });
+	
+	app.get("/status", (req, res) => {
+        res.render("status");
     });
 
     app.get('/callback', async (req, res) => {
@@ -81,12 +85,12 @@ module.exports =
         const { merch_id } = req.params;
 
         if (!merch_id)
-            return res.send(`<script>alert("살 수 있는 상품이 아니에요!");location.back();</script>`);
+            return res.status(404).send(`<script>alert("살 수 있는 상품이 아니에요!");location.back();</script>`);
         if (!req.session.user_id)
-            return res.redirect('/shop');
+            return res.status(200).redirect('/shop');
         
         if (!client.users.cache.has(req.session.user_id))
-            return res.send(`<script>alert("인트봇이 접근할 수 있는 유저가 아니에요!");location.back();</script>`);
+            return res.status(404).send(`<script>alert("인트봇이 접근할 수 있는 유저가 아니에요!");location.back();</script>`);
         
         const dscUser = await client.users.cache.get(req.session.user_id);
         const userDB = await client.db.findOne({_id: dscUser.id});
@@ -95,7 +99,7 @@ module.exports =
         if (!userDB)
             return res.send(`<script>alert("인트봇 서비스에 가입한 유저가 아니에요!");location.back();</script>`);
         if (userDB.money < merch.price)
-            return res.send(`<script>alert("인트봇 머니가 부족해요!");location.back();</script>`);
+            return res.send(`<script>alert("인트봇 머니가 부족해요!");location.back();location.back();</script>`);
 
         await client.db.updateOne({_id: req.session.user_id}, {
             $set: {
@@ -106,7 +110,7 @@ module.exports =
             }
         });
             
-        res.send(`<script>alert("인트봇 아이템이 구매되었어요!");location.href="/shop";</script>`)
+        res.status(200).send(`<script>alert("인트봇 아이템이 구매되었어요!");location.href="/shop";</script>`)
     });
 
     app.get('/logout', (req, res) => {
@@ -128,6 +132,7 @@ module.exports =
                   res.render("profile.ejs", {
                       profile_img: discordUser.displayAvatarURL(),
                       username: `${discordUser.username}`,
+					  status: `${client.status}`,
                       tag: `${discordUser.tag}`,
                       money: rank.money.count,
                       level: rank.level.count,
@@ -136,6 +141,7 @@ module.exports =
                       level_rank: rank.level.rank,
                       xp_rank: rank.xp.rank,
                       goods: userDB.goods,
+					  status: client.status,
                   });
               } catch (e) {
                   console.log(e);
