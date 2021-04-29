@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const xpmoney = {
-   "돈": {money:-1},
-   "레벨": {level:-1}
+   "돈": { money:-1 },
+   "레벨": { level:-1 }
 };
 
 module.exports = {
@@ -49,16 +49,14 @@ const getRank = async (option, client, message) => {
     let rankArr = await client.db.find().sort(xpmoney[option]).toArray();
     let realRankArr = [];
 
-    for (var i in rankArr) {
-        if (realRankArr.length == 5) {
+    for (let i of rankArr) {
+        if (realRankArr.length == 5)
             break;
-        } else {
-            if (!client.developers.includes(rankArr[i]._id)) {
-                realRankArr.push(rankArr[i]);
-            } else {
+        else
+            if (!client.developers.includes(i._id))
+                realRankArr.push(i);
+            else
                 continue;
-            }
-        }
     }
     
     rankArr = realRankArr;
@@ -74,13 +72,14 @@ const getRank = async (option, client, message) => {
     let discordFields = [];
 
 
-    for (var i in rankArr) {
+    for (let i in rankArr) {
         i = Number(i);
+        let value = rankArr[i][돈이야뭐야];
         try {
             let userInfo = await client.users.fetch(rankArr[i]._id);
-            discordFields.push({name: `${i+1}. ${userInfo.username}(${userInfo.id})`, value: rankArr[i][돈이야뭐야] + " " + 단위});
+            discordFields.push({name: `${i+1}. ${userInfo.username}`, value: numberWithCommas(value) + " " + 단위});
         } catch (e) {
-            discordFields.push({name: `${i+1}. Unknown User`, value: rankArr[i][돈이야뭐야] + " " + 단위});
+            discordFields.push({name: `${i+1}. Unknown User`, value: numberWithCommas(value) + " " + 단위});
         }
     }
 
@@ -105,9 +104,11 @@ const getRank = async (option, client, message) => {
  */
 const getMyRank = async (id, client) => {
     let user = await client.users.fetch(id);
+    let userDB = await client.db.findOne({_id: id});
     let moneyRankArr = await client.db.find().sort(xpmoney.돈).toArray();
     let levelRankArr = await client.db.find().sort(xpmoney.레벨).toArray();
     let rank = {};
+
     rank.level = {};
     rank.money = {};
     rank.money.rank = moneyRankArr.findIndex(e => {
@@ -118,17 +119,21 @@ const getMyRank = async (id, client) => {
     })
     rank.level.rank += 1;
     rank.money.rank += 1;
-    rank.level.count = await (await client.db.findOne({_id: id})).level;
-    rank.money.count = await (await client.db.findOne({_id: id})).money;
+    rank.level.count = numberWithCommas(userDB.level);
+    rank.money.count = numberWithCommas(userDB.money);
 
 
     let embed = new Discord.MessageEmbed()
-    .setTitle(`${user.tag} 님의 랭킹`)
-    .setColor('RANDOM')
-    .addField(`돈 랭킹: ${rank.money.rank} 위`, `보유자산: ${rank.money.count}`, false, true)
-    .addField(`레벨 랭킹: ${rank.level.rank} 위`, `레벨: ${rank.level.count}`, false, true)
-    .setFooter(user.tag, user.displayAvatarURL())
-    .setTimestamp();
+        .setTitle(`${user.tag} 님의 랭킹`)
+        .setColor('RANDOM')
+        .addField(`돈 랭킹: ${rank.money.rank} 위`, `보유자산: ${rank.money.count}`, false, true)
+        .addField(`레벨 랭킹: ${rank.level.rank} 위`, `레벨: ${rank.level.count}`, false, true)
+        .setFooter(user.tag, user.displayAvatarURL())
+        .setTimestamp();
 
     return embed;
+}
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }

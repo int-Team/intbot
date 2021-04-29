@@ -1,5 +1,5 @@
 const { ShardingManager } = require('discord.js');
-require('dotenv').config();
+require('dotenv').config({path: './.env'});
 
 const shard = new ShardingManager('./app.js', {
   token: process.env.BOT_TOKEN,
