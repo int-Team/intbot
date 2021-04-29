@@ -78,7 +78,7 @@ const getRank = async (option, client, message) => {
         i = Number(i);
         try {
             let userInfo = await client.users.fetch(rankArr[i]._id);
-            discordFields.push({name: `${i+1}. ${userInfo.username}`, value: rankArr[i][돈이야뭐야] + " " + 단위});
+            discordFields.push({name: `${i+1}. ${userInfo.username}(${userInfo.id})`, value: rankArr[i][돈이야뭐야] + " " + 단위});
         } catch (e) {
             discordFields.push({name: `${i+1}. Unknown User`, value: rankArr[i][돈이야뭐야] + " " + 단위});
         }

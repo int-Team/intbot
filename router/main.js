@@ -16,6 +16,10 @@ module.exports =
     app.get("/", (req, res) => {
         res.render("index");
     });
+	
+	app.get("/status", (req, res) => {
+        res.render("status");
+    });
 
     app.get('/callback', async (req, res) => {
         try {
@@ -81,12 +85,12 @@ module.exports =
         const { merch_id } = req.params;
 
         if (!merch_id)
-            return res.send(`<script>alert("살 수 있는 상품이 아니에요!");location.back();</script>`);
+            return res.status(404).send(`<script>alert("살 수 있는 상품이 아니에요!");location.back();</script>`);
         if (!req.session.user_id)
-            return res.redirect('/shop');
+            return res.status(200).redirect('/shop');
         
         if (!client.users.cache.has(req.session.user_id))
-            return res.send(`<script>alert("인트봇이 접근할 수 있는 유저가 아니에요!");location.back();</script>`);
+            return res.status(404).send(`<script>alert("인트봇이 접근할 수 있는 유저가 아니에요!");location.back();</script>`);
         
         const dscUser = await client.users.cache.get(req.session.user_id);
         const userDB = await client.db.findOne({_id: dscUser.id});
@@ -106,7 +110,7 @@ module.exports =
             }
         });
             
-        res.send(`<script>alert("인트봇 아이템이 구매되었어요!");location.href="/shop";</script>`)
+        res.status(200).send(`<script>alert("인트봇 아이템이 구매되었어요!");location.href="/shop";</script>`)
     });
 
     app.get('/logout', (req, res) => {
