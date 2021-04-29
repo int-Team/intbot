@@ -4,23 +4,21 @@ const MusicClient = require("./struct/Client");
 const fs = require("fs");
 const ascii = require("ascii-table");
 const table = new ascii().setHeading("Command", "Load Status");
-const { DB_PW, token, prefix } = require("./config.json");
 const MongoDB = require("mongodb");
-
 
 // Variables 
 require("dotenv").config();
 const PORT = process.env.PORT || 5001;
+const DB_PW = process.env.DB_PW;
 
 // Discord bot client
 const client = new MusicClient();
 client.aliases = new Discord.Collection();
 
 
-// Database (mongodb+srv://int:${DB_PW}@cluster0.gk8if.mongodb.net/intbot?retryWrites=true&w=majority)
 client.db = undefined;
 client.dbchannels = undefined;
-const DBClient = new MongoDB.MongoClient(`mongodb://inttest:intbabo1@cluster0-shard-00-00.pd6jy.mongodb.net:27017,cluster0-shard-00-01.pd6jy.mongodb.net:27017,cluster0-shard-00-02.pd6jy.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-1ywkc2-shard-0&authSource=admin&retryWrites=true&w=majority`, {
+const DBClient = new MongoDB.MongoClient(`mongodb+srv://int:${DB_PW}@cluster0.gk8if.mongodb.net/intbot?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
@@ -231,4 +229,4 @@ client.on("message", async message => {
 });
 
 
-client.login(token);
+client.login(process.env.BOT_TOKEN);
