@@ -1,5 +1,8 @@
 const { MessageEmbed } = require('discord.js');
 const Discord = require('discord.js');
+
+
+const numberWithCommas = x => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 module.exports = {
     name: '송금',
     aliases: ["ㄴ둥", "송금", "주기", "send"],

@@ -1,5 +1,9 @@
 const Discord = require('discord.js');
+function float2int(value) {
+    return value | 0;
+}
 
+const numberWithCommas = x => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 module.exports = {
     name: '주식',
     aliases: ['주식', 'wntlr'],
@@ -11,7 +15,7 @@ module.exports = {
 
 		let embed = new Discord.MessageEmbed()
 			.setTitle('주식 현황')
-			.setDescription(`다음 변동까지 ${600 - Math.abs((10000 - (Date.now() - client.lastStockUpdate)) / 1000)} 초`)
+			.setDescription(`다음 변동까지 ${float2int(600 - Math.abs((10000 - (Date.now() - client.lastStockUpdate)) / 1000) )} 초`)
 			.setColor("GREEN")
 			.setFooter('확인한 시간')
 			.setTimestamp();

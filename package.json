@@ -5,7 +5,9 @@
     "main": "app.js",
     "scripts": {
         "start": "node struct/Shard.js",
-        "dev": "nodemon app.js"
+        "dev": "nodemon app.js",
+				"boot" : "pm2 start app.js && pm2 log",
+				"repl" : "pm2 restart app && pm2 log"
     },
     "author": "int",
     "license": "MIT",
@@ -29,7 +31,6 @@
         "mongodb": "latest",
         "morgan": "latest",
         "node-fetch": "^2.6.1",
-        
         "querystring": "^0.2.0",
         "serve-favicon": "latest",
         "util": "latest",
@@ -40,6 +41,6 @@
     "devDependencies": {
         "eslint": "^7.24.0",
         "pm2": "^4.5.6",
-		"nodemon": "^2.0.7"
+        "nodemon": "^2.0.7"
     }
 }

@@ -3,7 +3,6 @@ const xpmoney = {
    "돈": { money:-1 },
    "레벨": { level:-1 }
 };
-
 module.exports = {
     name: '랭킹',
     aliases: ['ranking', 'rank', 'fodzld', 'ㄱ무ㅏㅑㅜㅎ', 'ㄱ무ㅏ'],

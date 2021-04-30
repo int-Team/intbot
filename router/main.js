@@ -73,7 +73,8 @@ module.exports =
                 user: {
                     tag: dscUser.tag,
                     money: userDB.money
-                }
+                },
+                status: client.status,
             });
         } catch (e) {
             console.log(e);
