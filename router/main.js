@@ -1,10 +1,10 @@
 require('dotenv').config();
-const DiscordOauth2 = require("discord-oauth2");
-const Oauth = new DiscordOauth2({
+const DiscordOauth = require('oauth-discord');
+const Oauth = new DiscordOauth({
     version: 'v8',
-    clientId: '798709769929621506',
-    clientSecret: process.env.CLIENT_SECRET,
-    redirectUri: process.env.REDIRECT_URI
+    client_id: '798709769929621506',
+    client_secret: process.env.CLIENT_SECRET,
+    redirect_uri: process.env.REDIRECT_URI,
 });
 
 module.exports =
@@ -30,12 +30,11 @@ module.exports =
             if (req.session.user_id)
                 return res.redirect('/');
 
-            const token = await Oauth.tokenRequest({
+            const token = await Oauth.getToken({
+                grant_type: 'authorization_code',
                 code,
-                scope: 'identify',
-                grantType: 'authorization_code',
             });
-            const user = await Oauth.getUser(token.access_token);
+            const user = await Oauth.user(token.access_token);
             
             if (!client.users.cache.has(user.id))
                 return res.send(`<script>alert("인트봇이 접근할 수 있는 유저가 아니에요!");location.back();</script>`);

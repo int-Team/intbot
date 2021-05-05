@@ -26,7 +26,6 @@ module.exports = {
         } else {
             if(xpmoney[option] != undefined){
                 let embed = await getRank(option, client, message);
-                console.log(embed);
                 return message.channel.send({embed});
             } else if (option == "자신") {
                 let embed = await getMyRank(message.author.id, client);
@@ -76,9 +75,9 @@ const getRank = async (option, client, message) => {
         let value = rankArr[i][돈이야뭐야];
         try {
             let userInfo = await client.users.fetch(rankArr[i]._id);
-            discordFields.push({name: `${i+1}. ${userInfo.username}`, value: numberWithCommas(value) + " " + 단위});
+            discordFields.push({name: `${i+1}. ${userInfo.username}`, value: numberToKorean(value) + " " + 단위});
         } catch (e) {
-            discordFields.push({name: `${i+1}. Unknown User`, value: numberWithCommas(value) + " " + 단위});
+            discordFields.push({name: `${i+1}. Unknown User`, value: numberToKorean(value) + " " + 단위});
         }
     }
 
@@ -118,8 +117,8 @@ const getMyRank = async (id, client) => {
     })
     rank.level.rank += 1;
     rank.money.rank += 1;
-    rank.level.count = numberWithCommas(userDB.level);
-    rank.money.count = numberWithCommas(userDB.money);
+    rank.level.count = numberToKorean(userDB.level);
+    rank.money.count = numberToKorean(userDB.money);
 
 
     let embed = new Discord.MessageEmbed()
@@ -133,6 +132,26 @@ const getMyRank = async (id, client) => {
     return embed;
 }
 
-function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+function numberToKorean(number){
+    var inputNumber  = number < 0 ? false : number
+    var unitWords    = ['', '만', '억', '조', '경', '해', '자', '양', '구', '간', '정', '재', '극']
+    var splitUnit    = 10000
+    var splitCount   = unitWords.length
+    var resultArray  = []
+    var resultString = ''
+
+    for (var i = 0; i < splitCount; i++){
+        var unitResult = (inputNumber % Math.pow(splitUnit, i + 1)) / Math.pow(splitUnit, i)
+        unitResult = Math.floor(unitResult)
+        if (unitResult > 0){
+            resultArray[i] = unitResult
+        }
+    }
+
+    for (var a = 0; a < resultArray.length; a++){
+        if(!resultArray[a]) continue
+        resultString = String(resultArray[a]) + unitWords[a] + ' ' + resultString
+    }
+
+    return resultString.replace(/ $/, '')
 }
