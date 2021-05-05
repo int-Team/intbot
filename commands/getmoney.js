@@ -13,7 +13,7 @@ module.exports = {
             const embed = new Discord.MessageEmbed()
                 .setTitle('인트봇의 돈 서비스에 가입되어있지 않아요.')
                 .setDescription('`인트야 가입`을 이용해서 먼저 가입해주세요!')
-                .setColor('RANDOM')
+                .setColor('RED')
                 .setFooter(message.author.tag, message.author.displayAvatarURL())
                 .setTimestamp()
             message.channel.send(embed);
@@ -57,10 +57,10 @@ module.exports = {
                         return message.channel.send(embed);
                     }
             } else {
-                if ((await client.db.findOne({_id: message.author.id})).lastGotMoney && new Date() - 1 + 1 - (await client.db.findOne({_id: message.author.id})).lastGotMoney < 3600000) {
+                if ((await client.db.findOne({_id: message.author.id})).lastGotMoney && new Date() - 1 + 1 - (await client.db.findOne({_id: message.author.id})).lastGotMoney < 7200000) {
                         const embed = new Discord.MessageEmbed()
-                        .setTitle('1시간 전에 이미 돈을 받았어요')
-                        .setDescription(`${(3600000 - (new Date() - 1 + 1 - ((await client.db.findOne({_id: message.author.id}))).lastGotMoney)) / 1000|0}초 후에 다시 시도해 주세요!\nKOREANBOTS에서 [여기](https://koreanbots.dev/bots/${client.user.id})를 눌러 하트를 추가하면 클타임이 5분이에요!`)
+                        .setTitle('2시간 전에 이미 돈을 받았어요')
+                        .setDescription(`${(7200000 - (new Date() - 1 + 1 - ((await client.db.findOne({_id: message.author.id}))).lastGotMoney)) / 1000|0}초 후에 다시 시도해 주세요!\nKOREANBOTS에서 [여기](https://koreanbots.dev/bots/${client.user.id})를 눌러 하트를 추가하면 클타임이 5분이에요!`)
                         .setColor('RANDOM')
                         .setFooter(message.author.tag, message.author.displayAvatarURL())
                         .setTimestamp()

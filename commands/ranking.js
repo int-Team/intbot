@@ -19,7 +19,7 @@ module.exports = {
             const embed = new Discord.MessageEmbed()
             .setTitle('인트봇의 돈 서비스에 가입되어있지 않아요.')
             .setDescription('`인트야 가입`을 이용해서 먼저 가입해주세요!')
-            .setColor('RANDOM')
+            .setColor('RED')
             .setFooter(message.author.tag, message.author.displayAvatarURL())
             .setTimestamp()
             message.channel.send(embed);
@@ -83,7 +83,7 @@ const getRank = async (option, client, message) => {
 
     let embed = {
         title: `${option} 랭킹`,
-        color: 'RANDOM',
+        color: 'GREEN',
         fields: discordFields,
         timestamp: new Date(),
         footer: {
@@ -123,8 +123,8 @@ const getMyRank = async (id, client) => {
 
     let embed = new Discord.MessageEmbed()
         .setTitle(`${user.tag} 님의 랭킹`)
-        .setColor('RANDOM')
-        .addField(`돈 랭킹: ${rank.money.rank} 위`, `보유자산: ${rank.money.count}`, false, true)
+        .setColor('ORANGE')
+        .addField(`돈 랭킹: ${rank.money.rank} 위`, `보유자산: ${rank.money.count}원`, false, true)
         .addField(`레벨 랭킹: ${rank.level.rank} 위`, `레벨: ${rank.level.count}`, false, true)
         .setFooter(user.tag, user.displayAvatarURL())
         .setTimestamp();
