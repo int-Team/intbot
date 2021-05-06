@@ -20,8 +20,8 @@ client.status = '오프라인'
 function float2int(value) {
     return value | 0;
 }
-// Discord bot client
 
+// Discord bot client
 client.aliases = new Discord.Collection();
 client.developers = [
     "687866011013218349",

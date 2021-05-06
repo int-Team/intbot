@@ -15,14 +15,14 @@ module.exports = {
 	usage: '인트야 매수 <주식>',
 	run: async (client, message, args, ops) => {
 		if (!args[1])
-			return message.reply('사용법: ```인트야 매수 [주식 이름] (0 이상의 숫자 Infinity 이하)```');
+			return message.reply('사용법: ```인트야 매수 [주식] [숫자]```');
 		
 		const res = await find(args[1], client);
 		const count = res.length;
 		const items = res.map((r) => r.name + '\n').join('');
 		if (!res || res.length === 0) 
 			return message.reply(
-				'해당 주식이 없습니다. `.주식`으로 주식 상황을 보고 오시는건 어떨까요?'
+				'해당 주식이 없습니다. `인트야 주식`으로 주식 상황을 보고 오시는건 어떨까요?'
 			);
 		else if (res.length > 1) 
 			return message.reply(
@@ -44,11 +44,11 @@ module.exports = {
 		var dived = 0;
 		var total = 0;
 		if (['전부', '올인', '모두', 'all', '올'].includes(args[2])) {
-			num = parseInt(Number(user.money) / Number(stock.money), 10);
+			num = Math.floor(Number(user.money) / Number(stock.money));
 			total = num * stock.money;
 			dived = Number(user.money) - total;
 		} else if (['반인', '반', 'half', '핲', '하프'].includes(args[2])) {
-			num = parseInt(Number(user.money) / 2 / Number(stock.money), 10);
+			num = Math.floor(Number(user.money) / 2 / Number(stock.money));
 			total = num * stock.money;
 			dived = Number(user.money) - total;
 		} else if (

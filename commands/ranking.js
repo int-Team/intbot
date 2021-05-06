@@ -3,37 +3,37 @@ const xpmoney = {
    "돈": { money:-1 },
    "레벨": { level:-1 }
 };
+const AvailableOptions = ['유저', '자신']
+
 module.exports = {
     name: '랭킹',
     aliases: ['ranking', 'rank', 'fodzld', 'ㄱ무ㅏㅑㅜㅎ', 'ㄱ무ㅏ'],
     description: '현재 랭킹 상태를 보여줘요',
-    usage: '인트야 랭킹 [돈/레벨/자신]',
+    usage: '인트야 랭킹 [유저/자신]',
     /**
      * 
      * @param {Discord.Client} client 
      * @param {Discord.Message} message 
      */
-    run: async (client, message, args, ops) => {
+    async run(client, message, args, ops) {
         const option = args[1]
-        if (!(await client.db.findOne({_id: message.author.id}))) {
-            const embed = new Discord.MessageEmbed()
-            .setTitle('인트봇의 돈 서비스에 가입되어있지 않아요.')
-            .setDescription('`인트야 가입`을 이용해서 먼저 가입해주세요!')
-            .setColor('RED')
-            .setFooter(message.author.tag, message.author.displayAvatarURL())
-            .setTimestamp()
-            message.channel.send(embed);
-        } else {
-            if(xpmoney[option] != undefined){
-                let embed = await getRank(option, client, message);
-                return message.channel.send({embed});
-            } else if (option == "자신") {
-                let embed = await getMyRank(message.author.id, client);
-                return message.channel.send(embed);
-            } else {
-                return message.channel.send("`인트야 랭킹 [돈/레벨/자신]` 중 한개를 선택하여 주세요.")
-            }
-        }
+        const userDB = await client.db.findOne({_id: message.author.id});
+        
+        if (!option)
+            
+        
+        if (option)
+            if (!AvailableOptions.includes(option))
+                return message.channel.send("`인트야 랭킹` | 인트야 랭킹 [유저/자신]");
+            if (!userDB)
+                return message.channel.send(new Discord.MessageEmbed()
+                .setTitle('인트봇의 돈 서비스에 가입되어있지 않아요.')
+                .setDescription('`인트야 가입`을 이용해서 먼저 가입해주세요!')
+                .setColor('RED')
+                .setFooter(message.author.tag, message.author.displayAvatarURL())
+                .setTimestamp());
+        
+        
     }
 }
 
@@ -43,57 +43,20 @@ module.exports = {
  * @param {Discord.Client} client
  * @param {Discord.Message} message 
  */
-const getRank = async (option, client, message) => {
-    let rankArr = await client.db.find().sort(xpmoney[option]).toArray();
-    let realRankArr = [];
-
-    for (let i of rankArr) {
-        if (realRankArr.length == 5)
-            break;
-        else
-            if (!client.developers.includes(i._id))
-                realRankArr.push(i);
-            else
-                continue;
-    }
+const getRank = async (client, message) => {
+    let rankArr = await client.db.find().sort({money: -1}).toArray();
+    let fields = [];
     
-    rankArr = realRankArr;
-
-    let 단위, 돈이야뭐야;
-    if (option == "돈") {
-        단위 = "원";
-        돈이야뭐야 = "money";
-    } else {
-        단위 = "레벨";
-        돈이야뭐야 = "level";
+    for (let user of rankArr) {
+        let dsc_user;
+        if (client.users.cache.has(user._id))
+            dsc_user = client.users.cache.get(user._id);
+        
+        fields.push({
+            name: `${fields.length + 1}. ${dsc_user.username}`,
+            value: ``
+        })
     }
-    let discordFields = [];
-
-
-    for (let i in rankArr) {
-        i = Number(i);
-        let value = rankArr[i][돈이야뭐야];
-        try {
-            let userInfo = await client.users.fetch(rankArr[i]._id);
-            discordFields.push({name: `${i+1}. ${userInfo.username}`, value: numberToKorean(value) + " " + 단위});
-        } catch (e) {
-            discordFields.push({name: `${i+1}. Unknown User`, value: numberToKorean(value) + " " + 단위});
-        }
-    }
-
-    let embed = {
-        title: `${option} 랭킹`,
-        color: 'GREEN',
-        fields: discordFields,
-        timestamp: new Date(),
-        footer: {
-            text: `${message.author.tag}`,
-            icon_url: `${message.author.displayAvatarURL({
-                dynamic: true
-            })}`,
-        },
-    }
-    return embed;
 }
 
 
