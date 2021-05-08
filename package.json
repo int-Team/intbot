@@ -31,7 +31,7 @@
         "mongodb": "latest",
         "morgan": "latest",
         "node-fetch": "^2.6.1",
-        "oauth-discord": "^1.3.0",
+        "oauth-discord": "latest",
         "querystring": "^0.2.0",
         "serve-favicon": "latest",
         "util": "latest",
