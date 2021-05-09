@@ -155,7 +155,7 @@ client.on('message', async message => {
 })
 // Ready!
 client.on("ready", () => {
-	client.status = '정상 운영중...'
+    client.status = '정상 운영중...'
     console.log(`[Bot] Logged on ${client.user.username}`);
 	
     setInterval(() => {
@@ -240,39 +240,6 @@ client.on("ready", () => {
             return
         }
     }, 200000);*/
-});
-
-client.on("message", async message => {
-    if (message.author.bot) return;
-	if(!await client.db.findOne({_id: message.author.id}) ) {
-		return;
-	} else if(!await client.dbchannels.findOne({_id: message.guild.id}) ) {
-		return;
-	} else {
-		let user = await client.db.findOne({_id: message.author.id});
-		let channel = await client.dbchannels.findOne({_id: message.guild.id});
-
-		if (!user)
-			return;
-		if(user.xp >= 100){
-			await client.db.updateOne({_id: message.author.id}, {
-				$set: {
-					level: user.level + 1,
-					xp: user.xp = 0,
-				}
-			});
-			if(channel.alram)
-				return;
-
-			message.channel.send(`${user.level}으로 레벨업 하셨습니다.`);
-		} else {
-			await client.db.updateOne({_id: message.author.id}, {
-				$set: {
-					xp: user.xp + 1,
-				}
-			});
-		}
-	}
 });
 
 client.on("message", async message => {
