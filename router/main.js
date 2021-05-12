@@ -64,6 +64,7 @@ module.exports =
             
       const dscUser = await client.users.cache.get(req.session.user_id)
       const userDB = await client.db.findOne({_id: dscUser.id})
+      const merchs = await client.goods.find().toArray()
 
       if (!userDB)
         return res.send('<script>alert("인트봇에 가입한 유저가 아니에요!");location.back();</script>')
@@ -71,9 +72,9 @@ module.exports =
       res.render('shop', {
         user: {
           tag: dscUser.tag,
-          money: userDB.money
+          money: numberToKorean(userDB.money),
         },
-        status: client.status,
+        merchs
       })
     } catch (e) {
       console.log(e)
@@ -92,14 +93,14 @@ module.exports =
     if (!client.users.cache.has(req.session.user_id))
       return res.status(404).send('<script>alert("인트봇이 접근할 수 있는 유저가 아니에요!");location.back();</script>')
         
-    const dscUser = await client.users.cache.get(req.session.user_id)
+    const dscUser = client.users.cache.get(req.session.user_id)
     const userDB = await client.db.findOne({_id: dscUser.id})
     const merch = await client.goods.findOne({_id: merch_id})
 
     if (!userDB)
       return res.send('<script>alert("인트봇 서비스에 가입한 유저가 아니에요!");location.back();</script>')
     if (userDB.money < merch.price)
-      return res.send('<script>alert("인트봇 머니가 부족해요!");location.back();location.back();</script>')
+      return res.send('<script>alert("돈이 부족해요!");location.back();location.back();</script>')
 
     await client.db.updateOne({_id: req.session.user_id}, {
       $set: {
@@ -123,7 +124,7 @@ module.exports =
     const userDB = await client.db.findOne({_id: id})
 
     if (!client.users.cache.has(id) || !userDB)
-      return res.send('<script>alert("찾으시는 유저가 없습니다");history.back();</script>')
+      return res.send('<script>alert("인트봇이 볼 수 없는 유저에요!");history.back();</script>')
 
     try {
       let user = await client.users.fetch(id)
@@ -138,62 +139,54 @@ module.exports =
         level: rank.level.count,
         xp: rank.level.count,
         money_rank: rank.money.rank,
-        level_rank: rank.level.rank,
         xp_rank: rank.level.rank,
         goods: userDB.goods,
+        // eslint-disable-next-line no-dupe-keys
         status: client.status,
       })
     } catch (e) {
       console.log(e)
-
-      res.render('profile.ejs', {
-        profile_img: 'https://blog.kakaocdn.net/dn/cyOIpg/btqx7JTDRTq/1fs7MnKMK7nSbrM9QTIbE1/img.jpg',
-        username: 'Unknown User',
-        tag: 'Unknown Tag',
-        money: 'unknown',
-        level: 'unknown',
-        xp: 'unknown',
-        money_rank: 'unknown',
-        level_rank: 'unknown',
-        xp_rank: 'unknown',
-        goods: [],
-        status: client.status,
-      })
+      return res.send('<script>alert("인트봇이 볼 수 없는 유저에요!");history.back();</script>')
     }
   })
 }
-
 
 /**
  * @param {Discord.Client} client 
  */
 const getMyRank = async (id, client) => {
-  const xpmoney = {
-    '돈': { money:-1 },
-    '레벨': { level:-1 }
-  }
-  let user = await client.users.fetch(id)
   let userDB = await client.db.findOne({_id: id})
-  let moneyRankArr = await client.db.find().sort(xpmoney.돈).toArray()
-  let levelRankArr = await client.db.find().sort(xpmoney.레벨).toArray()
+  let moneyRankArr = await client.db.find().sort({money:-1}).toArray()
   let rank = {}
-
-  rank.level = {}
   rank.money = {}
-  rank.money.rank = moneyRankArr.findIndex(e => {
-    return e._id == id
-  })
-  rank.level.rank = levelRankArr.findIndex(e => {
-    return e._id == id
-  })
-  rank.level.rank += 1
+  rank.money.rank = moneyRankArr.findIndex(e => e._id == id)
   rank.money.rank += 1
-  rank.level.count = numberWithCommas(userDB.level)
-  rank.money.count = numberWithCommas(userDB.money)
+  rank.money.count = numberToKorean(userDB.money)
 
   return rank
 }
 
-function numberWithCommas(x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+function numberToKorean(number){
+  if (String(number).includes('Infinity'))  return number
+  var inputNumber  = number < 0 ? false : number
+  var unitWords    = ['', '만', '억', '조', '경', '해', '자', '양', '구', '간', '정', '재', '극']
+  var splitUnit    = 10000
+  var splitCount   = unitWords.length
+  var resultArray  = []
+  var resultString = ''
+
+  for (var i = 0; i < splitCount; i++){
+    var unitResult = (inputNumber % Math.pow(splitUnit, i + 1)) / Math.pow(splitUnit, i)
+    unitResult = Math.floor(unitResult)
+    if (unitResult > 0){
+      resultArray[i] = unitResult
+    }
+  }
+
+  for (var a = 0; a < resultArray.length; a++){
+    if(!resultArray[a]) continue
+    resultString = String(resultArray[a]) + unitWords[a] + ' ' + resultString
+  }
+
+  return resultString.replace(/ $/, '')
 }

@@ -11,7 +11,7 @@
         "test": "npm run lint && npm run lint:commands",
         "lint": "eslint ./",
         "lint:commands": "eslint ./commands/",
-        "lint:fix": "eslint ./ -fix"
+        "lint:fix": "eslint ./ --fix"
     },
     "author": "int",
     "license": "MIT",

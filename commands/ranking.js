@@ -74,9 +74,7 @@ const getUserRank = async (id, client) => {
   let rank = {}
 
   rank.money = {}
-  rank.money.rank = moneyRankArr.findIndex(e => {
-    return e._id == id
-  })
+  rank.money.rank = moneyRankArr.findIndex(e => e._id == id)
   rank.money.rank += 1
   rank.money.count = numberToKorean(userDB.money)
 
