@@ -7,7 +7,11 @@
         "start": "node struct/Shard.js",
         "dev": "nodemon app.js",
         "boot": "pm2 start app.js && pm2 log",
-        "repl": "pm2 restart app && pm2 log"
+        "repl": "pm2 restart app && pm2 log",
+        "test": "npm run lint && npm run lint:commands",
+        "lint": "eslint ./",
+        "lint:commands": "eslint ./commands/",
+        "lint:fix": "eslint ./ -fix"
     },
     "author": "int",
     "license": "MIT",
@@ -40,7 +44,7 @@
         "zlib-sync": "^0.1.7"
     },
     "devDependencies": {
-        "eslint": "^7.24.0",
+        "eslint": "^7.26.0",
         "nodemon": "^2.0.7",
         "pm2": "^4.5.6"
     }
