@@ -32,13 +32,12 @@ module.exports = {
                 .setColor('RED')
                 .setFooter(message.author.tag, message.author.displayAvatarURL())
                 .setTimestamp());
-        
-        
+            if (option == '유저')
+        return message.channel.send(await getMyRank(message.author.id, client));
     }
 }
 
 /**
- * 
  * @param {*} option 
  * @param {Discord.Client} client
  * @param {Discord.Message} message 
@@ -55,7 +54,7 @@ const getRank = async (client, message) => {
         fields.push({
             name: `${fields.length + 1}. ${dsc_user.username}`,
             value: ``
-        })
+        });
     }
 }
 
