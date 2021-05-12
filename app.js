@@ -102,11 +102,11 @@ fs.readdir('./commands/', (err, list) => {
     try {
       let pull = require(`./commands/${file}`)
       if (pull.name && pull.run && pull.aliases) {
-        table.addRow(file, '✅')
-        for (let alias of pull.aliases) {
+        for (let alias of pull.aliases)
           client.aliases.set(alias, pull.name)
-        }
+
         client.commands.set(pull.name, pull)
+        table.addRow(file, '✅')
       } else {
         table.addRow(file, '❌ -> Error')
         continue
@@ -147,7 +147,7 @@ client.on('message', async message => {
   const DokdoHandler = new Dokdo(client, {
     aliases: ['dokdo', 'dok', '독도', '독'],
     prefix: '야 ',
-    owners: client.developers ,
+    owners: client.developers,
     noPerm: (message) => message.reply('🚫 해당 명령어는 인트봇 관리자 전용 명령어입니다.')
   })
 
