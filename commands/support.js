@@ -1,10 +1,11 @@
+/* eslint-disable no-unused-vars */
 const Discord = require('discord.js')
 module.exports = {
   name: '문의',
   aliases: ['신고', '서포트', 'support'],
   description: '봇에게 문의/신고를 할 수 있어요.',
   usage: '인트야 문의',
-  run: async (client, message, args, ops) => {
+  run: async (client, message, args, _ops) => {
     const content =  `${args.slice(1).join(' ')}`
     if(!content){
       return message.channel.send('문의 내용을 적어주세요.')
