@@ -1,8 +1,6 @@
 const { MessageEmbed } = require('discord.js')
 const Discord = require('discord.js')
 
-
-const numberWithCommas = x => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 module.exports = {
   name: '송금',
   aliases: ['ㄴ둥', '송금', '주기', 'send'],
@@ -40,7 +38,7 @@ module.exports = {
         let embed = new MessageEmbed()
           .setTitle('정말로 송금할까요?')
           .setColor('YELLOW')
-          .setDescription(`${dscUSER.tag} 님 에게 ${count} 만큼의 돈을 주고 ${total} 만큼의 이 남습니다! 수수료로 200원이 차감됩니다.`)
+          .setDescription(`${dscUSER.tag} 님 에게 ${numberToKorean(count)} 만큼의 돈을 주고 ${numberToKorean(total)} 만큼의 이 남습니다! 수수료로 200원이 차감됩니다.`)
           .setTimestamp()
           .setFooter(`${message.author.tag}\u200b`, message.author.displayAvatarURL({
             dynamic: true,
@@ -70,8 +68,8 @@ module.exports = {
               })
               embed.setTitle('송금ㅣ성공')
                 .setDescription('성공적으로 유저에게 돈을 보냈습니다')
-                .addField(`${dscUSER.tag}`, `${toUserDB.money + count} money`)
-                .addField(`${message.author.tag}`, `${total - 200} money`)
+                .addField(`${dscUSER.tag}`, `${numberToKorean(toUserDB.money + count)} money`)
+                .addField(`${message.author.tag}`, `${numberToKorean(total - 200)} money`)
                 .setColor('GREEN')
                 .setFooter(`${message.author.tag}\u200b`, message.author.displayAvatarURL({
                   dynamic: true,
@@ -103,7 +101,7 @@ module.exports = {
       }
     } catch (e) {
       console.log(e)
-      client.channels.cache.get('752710841513672714').send(new MessageEmbed()
+      client.channels.cache.get('836917703075823636').send(new MessageEmbed()
         .setTitle('ERRORㅣ돈보내기')
         .setColor('RED')
         .addField('요청인', `${message.author.tag}(${message.author.id})`)
@@ -114,4 +112,28 @@ module.exports = {
       return message.reply('에러가 난것 같아요, 잠깐만요..')
     }
   }
+}
+function numberToKorean(number){
+  if (String(number).includes('Infinity'))  return number
+  var inputNumber  = number < 0 ? false : number
+  var unitWords    = ['', '만', '억', '조', '경', '해', '자', '양', '구', '간', '정', '재', '극']
+  var splitUnit    = 10000
+  var splitCount   = unitWords.length
+  var resultArray  = []
+  var resultString = ''
+
+  for (var i = 0; i < splitCount; i++){
+    var unitResult = (inputNumber % Math.pow(splitUnit, i + 1)) / Math.pow(splitUnit, i)
+    unitResult = Math.floor(unitResult)
+    if (unitResult > 0){
+      resultArray[i] = unitResult
+    }
+  }
+
+  for (var a = 0; a < resultArray.length; a++){
+    if(!resultArray[a]) continue
+    resultString = String(resultArray[a]) + unitWords[a] + ' ' + resultString
+  }
+
+  return resultString.replace(/ $/, '')
 }
