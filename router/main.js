@@ -6,7 +6,7 @@ const Oauth = new DiscordOauth({
   client_secret: process.env.CLIENT_SECRET,
   redirect_uri: process.env.REDIRECT_URI,
 })
-
+const Discord = require('discord.js')
 module.exports =
   /**
    * @param {import('express').Application} app express app
@@ -50,6 +50,13 @@ module.exports =
       res.redirect('/shop')
     } catch (e) {
       console.log(e)
+      client.channels.cache.get('836917703075823636').send(new Discord.MessageEmbed()
+        .setTitle('ERRORㅣOAuth 이동')
+        .setColor('RED')
+        .addField('요청인', `${dscUser.id}`)
+        .addField('오류내용', e.toString())
+        .setTimestamp()
+      )
       res.redirect(process.env.OAUTH_URL)
     }
   })
@@ -78,6 +85,13 @@ module.exports =
       })
     } catch (e) {
       console.log(e)
+      client.channels.cache.get('836917703075823636').send(new Discord.MessageEmbed()
+        .setTitle('ERRORㅣ웹 상점')
+        .setColor('RED')
+        .addField('요청인', `${dscUser.id}`)
+        .addField('오류내용', e.toString())
+        .setTimestamp()
+      )
       res.redirect(process.env.OAUTH_URL)
     }
   })
@@ -146,7 +160,13 @@ module.exports =
       })
     } catch (e) {
       console.log(e)
-      return res.send('<script>alert("인트봇이 볼 수 없는 유저에요!");history.back();</script>')
+      client.channels.cache.get('836917703075823636').send(new Discord.MessageEmbed()
+        .setTitle('ERRORㅣOAuth 이동')
+        .setColor('RED')
+        .addField('오류내용', e.toString())
+        .setTimestamp()
+      )
+      return res.send('<script>alert("인트봇이 볼 수 없는 유저에요!");</script>')
     }
   })
 }
