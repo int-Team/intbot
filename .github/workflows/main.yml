@@ -16,22 +16,19 @@ jobs:
       with:
         node-version: 12
 
-    - name: : Package Install
+    - name: :Package Install
       run: yarn
 
     - name: ESLint Find
-	  run : yarn run lint
-      with:
-        custom-glob: src
+      run : yarn run lint
       env:
         CI: false
 		
-	- name: ESLint Fix
-	  run : yarn run lint:fix
-      with:
-        custom-glob: src
+    - name: ESLint Fix
+      run : yarn run lint:fix
       env:
         CI: false
+	
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
