@@ -2,19 +2,17 @@
 process.title = `Intbot - Ver. ${require('../package.json').version}, ${process.platform}-${process.arch}`
 
 // Dependencies
-const Discord = require("discord.js");
-const MongoDB = require("mongodb");
+const Discord = require('discord.js')
 const MusicClient = require('./struct/Client')
-const client = new MusicClient();
-const Event = require("./event");
-const Modules = require("./modules");
+const client = new MusicClient()
+const Event = require('./event')
+const Modules = require('./modules')
 
 // Variables 
 require('dotenv').config()
 const PORT = process.env.PORT || 5001
 const DB_PW = process.env.DB_PW
-const token = process.env.BOT_TOKEN
-const prefix = process.env.PREFIX
+client.prefix = process.env.PREFIX
 client.status = '오프라인'
 
 // Discord bot client
@@ -27,23 +25,23 @@ client.developers = [
   '552103947662524416',
   '647736678815105037'
 ]
-client.module = Modules;
+client.module = Modules
 
 // Database
 Modules.dataBase(client);
 
 // Booting
 (async () => {
-	console.clear();
+  console.clear()
 
-	console.log('---------------------------------------------------------------------');
-	console.log('Author(s) : chul0721, sujang, MadeGOD');
-	console.log('(C) Team Int. All rights reserved.');
-	console.log('---------------------------------------------------------------------');
-	console.log(`[System] Intbot - Ver. ${require('../package.json').version}, ${process.platform}-${process.arch}`);
+  console.log('---------------------------------------------------------------------')
+  console.log('Author(s) : chul0721, sujang, MadeGOD')
+  console.log('(C) Team Int. All rights reserved.')
+  console.log('---------------------------------------------------------------------')
+  console.log(`[System] Intbot - Ver. ${require('../package.json').version}, ${process.platform}-${process.arch}`)
 
-	client.login(process.env.BOT_TOKEN);
-	await Event.ready(client);
-	await Modules.handler(client, prefix, Modules);
+  client.login(process.env.BOT_TOKEN)
+  await Event.ready(client)
+  await Modules.handler(client, prefix, Modules)
 	
 })()
