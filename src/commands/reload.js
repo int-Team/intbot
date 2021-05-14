@@ -6,7 +6,7 @@ module.exports = {
   aliases: ['새로고침', 'flfhem', 'reload'],
   description: '명령어 새로고침을 합니다',
   usage: '인트야 리로드',
-  run: async (client, message, args, config) => {
+  run: async (client, message, args) => {
     if (!client.developers.includes(message.author.id)) return
     const embed = new Discord.MessageEmbed()
       .setTitle(`${client.emojis.cache.find(x => x.name == 'loading')} 리로드 중`)
@@ -22,7 +22,8 @@ module.exports = {
       }))
       .setTimestamp()
     let m = await message.channel.send(embed)
-    fs.readdir('./commands/', async function (_err, list) {
+    fs.readdir('./src/commands/', async function (_err, list) {
+	  console.log(client.color("blue", "[System] ")+ `Loading ${client.commands.size} commands`)
       client.commands.clear()
       client.aliases.clear() 
       var i = 0
@@ -37,7 +38,7 @@ module.exports = {
           client.commands.set(pull.name, pull)
         }
       }
-      console.log('[System] Reloaded ')            
+      console.log(client.color("blue", "[System] ")+ `Loaded ${client.commands.size} commands`)            
       embed.spliceFields(0, 1)
         .addField('커멘드 파일 로드 상태', `${client.emojis.cache.find(x => x.name == 'verified')} 리로드 완료(${list.length}개)`)
         .setTitle('리로드가 완료되었어요.')

@@ -51,9 +51,9 @@ module.exports =
     } catch (e) {
       console.log(e)
       client.channels.cache.get('836917703075823636').send(new Discord.MessageEmbed()
-        .setTitle('ERRORㅣOAuth 이동')
+        .setTitle('ERROR')
         .setColor('RED')
-        .addField('요청인', `${dscUser.id}`)
+        .addField('요청 장소', '/callback')
         .addField('오류내용', e.toString())
         .setTimestamp()
       )
@@ -86,9 +86,9 @@ module.exports =
     } catch (e) {
       console.log(e)
       client.channels.cache.get('836917703075823636').send(new Discord.MessageEmbed()
-        .setTitle('ERRORㅣ웹 상점')
+        .setTitle('ERROR')
         .setColor('RED')
-        .addField('요청인', `${dscUser.id}`)
+        .addField('요청장소', '/shop')
         .addField('오류내용', e.toString())
         .setTimestamp()
       )
