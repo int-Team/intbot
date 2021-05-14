@@ -1,0 +1,57 @@
+name: Code Analyze && ESLint Code Analyze
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  eslint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Install node v12
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+
+    - name: : Package Install
+      run: yarn
+
+    - name: ESLint Find
+	  run : yarn run lint
+      with:
+        custom-glob: src
+      env:
+        CI: false
+		
+	- name: ESLint Fix
+	  run : yarn run lint:fix
+      with:
+        custom-glob: src
+      env:
+        CI: false
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'javascript' ]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+        languages: ${{ matrix.language }}
+		
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v1
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1

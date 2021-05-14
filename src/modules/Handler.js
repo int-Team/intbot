@@ -35,7 +35,6 @@ module.exports = async (client, prefix, Modules) => {
         client.commands.get(client.aliases.get(args[0])).run(client, message, args)
       } else {
         let s = 0
-        let sname = undefined
         let typed = args[0]
         let valids = []
         for (let x of client.commands.array()) {
@@ -55,7 +54,6 @@ module.exports = async (client, prefix, Modules) => {
           }
           if (cnt > s) {
             s = cnt
-            sname = curr
           }
         }
       }

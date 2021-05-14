@@ -10,9 +10,8 @@ const Modules = require('./modules')
 
 // Variables 
 require('dotenv').config()
-const PORT = process.env.PORT || 5001
-const DB_PW = process.env.DB_PW
-client.prefix = process.env.PREFIX
+//const PORT = process.env.PORT || 5001
+const prefix = process.env.PREFIX
 client.status = '오프라인'
 
 // Discord bot client

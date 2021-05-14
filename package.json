@@ -10,7 +10,7 @@
         "repl": "pm2 restart app && pm2 log",
         "test": "npm run lint && npm run lint:commands",
         "lint": "eslint ./",
-        "lint:commands": "eslint ./src/commands/",
+        "lint:commands": "eslint ./src/commands/ --no-ignore",
         "lint:fix": "eslint ./ --fix"
     },
     "author": "teamint",
@@ -47,5 +47,6 @@
         "eslint": "^7.26.0",
         "nodemon": "^2.0.7",
         "pm2": "^4.5.6"
-    }
+    },
+	"eslintIgnore": ["/src/commands/*"]
 }

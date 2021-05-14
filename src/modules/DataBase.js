@@ -30,7 +30,8 @@ module.exports = async (client) => {
           { _id: stock._id },
           {
             $set: {
-              money: float2int(Math.random() * (stock_min * -2) + stock_min) + stock_v,
+              money:
+								float2int(Math.random() * (stock_min * -2) + stock_min) + stock_v,
               previous: stock.money,
             },
           }
@@ -40,6 +41,31 @@ module.exports = async (client) => {
 
       console.log('[Stock] Update', stockAvg / stocks.length)
     }, 600000)
+    client.once('ready', async () => {
+      client.lastStockUpdate = Date.now()
+      const stock_v = 5000
+      const stock_min = stock_v - 2000
+
+      const stocks = await client.stock.find().toArray()
+      let stockAvg = 30000
+      client.lastStockUpdate = Date.now()
+
+      for (let stock of stocks) {
+        client.stock.updateOne(
+          { _id: stock._id },
+          {
+            $set: {
+              money:
+								float2int(Math.random() * (stock_min * -2) + stock_min) + stock_v,
+              previous: stock.money,
+            },
+          }
+        )
+        stockAvg += stock.money
+      }
+
+      console.log('[Stock] Update', stockAvg / stocks.length)
+    })
   })
 }
 
