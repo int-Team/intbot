@@ -19,11 +19,11 @@ jobs:
 
     - name: Package Install
       run: yarn
-
-    - name: eslint
-      uses: icrawl/action-eslint@v1
-      with:
-        custom-glob: src # only if a different glob is needed, default: src
+      
+    - name: ESLint Find
+      run : yarn run lint
+      env:
+        CI: false
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
