@@ -23,7 +23,6 @@ jobs:
       run : yarn run lint
       env:
         CI: false
-		
     - name: ESLint Fix
       run : yarn run lint:fix
       env:
@@ -37,16 +36,13 @@ jobs:
       fail-fast: false
       matrix:
         language: [ 'javascript' ]
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
       with:
         languages: ${{ matrix.language }}
-		
     - name: Autobuild
       uses: github/codeql-action/autobuild@v1
 
