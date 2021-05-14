@@ -27,7 +27,6 @@ jobs:
       run : yarn run lint:fix
       env:
         CI: false
-	
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
