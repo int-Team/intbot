@@ -1,19 +1,19 @@
 {
     "name": "intbot",
-    "version": "1.0.0",
+    "version": "1.3.0",
     "description": "intbot",
-    "main": "app.js",
+    "main": "./src/index.js",
     "scripts": {
-        "start": "node struct/Shard.js",
-        "dev": "nodemon app.js",
-        "boot": "pm2 start app.js && pm2 log",
+        "start": "node ./src/struct/Shard.js",
+        "dev": "nodemon .",
+        "boot": "pm2 start src/index.js --name 'app' && pm2 log",
         "repl": "pm2 restart app && pm2 log",
         "test": "npm run lint && npm run lint:commands",
         "lint": "eslint ./",
-        "lint:commands": "eslint ./commands/",
+        "lint:commands": "eslint ./src/commands/",
         "lint:fix": "eslint ./ --fix"
     },
-    "author": "int",
+    "author": "teamint",
     "license": "MIT",
     "dependencies": {
         "@discordjs/opus": "^0.3.3",
