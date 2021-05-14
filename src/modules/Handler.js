@@ -6,17 +6,17 @@ module.exports = async (client, prefix, Modules) => {
       try {
         let pull = require(`../commands/${file}`)
         if (pull.name && pull.run && pull.aliases) {
-          console.log(`[Handler] ${file} ✅`)
+          console.log( client.color("green", "[Handler] ") + `${file} ✅`)
           for (let alias of pull.aliases) {
             client.aliases.set(alias, pull.name)
           }
           client.commands.set(pull.name, pull)
         } else {
-          console.error(`[Handler] ${file} ❌ -> Error`)
+          console.error( client.color("red", "[Handler] ") + `${file} ❌ -> Error`)
           continue
         }
       } catch (e) {
-        console.error(`[Handler] ${file} ❌ -> ${e}`)
+        console.error( client.color("red", "[Handler] ") + `${file} ❌ -> ${e}` )
         continue
       }
     }
@@ -65,6 +65,8 @@ module.exports = async (client, prefix, Modules) => {
       } else if (client.aliases.get(args[0])) {
         return message.channel.send('현재 인트봇이 점검중이며 일부 기능을 이용할수 없습니다.')
       }
+    } else if(client.status == '부팅중...') {
+      return message.channel.send('인트봇 리붓중이며 잠시만 기다려주세요...')
     }
 		
   })

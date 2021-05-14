@@ -15,7 +15,7 @@ module.exports = async (client) => {
     client.dbchannels = DBClient.db('intbot').collection('channels')
     client.stock = DBClient.db('intbot').collection('stock')
 
-    console.log('[Database] MongoDB Connected.')
+    console.log(client.color('yellow', "[Database] ") + 'MongoDB Connected.')
 
     setInterval(async () => {
       const stock_v = 5000

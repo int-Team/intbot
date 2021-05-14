@@ -3,5 +3,6 @@ module.exports = {
   dataBase : require('./DataBase.js'),
   dokdo : require('./Dokdo.js'),
 	
-  color : require('./Color.js')
+  colorData : require('./Color.js'),
+  web : require('./WebServer.js')
 }

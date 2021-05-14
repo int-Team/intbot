@@ -1,7 +1,6 @@
 module.exports = async (client) => {
   client.on('ready', async () => {
-    client.status = '정상 운영중...'
-    console.log(`[Bot] Logged on ${client.user.username}`)
+    console.log(client.color("cyan", "[Bot] ") + `Logged on ${client.user.username}`)
     setInterval(() => {
       switch (Math.floor(Math.random() * 6)) {
       case 0:
@@ -68,45 +67,38 @@ module.exports = async (client) => {
         })
         break
       }
-    }, 10000) 
-    client.lastStockUpdate = Date.now()
-    const stock_v = 5000
-    const stock_min = stock_v - 2000
-
-    const stocks = await client.stock.find().toArray()
-    let stockAvg = 30000
-    client.lastStockUpdate = Date.now()
-
-    for (let stock of stocks) {
-      client.stock.updateOne(
-        { _id: stock._id },
-        {
-          $set: {
-            money: float2int(Math.random() * (stock_min * -2) + stock_min) + stock_v,
-            previous: stock.money,
-          },
-        }
-      )
-      stockAvg += stock.money
-    }
-
-    console.log('[Stock] Update', stockAvg / stocks.length)
+    }, 10000)
   })
-  /*
-    setInterval(() => {
-        if(client.guilds.cache.size){
-            axios.post(`https://api.koreanbots.dev/bots/servers`, {
-                servers: client.guilds.cache.size
-            }, {
-                headers: {
-                    'Content-Type': "application/json",
-                    token: process.env.KTOKEN
-                }
-            });
-        } else {
-            return
-        }
-    }, 200000);*/
+  client.on('ready', async () => {
+    setTimeout(async () => {
+      client.status = '정상 운영중...'
+      client.lastStockUpdate = Date.now()
+      const stock_v = 5000
+      const stock_min = stock_v - 2000
+
+      const stocks = await client.stock.find().toArray()
+      let stockAvg = 30000
+      client.lastStockUpdate = Date.now()
+
+      for (let stock of stocks) {
+        client.stock.updateOne(
+          { _id: stock._id },
+          {
+            $set: {
+              money: float2int(Math.random() * (stock_min * -2) + stock_min) + stock_v,
+              previous: stock.money,
+            },
+          }
+        )
+        stockAvg += stock.money
+      }
+
+      console.log(client.color('gray', '[Stock] ') + 'Update', stockAvg / stocks.length)
+    }, 4000)
+    setTimeout(async () => {
+      client.status = '정상 운영중...'
+    }, 10000)
+  })
 }
 function float2int(value) {
   return value | 0

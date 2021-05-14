@@ -1,4 +1,6 @@
-// Console Color
+/* 
+ * Console Color
+ */
 module.exports.reset = '\x1b[0m'
 module.exports.bright = '\x1b[1m'
 module.exports.dim = '\x1b[2m'
@@ -7,18 +9,22 @@ module.exports.blink = '\x1b[5m'
 module.exports.reverse = '\x1b[7m'
 module.exports.hidden = '\x1b[8m'
 
-// Defealt Color
+/* 
+ * Defealt Color
+ */
 module.exports.black = '\x1b[30m'
 module.exports.red = '\x1b[31m'
 module.exports.green = '\x1b[32m'
 module.exports.yellow = '\x1b[33m'
 module.exports.blue = '\x1b[34m'
 module.exports.magenta = '\x1b[35m'
-module.exports.cyan = '\x1b[36m'
+module.exports.cyan = '\x1b[96m'
 module.exports.white = '\x1b[37m'
 module.exports.gray = '\x1b[90m'
 
-// Secret Color
+/* 
+ * Secret Color
+ */
 module.exports.BgBlack = '\x1b[40m'
 module.exports.BgRed = '\x1b[41m'
 module.exports.BgGreen = '\x1b[42m'
