@@ -6,17 +6,17 @@ module.exports = async (client, prefix, Modules) => {
       try {
         let pull = require(`../commands/${file}`)
         if (pull.name && pull.run && pull.aliases) {
-          console.log( client.color("green", "[Handler] ") + `${file} ✅`)
+          console.log( client.color('green', '[Handler] ') + `${file} ✅`)
           for (let alias of pull.aliases) {
             client.aliases.set(alias, pull.name)
           }
           client.commands.set(pull.name, pull)
         } else {
-          console.error( client.color("red", "[Handler] ") + `${file} ❌ -> Error`)
+          console.error( client.color('red', '[Handler] ') + `${file} ❌ -> Error`)
           continue
         }
       } catch (e) {
-        console.error( client.color("red", "[Handler] ") + `${file} ❌ -> ${e}` )
+        console.error( client.color('red', '[Handler] ') + `${file} ❌ -> ${e}` )
         continue
       }
     }

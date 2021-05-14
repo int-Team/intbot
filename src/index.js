@@ -29,11 +29,11 @@ client.color = color
 
 // Function
 function color(color, string) {
-	if(!Modules.colorData[color]){
-		throw new TypeError(`There is no color ${color}`);
-    } else {
-		return `${Modules.colorData[color]}${string}${Modules.colorData.reset}`
-    }
+  if(!Modules.colorData[color]){
+    throw new TypeError(`There is no color ${color}`)
+  } else {
+    return `${Modules.colorData[color]}${string}${Modules.colorData.reset}`
+  }
 }
 
 // Database
@@ -48,7 +48,7 @@ Modules.dataBase(client);
   console.log('Author(s) : chul0721, sujang, MadeGOD')
   console.log('(C) Team Int. All rights reserved.')
   console.log('---------------------------------------------------------------------')
-  console.log(client.color("blue", "[System] ") + `Intbot - Ver. ${require('../package.json').version}, ${process.platform}-${process.arch}`)
+  console.log(client.color('blue', '[System] ') + `Intbot - Ver. ${require('../package.json').version}, ${process.platform}-${process.arch}`)
 
   client.login(process.env.BOT_TOKEN)
   await Event.ready(client)
