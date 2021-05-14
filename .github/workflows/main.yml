@@ -1,7 +1,8 @@
-name: Code Analyze && ESLint Code Analyze
+name: Code Analyze
 
 on:
   push:
+    branches: [ main ]
   pull_request:
 
 jobs:
@@ -16,7 +17,7 @@ jobs:
       with:
         node-version: 12
 
-    - name: :Package Install
+    - name: Package Install
       run: yarn
 
     - name: ESLint Find
