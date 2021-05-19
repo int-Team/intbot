@@ -29,21 +29,19 @@ client.color = color
 
 // Function
 function color(color, string) {
-  if(!Modules.colorData[color]){
+  if(!Modules.colorData[color])
     throw new TypeError(`There is no color ${color}`)
-  } else {
+  else 
     return `${Modules.colorData[color]}${string}${Modules.colorData.reset}`
-  }
+  
 }
-
-// Database
-Modules.dataBase(client);
 
 // Booting
 (async () => {
   client.status = '부팅중...'
-  console.clear()
+  await Modules.dataBase(client)
 
+  console.clear()
   console.log('---------------------------------------------------------------------')
   console.log('Author(s) : chul0721, sujang, MadeGOD')
   console.log('(C) Team Int. All rights reserved.')
@@ -54,5 +52,4 @@ Modules.dataBase(client);
   await Event.ready(client)
   await Modules.handler(client, prefix, Modules)
   await Modules.web(client, PORT)
-	
 })()
