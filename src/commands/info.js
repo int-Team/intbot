@@ -6,12 +6,9 @@ module.exports = {
   usage: '인트야 정보',
   run: async (client, message, args, ops) => {
     message.channel.send(new Discord.MessageEmbed()
-      .setTitle(`${message.author.tag}님의 정보`)
+      .setAuthor(`${message.author.tag}`)
       .addField('돈', `${(await client.db.findOne({_id: message.author.id})).money}`)
-      .addField('채팅 xp', `${(await client.db.findOne({_id: message.author.id})).xp}/100`)
-      .addField('채팅 레벨', `${(await client.db.findOne({_id: message.author.id})).level}`)
-      .setColor('RANDOM')
-      .setFooter(message.author.tag, message.author.displayAvatarURL())
+      .setColor('GREEN')
       .setTimestamp()
     )
   }
