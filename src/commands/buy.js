@@ -1,12 +1,10 @@
 const { MessageEmbed } = require('discord.js')
-const Discord = require('discord.js')
+const { numberToKorean } = require('../util/index')
 
 async function find(str, client) {
   var s = await client.stock.find().toArray()
   return s.filter(r => r._id.includes(str) || r.name.includes(str) || r.code.includes(str))
 }
-
-const numberWithCommas = x => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
 module.exports = {
   name: '매수',
@@ -79,7 +77,7 @@ module.exports = {
       .setDescription(
         `매수하려는 주식 : ${
           res[0].name
-        }\n수량 : ${numberWithCommas(num)}\n지불할 금액 : ${numberWithCommas(total)} :coin:\n계속하시려면 💳 이모지로 반응하세요.`
+        }\n수량 : ${numberToKorean(num)}\n지불할 금액 : ${numberToKorean(total)} :coin:\n계속하시려면 💳 이모지로 반응하세요.`
       )
       .setTimestamp()
       .setColor('YELLOW')
@@ -106,11 +104,11 @@ module.exports = {
                 `주식 : ${
                   res[0].name
                 }\n수량 : ${
-                  numberWithCommas(num)
+                  numberToKorean(num)
                 }주\n지출 : ${
-                  numberWithCommas(total)
+                  numberToKorean(total)
                 } :coin:\n잔고 : ${
-                  numberWithCommas(dived)
+                  numberToKorean(dived)
                 } :coin:`
               )
               .setColor('GREEN')

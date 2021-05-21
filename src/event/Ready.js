@@ -97,7 +97,7 @@ module.exports = async (client) => {
     }, 4000)
     setTimeout(async () => {
       client.status = '정상 운영중...'
-    }, 10000)
+    }, 3000)
   })
 }
 

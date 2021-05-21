@@ -1,4 +1,5 @@
 const Discord = require('discord.js')
+
 module.exports = {
   name: '도박',
   aliases: ['gambling', 'ㅎ므ㅠㅣㅑㅜㅎ', 'ehqkr', 'dobak', 'game'],

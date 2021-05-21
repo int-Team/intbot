@@ -1,5 +1,6 @@
 const Discord = require('discord.js')
 require('dotenv').config()
+
 module.exports = {
   name: '개발자',
   aliases: ['developer', '개발팀', 'dev', 'team', '팀', '만든'],

@@ -1,9 +1,10 @@
 const Discord = require('discord.js')
+
 function float2int(value) {
   return value | 0
 }
-
 const numberWithCommas = x => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+
 module.exports = {
   name: '주식',
   aliases: ['주식', 'wntlr'],
