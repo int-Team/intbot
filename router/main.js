@@ -58,16 +58,15 @@ module.exports =
     try {
       if (!req.session.user_id)
         return res.redirect(process.env.OAUTH_URL)
-            
       if (!client.users.cache.has(req.session.user_id))
-        return res.send('<script>alert("인트봇이 접근할 수 있는 유저가 아니에요!");location.back();</script>')
+        return res.send('<script>alert("인트봇이 접근할 수 있는 유저가 아니에요!");history.back();</script>')
             
       const dscUser = await client.users.cache.get(req.session.user_id)
       const userDB = await client.db.findOne({_id: dscUser.id})
       const merchs = await client.goods.find().toArray()
 
       if (!userDB)
-        return res.send('<script>alert("인트봇에 가입한 유저가 아니에요!");location.back();</script>')
+        return res.send('<script>alert("인트봇에 가입한 유저가 아니에요!");history.back();</script>')
 
       res.render('shop', {
         user: {
@@ -102,16 +101,21 @@ module.exports =
     if (userDB.money < merch.price)
       return res.send('<script>alert("돈이 부족해요!");location.back();location.back();</script>')
 
+    userDB.merchs[merch._id] = {
+      count: userDB.merchs[merch._id] + 1 || 1,
+    }
+
     await client.db.updateOne({_id: req.session.user_id}, {
       $set: {
         money: Number(userDB.money - merch.price),
+        merchs: userDB.merchs
       },
       $push: {
         goods: merch._id
       }
     })
             
-    res.status(200).send('<script>alert("인트봇 아이템이 구매되었어요!");location.href="/shop";</script>')
+    res.status(200).send('<script>alert("아이템이 구매되었어요!");location.href="/shop";</script>')
   })
 
   app.get('/logout', (req, res) => {
