@@ -1,6 +1,6 @@
 module.exports = async (client) => {
   client.on('ready', async () => {
-    console.log(client.color('cyan', '[Bot] ') + `Logged on ${client.user.username}`)
+    console.log(client.color('cyan', '[Bot]'), `Logged on ${client.user.username}`)
     setInterval(() => {
       switch (Math.floor(Math.random() * 6)) {
       case 0:
@@ -100,6 +100,7 @@ module.exports = async (client) => {
     }, 10000)
   })
 }
+
 function float2int(value) {
   return value | 0
 }
