@@ -24,7 +24,6 @@ module.exports = {
       userID = args[1].replace(/[<@!]/gi, '')
     else
       userID = message.author.id
-
     user = await client.db.findOne({_id: userID})
 
     const embed = new MessageEmbed()
