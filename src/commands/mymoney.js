@@ -29,7 +29,7 @@ module.exports = {
     const embed = new MessageEmbed()
       .setTitle(`${message.author.tag}님의 지갑`)
       .setDescription('뒤적 뒤적 지갑속에 뭐가 있을까요?')
-      .addField('돈', `${numberToKorean(user.money)}원`, true)
+      .addField('돈', `${numberToKorean(user.money)} 원`, true)
       .setColor('GREEN')
       .setFooter(message.author.tag, message.author.displayAvatarURL())
       .setTimestamp()
