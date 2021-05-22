@@ -9,11 +9,11 @@
         "boot": "pm2 start src/index.js --name 'app' && pm2 log",
         "repl": "pm2 restart app && pm2 log",
         "test": "npm run lint && npm run lint:commands",
-        "lint": "eslint ./",
+        "lint": "eslint ./src",
         "lint:commands": "eslint ./src/commands/ --no-ignore",
-        "lint:fix": "eslint ./ --fix"
+        "lint:fix": "eslint ./src --fix"
     },
-    "author": "teamint",
+    "author": "team-int",
     "license": "MIT",
     "dependencies": {
         "@discordjs/opus": "^0.3.3",

@@ -1,5 +1,5 @@
 function numberToKorean(number){
-  if (String(number).includes('Infinity'))  return number
+  if (number >= Infinity)  return '무량대수'
   var inputNumber  = number < 0 ? false : number
   var unitWords    = ['', '만', '억', '조', '경', '해', '자', '양', '구', '간', '정', '재', '극']
   var splitUnit    = 10000

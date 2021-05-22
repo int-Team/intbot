@@ -77,7 +77,7 @@ module.exports = async (client) => {
       const stock_min = stock_v - 2000
 
       const stocks = await client.stock.find().toArray()
-      let stockAvg = 30000
+      let stockAvg = 0
       client.lastStockUpdate = Date.now()
 
       for (let stock of stocks) {
@@ -94,7 +94,7 @@ module.exports = async (client) => {
       }
 
       console.log(client.color('gray', '[Stock] ') + 'Update', stockAvg / stocks.length)
-    }, 4000)
+    }, 2000)
     setTimeout(async () => {
       client.status = '정상 운영중...'
     }, 3000)

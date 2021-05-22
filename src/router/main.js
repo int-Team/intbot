@@ -1,12 +1,13 @@
 require('dotenv').config()
 const DiscordOauth = require('oauth-discord')
+const Discord = require('discord.js')
+const { numberToKorean } = require('../util/index.js')
 const Oauth = new DiscordOauth({
   version: 'v8',
   client_id: '798709769929621506',
   client_secret: process.env.CLIENT_SECRET,
   redirect_uri: process.env.REDIRECT_URI,
 })
-const Discord = require('discord.js')
 
 module.exports =
   /**
@@ -147,7 +148,7 @@ module.exports =
       res.render('profile.ejs', {
         profile_img: user.displayAvatarURL(),
         username: `${user.username}`,
-        status: `${client.status}`,
+        status: client.status,
         tag: `${user.tag}`,
         money: rank.money.count,
         level: rank.level.count,
@@ -155,8 +156,6 @@ module.exports =
         money_rank: rank.money.rank,
         xp_rank: rank.level.rank,
         goods: userDB.goods,
-        // eslint-disable-next-line no-dupe-keys
-        status: client.status,
       })
     } catch (e) {
       console.log(e)
@@ -184,29 +183,4 @@ const getMyRank = async (id, client) => {
   rank.money.count = numberToKorean(userDB.money)
 
   return rank
-}
-
-function numberToKorean(number){
-  if (String(number).includes('Infinity'))  return number
-  var inputNumber  = number < 0 ? false : number
-  var unitWords    = ['', '만', '억', '조', '경', '해', '자', '양', '구', '간', '정', '재', '극']
-  var splitUnit    = 10000
-  var splitCount   = unitWords.length
-  var resultArray  = []
-  var resultString = ''
-
-  for (var i = 0; i < splitCount; i++){
-    var unitResult = (inputNumber % Math.pow(splitUnit, i + 1)) / Math.pow(splitUnit, i)
-    unitResult = Math.floor(unitResult)
-    if (unitResult > 0){
-      resultArray[i] = unitResult
-    }
-  }
-
-  for (var a = 0; a < resultArray.length; a++){
-    if(!resultArray[a]) continue
-    resultString = String(resultArray[a]) + unitWords[a] + ' ' + resultString
-  }
-
-  return resultString.replace(/ $/, '')
 }
