@@ -11,7 +11,7 @@ module.exports = {
 
     if (!user)
       return message.channel.send(
-        new Discord.MessageEmbed()
+        new MessageEmbed()
         .setTitle('인트의 서비스에 가입되어있지 않아요.')
         .setDescription('`인트야 가입`을 이용해서 먼저 가입해주세요!')
         .setColor('RED')
