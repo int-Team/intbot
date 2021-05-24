@@ -19,6 +19,24 @@ module.exports =
 	
   app.get('/status', (_req, res) => res.render('status'))
 
+  app.get('/stock', async (req, res) => {
+    const stocks = await client.stock.find().toArray()
+    const user = client.users.cache.get(req.session.userID)
+    let options = {
+      stocks,
+      user: {}
+    }
+
+    if (user) {
+      const userDB = await client.db.findOne({_id: user.id})
+      options.user.isLogined = true
+      options.user.tag = user.tag
+      options.user.money = (userDB === null || userDB === void 0 ? void 0 : userDB.money) || '가입되지 않음'
+    }
+
+    res.render('stock', options)
+  })
+
   app.get('/callback', async (req, res) => {
     try {
       const { code } = req.query
@@ -33,7 +51,7 @@ module.exports =
         code,
       })
       const user = await Oauth.user(token.access_token)
-            
+      
       if (!client.users.cache.has(user.id))
         return res.send('<script>alert("인트봇이 접근할 수 있는 유저가 아니에요!");location.back();</script>')
             
