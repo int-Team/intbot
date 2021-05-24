@@ -15,11 +15,27 @@ module.exports =
    * @param {import('discord.js').Client} client client
    */
 (app, client) => {
-  app.get('/', (_req, res) => res.render('index'))
+/* Root Dir GET */
+    app.get('/', async (req, res) => {
+      res.status(200).send({
+        code : 200,
+        message: 'Hello World',
+        gateway : {
+          '/v1' : 'Available',
+          '/v2' : 'Deprecated'
+        }
+      })
+    })
 	
-  app.get('/status', (_req, res) => res.render('status'))
+	app.get('/v1/status/', async (req, res) => {
+      res.status(200).send({
+        guilds: client.guilds.cache.size,
+        status: client.status,
+        users: client.users.cache.size,
+      })
+    })
 
-  app.get('/callback', async (req, res) => {
+  app.get('/v1/callback', async (req, res) => {
     try {
       const { code } = req.query
 
@@ -41,11 +57,23 @@ module.exports =
       const userDB = await client.db.findOne({_id: dscUser.id})
 
       if (!userDB)
-        return res.send('<script>alert("인트봇에 가입한 유저가 아니에요!");location.back();</script>')
+        return res.status(404).send({
+			code : 404,
+			message : "인트봇 서비스 가입한 유저가 아닙니다."
+		})
 
       req.session.user_id = dscUser.id
 
-      res.redirect('/shop')
+      res.send({
+		  code : 200,
+		  user : {
+			  id : dscUser.id,
+			  db : userDB
+		  },
+		  oauth : {
+			  code : user
+		  }
+	  })
     } catch (e) {
       console.log(e)
       client.channels.cache.get('836917703075823636').send(new Discord.MessageEmbed()
@@ -59,26 +87,33 @@ module.exports =
     }
   })
 
-  app.get('/shop', async (req, res) => {
+  app.get('/v1/shop', async (req, res) => {
     try {
       if (!req.session.user_id)
         return res.redirect(process.env.OAUTH_URL)
       if (!client.users.cache.has(req.session.user_id))
-        return res.send('<script>alert("인트봇이 접근할 수 있는 유저가 아니에요!");history.back();</script>')
+        return res.status(400).send({
+			code : 400,
+			message : "유효하지 않은 Discord ID 입니다."
+		})
             
       const dscUser = await client.users.cache.get(req.session.user_id)
       const userDB = await client.db.findOne({_id: dscUser.id})
       const merchs = await client.goods.find().toArray()
 
       if (!userDB)
-        return res.send('<script>alert("인트봇에 가입한 유저가 아니에요!");history.back();</script>')
+        return res.status(404).send({
+			code : 404,
+			message : "인트봇 서비스 가입한 유저가 아닙니다."
+		})
 
-      res.render('shop', {
+      res.status(200).send({
+		code : 200,
         user: {
           tag: dscUser.tag,
           money: numberToKorean(userDB.money),
         },
-        merchs
+        item : merchs
       })
     } catch (e) {
       console.log(e)
@@ -93,24 +128,39 @@ module.exports =
     }
   })
 
-  app.get('/buy/:merch_id', async (req, res) => {
+  app.get('/v1/buy/:merch_id', async (req, res) => {
     const { merch_id } = req.params
 
     if (!merch_id)
-      return res.status(404).send('<script>alert("살 수 있는 상품이 아니에요!");location.back();</script>')
+      return res.status(404).send({
+			code : 404,
+			message : "없는 아이템 입니다."
+		})
     if (!req.session.user_id)
-      return res.status(200).redirect('/shop')
+      return res.status(200).redirect('/v1/callback')
     if (!client.users.cache.has(req.session.user_id))
-      return res.status(404).send('<script>alert("인트봇이 접근할 수 있는 유저가 아니에요!");location.back();</script>')
+      return res.status(400).send({
+			code : 400,
+			message : "유효하지 않은 Discord ID 입니다."
+		})
         
     const dscUser = client.users.cache.get(req.session.user_id)
     const userDB = await client.db.findOne({_id: dscUser.id})
     const merch = await client.goods.findOne({_id: merch_id})
 
     if (!userDB)
-      return res.send('<script>alert("인트봇 서비스에 가입한 유저가 아니에요!");location.back();</script>')
+      return res.status(404).send({
+			code : 404,
+			message : "인트봇 서비스 가입한 유저가 아닙니다."
+		})
+
     if (userDB.money < merch.price)
-      return res.send('<script>alert("돈이 부족해요!");location.back();location.back();</script>')
+      return res.status(400).send({
+			code : 400,
+			message : "돈이 부족합니다.",
+		    price : merch.price
+		})
+
 
     userDB.merchs[merch._id] = {
       count: userDB.merchs[merch._id] + 1 || 1,
@@ -126,7 +176,11 @@ module.exports =
       }
     })
             
-    res.status(200).send('<script>alert("아이템이 구매되었어요!");location.href="/shop";</script>')
+    res.status(200).send({
+		code : 200,
+		message : "아이템이 성공적으로 구매되었습니다",
+		item : merch
+	})
   })
 
   app.get('/logout', (req, res) => {
