@@ -16,24 +16,24 @@ module.exports =
    */
 (app, client) => {
 /* Root Dir GET */
-    app.get('/', async (req, res) => {
-      res.status(200).send({
-        code : 200,
-        message: 'Hello World',
-        gateway : {
-          '/v1' : 'Available',
-          '/v2' : 'Deprecated'
-        }
-      })
+  app.get('/', async (req, res) => {
+    res.status(200).send({
+      code : 200,
+      message: 'Hello World',
+      gateway : {
+        '/v1' : 'Available',
+        '/v2' : 'Deprecated'
+      }
     })
+  })
 	
-	app.get('/v1/status/', async (req, res) => {
-      res.status(200).send({
-        guilds: client.guilds.cache.size,
-        status: client.status,
-        users: client.users.cache.size,
-      })
+  app.get('/v1/status/', async (req, res) => {
+    res.status(200).send({
+      guilds: client.guilds.cache.size,
+      status: client.status,
+      users: client.users.cache.size,
     })
+  })
 
   app.get('/v1/callback', async (req, res) => {
     try {
@@ -58,22 +58,13 @@ module.exports =
 
       if (!userDB)
         return res.status(404).send({
-			code : 404,
-			message : "인트봇 서비스 가입한 유저가 아닙니다."
-		})
+          code : 404,
+          message : '인트봇 서비스 가입한 유저가 아닙니다.'
+        })
 
       req.session.user_id = dscUser.id
 
-      res.send({
-		  code : 200,
-		  user : {
-			  id : dscUser.id,
-			  db : userDB
-		  },
-		  oauth : {
-			  code : user
-		  }
-	  })
+      res.send({code : 200, user : {id : dscUser.id, db : userDB},oauth : {code : user}})
     } catch (e) {
       console.log(e)
       client.channels.cache.get('836917703075823636').send(new Discord.MessageEmbed()
@@ -93,9 +84,9 @@ module.exports =
         return res.redirect(process.env.OAUTH_URL)
       if (!client.users.cache.has(req.session.user_id))
         return res.status(400).send({
-			code : 400,
-			message : "유효하지 않은 Discord ID 입니다."
-		})
+          code : 400,
+          message : '유효하지 않은 Discord ID 입니다.'
+        })
             
       const dscUser = await client.users.cache.get(req.session.user_id)
       const userDB = await client.db.findOne({_id: dscUser.id})
@@ -103,12 +94,12 @@ module.exports =
 
       if (!userDB)
         return res.status(404).send({
-			code : 404,
-			message : "인트봇 서비스 가입한 유저가 아닙니다."
-		})
+          code : 404,
+          message : '인트봇 서비스 가입한 유저가 아닙니다.'
+        })
 
       res.status(200).send({
-		code : 200,
+        code : 200,
         user: {
           tag: dscUser.tag,
           money: numberToKorean(userDB.money),
@@ -133,16 +124,16 @@ module.exports =
 
     if (!merch_id)
       return res.status(404).send({
-			code : 404,
-			message : "없는 아이템 입니다."
-		})
+        code : 404,
+        message : '없는 아이템 입니다.'
+      })
     if (!req.session.user_id)
       return res.status(200).redirect('/v1/callback')
     if (!client.users.cache.has(req.session.user_id))
       return res.status(400).send({
-			code : 400,
-			message : "유효하지 않은 Discord ID 입니다."
-		})
+        code : 400,
+        message : '유효하지 않은 Discord ID 입니다.'
+      })
         
     const dscUser = client.users.cache.get(req.session.user_id)
     const userDB = await client.db.findOne({_id: dscUser.id})
@@ -150,16 +141,16 @@ module.exports =
 
     if (!userDB)
       return res.status(404).send({
-			code : 404,
-			message : "인트봇 서비스 가입한 유저가 아닙니다."
-		})
+        code : 404,
+        message : '인트봇 서비스 가입한 유저가 아닙니다.'
+      })
 
     if (userDB.money < merch.price)
       return res.status(400).send({
-			code : 400,
-			message : "돈이 부족합니다.",
-		    price : merch.price
-		})
+        code : 400,
+        message : '돈이 부족합니다.',
+        price : merch.price
+      })
 
 
     userDB.merchs[merch._id] = {
@@ -177,10 +168,10 @@ module.exports =
     })
             
     res.status(200).send({
-		code : 200,
-		message : "아이템이 성공적으로 구매되었습니다",
-		item : merch
-	})
+      code : 200,
+      message : '아이템이 성공적으로 구매되었습니다',
+      item : merch
+    })
   })
 
   app.get('/logout', (req, res) => {

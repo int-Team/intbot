@@ -16,8 +16,6 @@
     "author": "team-int",
     "license": "MIT",
     "dependencies": {
-        "@discordjs/opus": "^0.3.3",
-        "ascii-table": "latest",
         "axios": "latest",
         "body-parser": "^1.19.0",
         "child_process": "^1.0.2",
@@ -25,12 +23,9 @@
         "discord.js": "^12.5.3",
         "dokdo": "^0.2.0",
         "dotenv": "^8.2.0",
-        "ejs": "latest",
         "erlpack": "^0.1.3",
         "express": "latest",
         "express-session": "^1.17.1",
-        "ffmpeg": "^0.0.4",
-        "ffmpeg-static": "^4.2.7",
         "global": "^4.4.0",
         "mongodb": "latest",
         "morgan": "latest",
@@ -39,8 +34,6 @@
         "querystring": "^0.2.0",
         "serve-favicon": "latest",
         "util": "latest",
-        "youtube-search-api": "latest",
-        "ytdl-core": "latest",
         "zlib-sync": "^0.1.7"
     },
     "devDependencies": {
