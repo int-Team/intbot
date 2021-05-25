@@ -3,8 +3,7 @@ process.title = `Intbot - Ver. ${require('../package.json').version}, ${process.
 
 // Dependencies
 const Discord = require('discord.js')
-const MusicClient = require('./struct/Client')
-const client = new MusicClient()
+const client = new Discord.Client()
 const Event = require('./event')
 const Modules = require('./modules')
 
@@ -25,6 +24,7 @@ client.developers = [
   '647736678815105037',
   '694131960125325374'
 ]
+client.commands = new Discord.Collection()
 client.module = Modules
 client.color = color
 
