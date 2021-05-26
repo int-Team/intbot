@@ -17,7 +17,8 @@ module.exports = {
 		let user = args[1];
 		if (user == '가위' || user == '가' || user == '찌' || user == 'scissor') b = '가위';
 		else if (user == '바위' || user == '바' || user == 'rock' || user == '묵') b = '바위';
-		else if (user == '보' || user == '보자기' || user == 'paper' || user == '빠') b = '보';
+		else if (user == '보' || user == '보자기' || user == 'paper' || user == '빠') b = '보'
+		else if (!user) b = randomIndex(['가위', '바위', '보']);
 		
 		let embed = new Discord.MessageEmbed()
 			.setTitle('가위 바위 보!')
