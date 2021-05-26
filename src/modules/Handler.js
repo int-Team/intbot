@@ -61,7 +61,7 @@ module.exports = async (client, prefix, Modules) => {
         return message.channel.send('현재 인트봇이 점검중이며 일부 기능을 이용할수 없습니다.')
       }
     } else if(client.status.includes('부팅중')) {
-      return message.channel.send('인트봇 리붓중이며 잠시만 기다려주세요...')
+      return message.channel.send('인트봇 재시작중이며 잠시만 기다려주세요...')
     }
 		
   })

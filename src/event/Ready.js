@@ -94,10 +94,10 @@ module.exports = async (client) => {
       }
 
       console.log(client.color('gray', '[Stock] ') + 'Update', stockAvg / stocks.length)
-    }, 2000)
+    }, 1000)
     setTimeout(async () => {
       client.status = '정상 운영중...'
-    }, 3000)
+    }, 2000)
   })
 }
 

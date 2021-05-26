@@ -69,9 +69,6 @@ module.exports = {
 			} else {
 				// Lose
 				let losed = float2int(userDB.money / 100)
-				if(userDB.money > 10000) {
-					losed = float2int(userDB.money / 10000)
-				}
 				await client.db.updateOne({_id: message.author.id}, {
 					$set: {
 					  money: losed,
