@@ -6,21 +6,9 @@ module.exports = {
   description: '도박을 해요.',
   usage: '인트야 도박',
   run: async (client, message, args, ops) => {
-    let embedJSON = {
-      title: '주식 상황',
-      color: 'GREEN',
-      timestamp: new Date()
-    }
-    const developers = [
-      '745758911012929550',
-      '714736989106208791',
-      '418677556322107412'
-    ]
-
     const amount = args[1]
     if(Number(amount)<0) return message.channel.send('자연수만 지원됩니다.')
-    if (developers.includes(message.author.id)) return message.channel.send('인트봇의 개발자라 도박이 불가능해요!')
-			
+    		
     if ((await client.db.findOne({_id: message.author.id})).lastGamblng && new Date() - 1 + 1 - (await client.db.findOne({_id: message.author.id})).lastGamblng < 2000) {
       const embed = new Discord.MessageEmbed()
         .setTitle('경찰입니다. 신고들어와서 왔씁니다.')
