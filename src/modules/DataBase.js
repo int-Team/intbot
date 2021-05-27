@@ -14,7 +14,7 @@ module.exports = async (client) => {
     client.goods = DBClient.db('intbot').collection('goods')
     client.dbchannels = DBClient.db('intbot').collection('channels')
     client.stock = DBClient.db('intbot').collection('stock')
-	client.data = DBClient.db('intbot').collection('secrets')
+    client.data = DBClient.db('intbot').collection('secrets')
 
     console.log(client.color('yellow', '[Database] ') + 'MongoDB Connected.')
 
