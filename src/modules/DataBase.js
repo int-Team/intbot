@@ -14,6 +14,7 @@ module.exports = async (client) => {
     client.goods = DBClient.db('intbot').collection('goods')
     client.dbchannels = DBClient.db('intbot').collection('channels')
     client.stock = DBClient.db('intbot').collection('stock')
+	client.data = DBClient.db('intbot').collection('secrets')
 
     console.log(client.color('yellow', '[Database] ') + 'MongoDB Connected.')
 
@@ -38,7 +39,7 @@ module.exports = async (client) => {
         stockAvg += stock.money
       }
 
-      console.log('[Stock] Update', stockAvg / stocks.length)
+      console.log(client.color('gray', '[Stock] ') + 'Update', stockAvg / stocks.length)
     }, 600000)
     
   })

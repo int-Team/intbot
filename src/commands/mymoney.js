@@ -36,28 +36,31 @@ module.exports = {
 			  .setColor('GREEN')
 			  .setFooter(message.author.tag, message.author.displayAvatarURL())
 			  .setTimestamp()
-				console.log(userDB)
-			message.channel.send({embed : mentionUserEmbed})
+			let m = await message.channel.send({embed : mentionUserEmbed})
 				if(!userDB.stock) {
-					mentionUserEmbed.addField('현재 시즌', '**SEASON 0 Start**', true)
-				  .addField('뱃지', '개발중입니다.', true)
-
-				return message.channel.send(mentionUserEmbed)
+					let str = '```diff\n'
+					str += '--- 현제 주식을 보유하지 않고 있습니다.'
+					str += "```"
+					mentionUserEmbed.addField('주식' , str)
+						.addField('현재 시즌', '**SEASON 0 Start**', true)
+				  		.addField('뱃지', '개발중입니다.', true)
+				m.edit({
+					embed : mentionUserEmbed
+				})
 				} else {
 				let str = '```diff\n'
 				for (let stock of Object.entries(userDB.stock)) {
-				  if (stock[1] == 0) 
-					  return str += `--- 현제 주식을 보유하지 않고 있습니다.`
-
 				  const [code, money] = stock
 				  const stockDB = await client.stock.findOne({code: code})
-				  str += `+ ${code}\n   ${numberToKorean(money)} 주\n   ${numberToKorean(stockDB.money * money)} 원\n`
+				  str += `+ ${code}\n   ${numberToKorean(money) || 0} 주\n   ${numberToKorean(stockDB.money * money) || 0} 원\n`
 				}
 				str += '```'
 				mentionUserEmbed.addField('주식', str)
 					.addField('현재 시즌', '**SEASON 0 Start**', true)
 					.addField('뱃지', '개발중입니다.', true)
-				message.channel.send(mentionUserEmbed)
+				m.edit({
+					embed : mentionUserEmbed
+				})
 			}
 		}
 	} else {
@@ -72,32 +75,30 @@ module.exports = {
 		
 		let m = await message.channel.send({embed :embed})
 		let str = '```diff\n'
-		if(!userDB.stock) {
-			embed.addField('현재 시즌', '**SEASON 0 Start**', true)
-		  .addField('뱃지', '개발중입니다.', true)
-
+			if(!userDB.stock) {
+				let str = '```diff\n'
+				str += '--- 현제 주식을 보유하지 않고 있습니다.'
+				str += "```"
+				embed.addField('주식' , str)
+					.addField('현재 시즌', '**SEASON 0 Start**', true)
+					.addField('뱃지', '개발중입니다.', true)
 			m.edit({
 				embed : embed
 			})
-		} else if(userDB.stock) {
+			} else {
+			let str = '```diff\n'
 			for (let stock of Object.entries(userDB.stock)) {
-			  if (stock[1] == 0) 
-				  return str += `--- 현제 주식을 보유하지 않고 있습니다.`
-
 			  const [code, money] = stock
 			  const stockDB = await client.stock.findOne({code: code})
-			  str += `+ ${code}\n   ${numberToKorean(money)} 주\n   ${numberToKorean(stockDB.money * money)} 원\n`
+			  str += `+ ${code}\n   ${numberToKorean(money) || 0} 주\n   ${numberToKorean(stockDB.money * money) || 0} 원\n`
 			}
 			str += '```'
 			embed.addField('주식', str)
-			embed.addField('현재 시즌', '**SEASON 0 Start**', true)
-		  .addField('뱃지', '개발중입니다.', true)
-
+				.addField('현재 시즌', '**SEASON 0 Start**', true)
+				.addField('뱃지', '개발중입니다.', true)
 			m.edit({
 				embed : embed
 			})
-		} else {
-			message.channel.send("아 오륭 ")	
 		}
 	}
   }

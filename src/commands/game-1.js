@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-
+const { numberToKorean } = require('../util/index')
 
 function randomIndex(array) {
     return array[Math.floor(Math.random() * array.length)];
@@ -27,6 +27,7 @@ module.exports = {
 			.addField('당신의 선택', b)
 		
 		let userDB = await client.db.findOne({_id : message.author.id})
+		let buja = false
 		if (!userDB) {
 			const noDB = new Discord.MessageEmbed()
 				.setTitle('인트봇의 서비스에 가입되어있지 않아요.')
@@ -35,6 +36,13 @@ module.exports = {
 				.setFooter(message.author.tag, message.author.displayAvatarURL())
 				.setTimestamp()
 			  return message.channel.send(noDB)
+		} else if (userDB.money < 1000) {
+			const noMoney = new Discord.MessageEmbed()
+				.setDescription('인트봇 : 적어도 1천원 정도 지갑에 넣고 다니라고')
+				.setColor('RED')
+				.setFooter('돈이 없다고 인트봇이랑 같이 게임하기 싫다고 합니다.')
+				.setTimestamp()
+			  return message.channel.send(noMoney)
 		}
 		if (!args[1]) {
 			return message.channel.send('사용법 : `인트야 가위바위보 [당신의 선택]`');
@@ -51,7 +59,7 @@ module.exports = {
 			} else if (
 				(b == '가위' && a == '보') ||
 				(b == '바위' && a == '가위') ||
-				(b == '보' && a == '주먹')
+				(b == '보' && a == '바위')
 			) {
 				// Win
 				let total = Number(userDB.money + 10000)
@@ -68,14 +76,14 @@ module.exports = {
 				})
 			} else {
 				// Lose
-				let losed = float2int(userDB.money / 100)
+				let total = userDB.money - 1000
 				await client.db.updateOne({_id: message.author.id}, {
 					$set: {
-					  money: losed,
+					  money: total,
 					}
 				  })
 				embed.addField('인트봇',`${a}`)
-				.setDescription(`그럴 수 있어. 이런 날도 있는 거지 뭐. 그레도 돈에서 ${losed}원 가져간다 ㅅㄱ`)
+				.setDescription(`그럴 수 있어. 이런 날도 있는 거지 뭐. 그레도 돈에서 ${numberToKorean(1000)} 가져간다 ㅅㄱ`)
 				m.edit({
 				  embed: embed
 				})
