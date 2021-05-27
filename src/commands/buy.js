@@ -55,7 +55,7 @@ module.exports = {
 			Number(args[2]) < 1 ||
 			Number(args[2]) == Infinity
     ) {
-      return message.reply('사용법: ```.매수 [주식 이름] (0 이상의 숫자 Infinity 이하)```')
+      return message.reply('사용법: ```인트야 매수 [주식 이름] (0 이상의 숫자 Infinity 이하)```')
     } else {
       num = Number(args[2])
       total = num * stock.money
