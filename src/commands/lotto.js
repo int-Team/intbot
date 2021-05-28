@@ -14,6 +14,9 @@ const possibleEmoji = {
   '9️⃣': 9,
 }
 const 로또값 = 5000
+function randomIndex(array) {
+    return array[Math.floor(Math.random() * array.length)];
+}
 
 module.exports = {
   name: 'lotto',
@@ -59,11 +62,45 @@ module.exports = {
 
     switch(option) {
       case possibleOption[0]:
-        if (now.getDay() == 5 && now.getHours() == 17)  return message.reply('금요일 오후 5시가 지났습니다')
-        if (!subOption)  return message.reply('자동 | 수동을 선택해주세요')
+        if (now.getDay() == 5 && now.getHours() + 9 == 17)  return message.reply('금요일 오후 5시가 지났습니다')
+        if (!subOption)  return message.reply('`자동/수동`을 선택해주세요')
         if ((user.money - 로또값) < 0)  return message.reply('돈이 부족합니다')
         if (subOption == '자동') {
+		let embed = {
+            title: '로또 자동 발급',
+            description: `${client.emojis.cache.find(x => x.name == 'loading')} 발급중...`,
+            color: 'ORANGE',
+            fields: [
+              {
+                name: '메인번호',
+                value: '\u200b'
+              },
+              {
+                name: '보너스 번호',
+                value: '\u200b'
+              },
+            ],
+            timestamp: new Date(),
+            footer: message.author.tag
+          }
 
+          let msg = await message.reply({embed})
+		  for (let i = 1;; i++) {
+			  embed.fields[0].value += randomIndex([1,2,3,4,5,6,7,8,9]) + ' '
+			  msg = await msg.edit({embed}) 
+			  if(i >= 4) {
+				  embed.fields[1].value += randomIndex([1,2,3,4,5,6,7,8,9]) + ' '
+				  msg = await msg.edit({embed})
+				  setTimeout(async () => {
+					  msg.description = '로또 번호가 발급되었습니다. 계속 진행하시겠습니까?'
+					  msg = await msg.edit({embed}) 
+					  console.log('a')
+					  let num = embed.fields[0].value.split(' ')
+					  let bonus = embed.fields[1].value.split(' ')
+				  }, 1000)
+				  break
+			  }
+		  }
         } else if (subOption == '수동') {
           let embed = {
             title: '로또 선택',
