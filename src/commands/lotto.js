@@ -51,12 +51,17 @@ module.exports = {
     async (message, user, num, bonus) => {
       const filter = (reaction, _user) => ['✅', '❌'].includes(reaction.emoji.name) && _user.id === user.id
       const clc = await message.awaitReactions(filter, {max: 1})
-      if (clc.size == 0)  return message.reply(`취소되었습니다 (${user.tag})`)
       const reaction = clc.first()
+      const embed = new Discord.MessageEmbed()
+        .setTimestamp()
+        .setFooter(user.tag)
+        .setDescription(`번호\n${num.join(' ')} +${bonus.join(' ')}`)
+
+      if (clc.size == 0)  return message.edit(embed.setTitle('취소하였습니다').setColor('RED'))
       if (reaction.emoji.name == '✅') {
-        return message.channel.send(`등록되었습니다 (${user.tag})`)
+        return message.edit(embed.setTitle('등록되었습니다').setColor('GREEN'))
       } else {
-        return message.channel.send(`취소되었습니다 (${user.tag})`)
+        return message.edit(embed.setTitle('취소하였습니다').setColor('RED'))
       }
     })
 
@@ -66,7 +71,7 @@ module.exports = {
         if (!subOption)  return message.reply('`자동/수동`을 선택해주세요')
         if ((user.money - 로또값) < 0)  return message.reply('돈이 부족합니다')
         if (subOption == '자동') {
-		let embed = {
+		      let embed = {
             title: '로또 자동 발급',
             description: `${client.emojis.cache.find(x => x.name == 'loading')} 발급중...`,
             color: 'ORANGE',
@@ -85,22 +90,14 @@ module.exports = {
           }
 
           let msg = await message.reply({embed})
-		  for (let i = 1;; i++) {
-			  embed.fields[0].value += randomIndex([1,2,3,4,5,6,7,8,9]) + ' '
-			  msg = await msg.edit({embed}) 
-			  if(i >= 4) {
-				  embed.fields[1].value += randomIndex([1,2,3,4,5,6,7,8,9]) + ' '
-				  msg = await msg.edit({embed})
-				  setTimeout(async () => {
-					  msg.description = '로또 번호가 발급되었습니다. 계속 진행하시겠습니까?'
-					  msg = await msg.edit({embed}) 
-					  console.log('a')
-					  let num = embed.fields[0].value.split(' ')
-					  let bonus = embed.fields[1].value.split(' ')
-				  }, 1000)
-				  break
-			  }
-		  }
+          for (let i = 1; i <= 4; i++) 
+            embed.fields[0].value += randomIndex([1,2,3,4,5,6,7,8,9]) + ' '
+          embed.fields[1].value += randomIndex([1,2,3,4,5,6,7,8,9]) + ' '
+          embed.description = `${client.emojis.cache.find(x => x.name == 'black_verify')} 로또 번호가 발급되었습니다. 계속 진행하시겠습니까?`  
+          msg = await msg.edit({embed})
+          await msg.react('✅')
+          await msg.react('❌')
+          event.emit('pending', msg, message.author, embed.fields[0].value.split(' '), embed.fields[1].value.split(' '))
         } else if (subOption == '수동') {
           let embed = {
             title: '로또 선택',
@@ -121,7 +118,6 @@ module.exports = {
           }
 
           let msg = await message.reply({embed})
-          // msg.createReactionCollector((reaction, user) => user.id !== message.author.id && user.id !== client.user.id).on('collect', ctd => ctd.remove())    
           await msg.react('1️⃣')
           await msg.react('2️⃣')
           await msg.react('3️⃣')
