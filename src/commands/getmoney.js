@@ -23,7 +23,8 @@ module.exports = {
           token: koreanbottoken
         }
       }).catch( (e) => {
-        message.channel.send(`저런... 개발중에 뭘 잘못 건든거 같네요. 개발자들이 이 오류를 보면 얼마나 스트래쓰를 받을지는 모르겠지만 일단 보낼께요. \n${e}`)
+        if (e == 'Error: Request failed with status code 404') {}
+        else message.channel.send(`저런... 개발중에 뭘 잘못 건든거 같네요. 개발자들이 이 오류를 보면 얼마나 스트래쓰를 받을지는 모르겠지만 일단 보낼께요. \n${e}`)
       })
       if ((await axios.get(`https://api.koreanbots.dev/bots/voted/${message.author.id}`, {
         headers: {
