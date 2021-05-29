@@ -146,7 +146,7 @@ module.exports = {
                 new Discord.MessageEmbed()
                 .setTitle('확실합니까?')
                 .setColor('ORANGE')
-                .setDescription(`번호\n${num.join(' ')} + ${bonus.join(' ')}`)
+                .setDescription(`번호\n${num.join(' ')}+ ${bonus.join(' ')}`)
                 .setFooter(message.author.tag)
                 .setTimestamp()
               )
