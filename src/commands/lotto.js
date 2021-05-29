@@ -49,13 +49,13 @@ module.exports = {
      * @param {string[]} bonus
      */
     async (message, user, num, bonus) => {
-      const filter = (reaction, _user) => ['✅', '❌'].includes(reaction.emoji.name) && _user.id === user.id
+      const filter = (reaction, _user) => ['✅', '❌', '🔁'].includes(reaction.emoji.name) && _user.id === user.id
       const clc = await message.awaitReactions(filter, {max: 1})
       const reaction = clc.first()
       const embed = new Discord.MessageEmbed()
         .setTimestamp()
         .setFooter(user.tag)
-        .setDescription(`번호\n${num.join(' ')} +${bonus.join(' ')}`)
+        .setDescription(`번호\n${num.join(' ')}+ ${bonus.join(' ')}`)
 
       if (clc.size == 0)  return message.edit(embed.setTitle('취소하였습니다').setColor('RED'))
       if (reaction.emoji.name == '✅') {
@@ -90,13 +90,21 @@ module.exports = {
           }
 
           let msg = await message.reply({embed})
-          for (let i = 1; i <= 4; i++) 
-            embed.fields[0].value += randomIndex([1,2,3,4,5,6,7,8,9]) + ' '
-          embed.fields[1].value += randomIndex([1,2,3,4,5,6,7,8,9]) + ' '
+          for (let i = 1;; i++) {
+			  
+          	  embed.fields[0].value += randomIndex([1,2,3,4,5,6,7,8,9]) + ' '
+			  if(i >= 4) {
+				 embed.fields[1].value += randomIndex([1,2,3,4,5,6,7,8,9]) + ' '  
+				 break
+			  }
+			  msg = await msg.edit({embed})
+			  
+		  }
           embed.description = `${client.emojis.cache.find(x => x.name == 'black_verify')} 로또 번호가 발급되었습니다. 계속 진행하시겠습니까?`  
           msg = await msg.edit({embed})
           await msg.react('✅')
           await msg.react('❌')
+		    await msg.react('🔁')
           event.emit('pending', msg, message.author, embed.fields[0].value.split(' '), embed.fields[1].value.split(' '))
         } else if (subOption == '수동') {
           let embed = {
@@ -137,7 +145,7 @@ module.exports = {
             if (i <= 4) {
               embed.fields[0].value += String(possibleEmoji[emoji.name]) + ' '
               msg = await msg.edit({embed})
-            } else {
+            } else if(i == 5){
               embed.fields[1].value += String(possibleEmoji[emoji.name]) + ' '
               msg = await msg.edit({embed})
               let num = embed.fields[0].value.split(' ')
@@ -157,5 +165,6 @@ module.exports = {
           })
         }
     }
+	 
   }
 } 
