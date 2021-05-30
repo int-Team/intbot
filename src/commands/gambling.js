@@ -41,7 +41,7 @@ module.exports = {
         message.channel.send(embed)
       } else if (isInt(amount)){
         let total
-        const num = Math.floor(Math.random() * 300)
+        const num = Math.floor(Math.random() * 200)
 					
         if(num < 80 && num >= 5){
           total = Number(userDB.money + Number(amount))
@@ -59,7 +59,7 @@ module.exports = {
             .setTimestamp()
 						
           message.channel.send(embed)
-        } else if (num < 5) {
+        } else if (num < 2) {
           total = Number((userDB.money) + (Number(amount) * 10))
 						
           await client.db.updateOne({_id: message.author.id}, {
