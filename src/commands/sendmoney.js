@@ -6,10 +6,9 @@ module.exports = {
   aliases: ['ㄴ둥', '송금', '주기', 'send'],
   usage: '인트야 송금',
   run: async (client, message, args, ops) => {
-    if (args[1] == undefined || args[2] == undefined || isNaN(args[2]) || Number(args[2]) < 0 || Number(args[2]) == Infinity) {
-      return message.reply('사용법: ```인트야 송금 @멘션 (0 이상의 숫자 Infinity 미만)```')
+    if (args[1] == undefined || args[2] == undefined || isNaN(args[2]) || Number(args[2]) < 0 || Number(args[2]) == Infinity || Number(args[2]) % 1 != 0) {
+      return message.reply('사용법: ```인트야 송금 @멘션 (송금액 [0~Infinity 의 자연수])```')
     }
-
 
     const userID = args[1].replace(/[<@!]/g, '').replace('>', '')
     let count = Number(args[2]) 
