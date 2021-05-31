@@ -16,7 +16,7 @@ module.exports = {
 
     let embed = new Discord.MessageEmbed()
       .setTitle('주식 현황')
-      .setDescription(`다음 변동까지 ${timeToKorean(float2int(600 - Math.abs((10000 - (Date.now() - client.lastStockUpdate)) / 1000) ))}`)
+      .setDescription(`다음 변동까지 ${timeToKorean(float2int(600 - Math.abs(((Date.now() + client.lastStockUpdate)) / 1000) ))}`)
       .setColor('GREEN')
       .setFooter('확인한 시간')
       .setTimestamp()
