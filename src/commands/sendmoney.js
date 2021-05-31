@@ -53,7 +53,7 @@ module.exports = {
         chkMsg.awaitReactions(filter, { max: 1 })
           .then(collected => {
             const reaction = collected.first()
-            
+            total = meUserDB.money - count
             if (reaction.emoji.name === '✅') {
               client.db.findOneAndUpdate({_id: message.author.id}, {
                 $set: {
@@ -67,8 +67,8 @@ module.exports = {
               })
               embed.setTitle('송금ㅣ성공')
                 .setDescription('성공적으로 유저에게 돈을 보냈습니다')
-                .addField(`${dscUSER.tag}`, `${numberToKorean(toUserDB.money + count)} money`)
-                .addField(`${message.author.tag}`, `${numberToKorean(total - 200)} money`)
+                .addField(`${dscUSER.tag}`, `${numberToKorean(toUserDB.money + count)}원`)
+                .addField(`${message.author.tag}`, `${numberToKorean(meUserDB.money)}원`)
                 .setColor('GREEN')
                 .setFooter(`${message.author.tag}\u200b`, message.author.displayAvatarURL({
                   dynamic: true,
