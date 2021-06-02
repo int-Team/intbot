@@ -4,7 +4,7 @@
     "description": "intbot",
     "main": "./src/index.js",
     "scripts": {
-        "start": "node ./src/struct/Shard.js",
+        "start": "node .",
         "dev": "nodemon .",
         "boot": "pm2 start src/index.js --name 'app' && pm2 log",
         "repl": "pm2 restart app && pm2 log",
