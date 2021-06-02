@@ -103,7 +103,7 @@ module.exports = {
             title: '로또 선택',
             description: '이모지를 선택해서 숫자를 고르세요!',
             color: 'GREEN',
-            fields: [
+            fields: [12
               {
                 name: '고른번호',
                 value: '\u200b'
