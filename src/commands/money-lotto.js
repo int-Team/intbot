@@ -67,7 +67,7 @@ module.exports = {
 
     switch(option) {
       case possibleOption[0]:
-        if (now.getDay() == 5 && now.getHours() + 9 == 17)  return message.reply('금요일 오후 5시가 지났습니다')
+        if (now.getDay() >= 5 && now.getHours() + 8 >= 17)  return message.reply('금요일 오후 5시가 지났습니다')
         if (!subOption)  return message.reply('`자동/수동`을 선택해주세요')
         if ((user.money - 로또값) < 0)  return message.reply('돈이 부족합니다')
         if (subOption == '자동') {
