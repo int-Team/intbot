@@ -27,7 +27,7 @@ client.developers = [
 client.commands = new Discord.Collection()
 client.module = Modules
 client.color = color
-client.mode = process.env.MODE ||'hosting'
+client.mode = process.env.MODE || 'hosting'
 
 // Function
 function color(color, ...string) {
@@ -35,7 +35,6 @@ function color(color, ...string) {
     throw new TypeError(`There is no color ${color}`)
   else 
     return `${Modules.colorData[color]}${string.join(' ')}${Modules.colorData.reset}`
-  
 }
 
 // Booting

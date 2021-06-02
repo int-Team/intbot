@@ -101,7 +101,8 @@ module.exports = async (client) => {
     }
 
     setTimeout(async () => {
-      client.season = JSON.parse(await client.data.findOne({ _id: 'season' }).data)
+      const season = await client.data.findOne({ _id: 'season' })
+      client.season = season.data
       client.status = '정상 운영중...'
     }, 2000)
   })

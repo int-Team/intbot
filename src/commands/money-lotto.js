@@ -33,7 +33,6 @@ module.exports = {
   async run(client, message, args) {
     let i = 0;
 		const [_, option, subOption] = args;
-    console.log(option, subOption)
     if (!possibleOption.includes(option))
       return message.reply(this.usage)
     
@@ -49,16 +48,26 @@ module.exports = {
      * @param {string[]} bonus
      */
     async (message, user, num, bonus) => {
+      num.pop()
+      bonus.pop()
       const filter = (reaction, _user) => ['✅', '❌'].includes(reaction.emoji.name) && _user.id === user.id
       const clc = await message.awaitReactions(filter, {max: 1})
       const reaction = clc.first()
       const embed = new Discord.MessageEmbed()
         .setTimestamp()
         .setFooter(user.tag)
-        .setDescription(`번호\n${num.join(' ')}+ ${bonus.join(' ')}`)
+        .setDescription(`번호\n${num.join(' ')} + ${bonus.join(' ')}`)
 
       if (clc.size == 0)  return message.edit(embed.setTitle('취소하였습니다').setColor('RED'))
       if (reaction.emoji.name == '✅') {
+        client.db.updateOne({_id: user.id}, {
+          $push: {
+            lotto: {
+              num,
+              bonus,
+            }
+          }
+        })
         return message.edit(embed.setTitle('등록되었습니다').setColor('GREEN'))
       } else {
         return message.edit(embed.setTitle('취소하였습니다').setColor('RED'))
@@ -67,6 +76,7 @@ module.exports = {
 
     switch(option) {
       case possibleOption[0]:
+        if (user.lotto && user.lotto.length > 20) return message.reply('로또는 최대 20장 까지 구매가 가능합니다')
         if (now.getDay() >= 5 && now.getHours() + 8 >= 17)  return message.reply('금요일 오후 5시가 지났습니다')
         if (!subOption)  return message.reply('`자동/수동`을 선택해주세요')
         if ((user.money - 로또값) < 0)  return message.reply('돈이 부족합니다')
@@ -110,7 +120,7 @@ module.exports = {
             title: '로또 선택',
             description: '이모지를 선택해서 숫자를 고르세요!',
             color: 'GREEN',
-            fields: [12
+            fields: [
               {
                 name: '고른번호',
                 value: '\u200b'
@@ -163,7 +173,20 @@ module.exports = {
             }
           })
         }
+        break
+      case possibleOption[1]:
+        if (!user.lotto) return message.reply('현재 구매한 로또가 없습니다')
+        if (user.lotto.length <= 0) return message.reply('현재 구매한 로또가 없습니다')
+        let embed = new Discord.MessageEmbed()
+          .setTitle(`로또 구매 목록`)
+          .setFooter(message.author.tag, message.author.displayAvatarURL())
+          .setColor('GREEN')
+          .setTimestamp()
+        
+        for (let i in user.lotto)
+          embed.addField(`${Number(i) + 1}번 로또`, `${user.lotto[i].num.join(' ')} +${user.lotto[i].bonus.join(' ')}`)
+  
+        message.reply(embed)
     }
-	 
   }
 } 
