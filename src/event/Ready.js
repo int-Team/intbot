@@ -68,34 +68,41 @@ module.exports = async (client) => {
         break
       }
     }, 10000)
-  })
+  }) 
   client.on('ready', async () => {
+    if(client.mode == 'hosting') {
+		setTimeout(async () => {
+			client.status = '정상 운영중...'
+			client.lastStockUpdate = Date.now()
+			const stock_v = 5000
+			const stock_min = stock_v - 2000
+
+			const stocks = await client.stock.find().toArray()
+			let stockAvg = 0
+			client.lastStockUpdate = Date.now()
+
+			for (let stock of stocks) {
+			  client.stock.updateOne(
+				 { _id: stock._id },
+				 {
+					$set: {
+					  money: float2int(Math.random() * (stock_min * -2) + stock_min) + stock_v,
+					  previous: stock.money,
+					},
+				 }
+			  )
+			  stockAvg += stock.money
+			}
+
+			console.log(client.color('gray', '[Stock] ') + 'Update', stockAvg / stocks.length)
+		 }, 1000) 
+	 } else {
+		 client.status = '정상 운영중...'
+	 }
+	 
+	
     setTimeout(async () => {
-      client.status = '정상 운영중...'
-      client.lastStockUpdate = Date.now()
-      const stock_v = 5000
-      const stock_min = stock_v - 2000
-
-      const stocks = await client.stock.find().toArray()
-      let stockAvg = 0
-      client.lastStockUpdate = Date.now()
-
-      for (let stock of stocks) {
-        client.stock.updateOne(
-          { _id: stock._id },
-          {
-            $set: {
-              money: float2int(Math.random() * (stock_min * -2) + stock_min) + stock_v,
-              previous: stock.money,
-            },
-          }
-        )
-        stockAvg += stock.money
-      }
-
-      console.log(client.color('gray', '[Stock] ') + 'Update', stockAvg / stocks.length)
-    }, 1000)
-    setTimeout(async () => {
+		client.season = JSON.parse(await client.data.findOne({_id : 'season'}).data)
       client.status = '정상 운영중...'
     }, 2000)
   })

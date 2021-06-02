@@ -27,6 +27,7 @@ client.developers = [
 client.commands = new Discord.Collection()
 client.module = Modules
 client.color = color
+client.mode = process.env.MODE ||'hosting'
 
 // Function
 function color(color, ...string) {

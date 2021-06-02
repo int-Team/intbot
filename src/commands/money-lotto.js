@@ -49,7 +49,7 @@ module.exports = {
      * @param {string[]} bonus
      */
     async (message, user, num, bonus) => {
-      const filter = (reaction, _user) => ['✅', '❌', '🔁'].includes(reaction.emoji.name) && _user.id === user.id
+      const filter = (reaction, _user) => ['✅', '❌'].includes(reaction.emoji.name) && _user.id === user.id
       const clc = await message.awaitReactions(filter, {max: 1})
       const reaction = clc.first()
       const embed = new Discord.MessageEmbed()
@@ -104,7 +104,6 @@ module.exports = {
           msg = await msg.edit({embed})
           await msg.react('✅')
           await msg.react('❌')
-		    await msg.react('🔁')
           event.emit('pending', msg, message.author, embed.fields[0].value.split(' '), embed.fields[1].value.split(' '))
         } else if (subOption == '수동') {
           let embed = {
