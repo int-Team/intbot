@@ -55,7 +55,7 @@ module.exports = {
       const embed = new Discord.MessageEmbed()
         .setTimestamp()
         .setFooter(user.tag)
-        .setDescription(`번호\n${num.join(' ')} +${bonus.join(' ')}`)
+        .setDescription(`번호\n${num.join(' ')}+ ${bonus.join(' ')}`)
 
       if (clc.size == 0)  return message.edit(embed.setTitle('취소하였습니다').setColor('RED'))
       if (reaction.emoji.name == '✅') {
@@ -67,7 +67,7 @@ module.exports = {
 
     switch(option) {
       case possibleOption[0]:
-        if (now.getDay() == 5 && now.getHours() + 9 == 17)  return message.reply('금요일 오후 5시가 지났습니다')
+        if (now.getDay() >= 5 && now.getHours() + 8 >= 17)  return message.reply('금요일 오후 5시가 지났습니다')
         if (!subOption)  return message.reply('`자동/수동`을 선택해주세요')
         if ((user.money - 로또값) < 0)  return message.reply('돈이 부족합니다')
         if (subOption == '자동') {
@@ -90,9 +90,16 @@ module.exports = {
           }
 
           let msg = await message.reply({embed})
-          for (let i = 1; i <= 4; i++) 
-            embed.fields[0].value += randomIndex([1,2,3,4,5,6,7,8,9]) + ' '
-          embed.fields[1].value += randomIndex([1,2,3,4,5,6,7,8,9]) + ' '
+          for (let i = 1;; i++) {
+			  
+          	  embed.fields[0].value += randomIndex([1,2,3,4,5,6,7,8,9]) + ' '
+			  if(i >= 4) {
+				 embed.fields[1].value += randomIndex([1,2,3,4,5,6,7,8,9]) + ' '  
+				 break
+			  }
+			  msg = await msg.edit({embed})
+			  
+		  }
           embed.description = `${client.emojis.cache.find(x => x.name == 'black_verify')} 로또 번호가 발급되었습니다. 계속 진행하시겠습니까?`  
           msg = await msg.edit({embed})
           await msg.react('✅')
@@ -137,7 +144,7 @@ module.exports = {
             if (i <= 4) {
               embed.fields[0].value += String(possibleEmoji[emoji.name]) + ' '
               msg = await msg.edit({embed})
-            } else {
+            } else if(i == 5){
               embed.fields[1].value += String(possibleEmoji[emoji.name]) + ' '
               msg = await msg.edit({embed})
               let num = embed.fields[0].value.split(' ')
@@ -146,7 +153,7 @@ module.exports = {
                 new Discord.MessageEmbed()
                 .setTitle('확실합니까?')
                 .setColor('ORANGE')
-                .setDescription(`번호\n${num.join(' ')} +${bonus.join(' ')}`)
+                .setDescription(`번호\n${num.join(' ')}+ ${bonus.join(' ')}`)
                 .setFooter(message.author.tag)
                 .setTimestamp()
               )
@@ -157,5 +164,6 @@ module.exports = {
           })
         }
     }
+	 
   }
 } 
