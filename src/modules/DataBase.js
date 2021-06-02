@@ -16,34 +16,32 @@ module.exports = async (client) => {
     client.stock = DBClient.db('intbot').collection('stock')
     client.data = DBClient.db('intbot').collection('secrets')
     console.log(client.color('yellow', '[Database] ') + 'MongoDB Connected.')
-	  
-	 
-	  
-	 if(client.mode == 'hosting') {
-		 setInterval(async () => {
-			const stock_v = 5000
-			const stock_min = stock_v - 2000
 
-			const stocks = await client.stock.find().toArray()
-			let stockAvg = 3000
-			client.lastStockUpdate = Date.now()
+    if (client.mode == 'hosting') {
+      setInterval(async () => {
+        const stock_v = 5000
+        const stock_min = stock_v - 2000
 
-			for (let stock of stocks) {
-			  client.stock.updateOne(
-				 { _id: stock._id },
-				 {
-					$set: {
-					  money: float2int(Math.random() * (stock_min * -2) + stock_min) + stock_v,
-					  previous: stock.money,
-					},
-				 }
-			  )
-			  stockAvg += stock.money
-			}
+        const stocks = await client.stock.find().toArray()
+        let stockAvg = 3000
+        client.lastStockUpdate = Date.now()
 
-			console.log(client.color('gray', '[Stock] ') + 'Update', stockAvg / stocks.length)
-		 }, 600000)
-	 }
+        for (let stock of stocks) {
+          client.stock.updateOne(
+            { _id: stock._id },
+            {
+              $set: {
+                money: float2int(Math.random() * (stock_min * -2) + stock_min) + stock_v,
+                previous: stock.money,
+              },
+            }
+          )
+          stockAvg += stock.money
+        }
+
+        console.log(client.color('gray', '[Stock] ') + 'Update', stockAvg / stocks.length)
+      }, 600000)
+    }
   })
 }
 
