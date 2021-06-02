@@ -185,8 +185,8 @@ module.exports = {
         
         for (let i in user.lotto)
           embed.addField(`${Number(i) + 1}번 로또`, `${user.lotto[i].num.join(' ')} +${user.lotto[i].bonus.join(' ')}`)
-  
         message.reply(embed)
+        break
     }
   }
 } 
