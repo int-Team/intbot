@@ -10,7 +10,7 @@ const Modules = require('./modules')
 // Variables 
 require('dotenv').config()
 const PORT = process.env.PORT || 3000
-const prefix = process.env.PREFIX
+const prefix = process.env.PREFIX || "인트야 "
 client.status = '오프라인'
 
 // Discord bot client
