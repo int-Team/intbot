@@ -43,7 +43,7 @@ module.exports = {
         let total
         const num = Math.floor(Math.random() * 200)
 					
-        if(num < 80 && num >= 2){
+        if(num < 80 && num >= 5){
           total = Number(userDB.money + Number(amount))
           await client.db.updateOne({_id: message.author.id}, {
             $set: {

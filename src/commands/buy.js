@@ -69,7 +69,7 @@ module.exports = {
       items[res[0]._id] = num
     else
       items[res[0]._id] += num
-    if (total * 1000000 > Number(user.money))
+    if (total / 1000000 > Number(user.money))
       return message.reply('돈이 많은데 너무 적게 사시네요. 취소합니다.')
         
     const chkBuy = new MessageEmbed()
