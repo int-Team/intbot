@@ -46,7 +46,7 @@ module.exports = {
           `\`\`\`diff\n${numberWithCommas(stock.money)}\n${previousStockStr}\`\`\``
           , true)
     }
-    embed.addField('\u200b', `마지막 주식 변동 : ${lastUpdate.getHours()}시 ${lastUpdate.getMinutes()}분 ${lastUpdate.getSeconds()}초`, true)
+    embed.addField('\u200b', `마지막 주식 변동 : ${lastUpdate.getHours()+9}시 ${lastUpdate.getMinutes()}분 ${lastUpdate.getSeconds()}초`, true)
 
     message.channel.send(embed)
   }
