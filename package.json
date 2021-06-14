@@ -30,6 +30,7 @@
         "mongodb": "latest",
         "morgan": "latest",
         "node-fetch": "^2.6.1",
+        "node-schedule": "^2.0.0",
         "oauth-discord": "latest",
         "querystring": "^0.2.0",
         "serve-favicon": "latest",
@@ -39,7 +40,9 @@
     "devDependencies": {
         "eslint": "^7.26.0",
         "nodemon": "^2.0.7",
-        "pm2": "^4.5.6"
+        "pm2": "^5.1.0"
     },
-	"eslintIgnore": ["/src/commands/*"]
+    "eslintIgnore": [
+        "/src/commands/*"
+    ]
 }
