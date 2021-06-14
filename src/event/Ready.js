@@ -1,6 +1,9 @@
 module.exports = async (client) => {
   client.on('ready', async () => {
-    console.log(client.color('cyan', '[Bot]'), `Logged on ${client.user.username}`)
+    console.log(
+      client.color('cyan', '[Bot]'),
+      `Logged on ${client.user.username}`
+    )
     setInterval(() => {
       switch (Math.floor(Math.random() * 6)) {
       case 0:
@@ -86,7 +89,9 @@ module.exports = async (client) => {
             { _id: stock._id },
             {
               $set: {
-                money: float2int(Math.random() * (stock_min * -2) + stock_min) + stock_v,
+                money:
+                  float2int(Math.random() * (stock_min * -2) + stock_min) +
+                  stock_v,
                 previous: stock.money,
               },
             }
@@ -94,7 +99,10 @@ module.exports = async (client) => {
           stockAvg += stock.money
         }
 
-        console.log(client.color('gray', '[Stock] ') + 'Update', stockAvg / stocks.length)
+        console.log(
+          client.color('gray', '[Stock] ') + 'Update',
+          stockAvg / stocks.length
+        )
       }, 1000)
     } else {
       client.status = '정상 운영중...'

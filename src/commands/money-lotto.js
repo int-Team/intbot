@@ -33,20 +33,15 @@ module.exports = {
    * @param {string[]} args
    */
   async run(client, message, args) {
-    schedule.scheduleJob(
-      { hour: 13, dayOfWeek: 5, minute: 0, second: 0 },
-      () => {
-        let lottoNumber = [];
-        for (let i = 0; i < 4; i++) {
-          lottoNumber[lottoNumber.length] = randomIndex([
-            1, 2, 3, 4, 5, 6, 7, 8, 9,
-          ]);
-        }
+    schedule.scheduleJob({ dayOfWeek: 1 }, () => {
+      let lottoNumber = [];
+      for (let i = 0; i < 4; i++) {
+        lottoNumber[lottoNumber.length];
       }
-    );
+    });
 
     let i = 0;
-    const [_, option, subOption] = args;
+    const [_, option, subOption] = args
     if (!possibleOption.includes(option)) return message.reply(this.usage);
 
     const userdb = await client.db.findOne({ _id: message.author.id });
