@@ -1,48 +1,48 @@
 {
-    "name": "intbot",
-    "version": "1.3.0",
-    "description": "intbot",
-    "main": "./src/index.js",
-    "scripts": {
-        "start": "node ./src/struct/Shard.js",
-        "dev": "nodemon .",
-        "boot": "pm2 start src/index.js --name 'app' && pm2 log",
-        "repl": "pm2 restart app && pm2 log",
-        "test": "npm run lint && npm run lint:commands",
-        "lint": "eslint ./src",
-        "lint:commands": "eslint ./src/commands/ --no-ignore",
-        "lint:fix": "eslint ./src --fix"
-    },
-    "author": "team-int",
-    "license": "MIT",
-    "dependencies": {
-        "axios": "latest",
-        "body-parser": "^1.19.0",
-        "child_process": "^1.0.2",
-        "discord-oauth2": "^2.6.0",
-        "discord.js": "^12.5.3",
-        "dokdo": "^0.2.0",
-        "dotenv": "^8.2.0",
-        "erlpack": "^0.1.3",
-        "express": "latest",
-        "express-session": "^1.17.1",
-        "global": "^4.4.0",
-        "mongodb": "latest",
-        "morgan": "latest",
-        "node-fetch": "^2.6.1",
-        "node-schedule": "^2.0.0",
-        "oauth-discord": "latest",
-        "querystring": "^0.2.0",
-        "serve-favicon": "latest",
-        "util": "latest",
-        "zlib-sync": "^0.1.7"
-    },
-    "devDependencies": {
-        "eslint": "^7.26.0",
-        "nodemon": "^2.0.7",
-        "pm2": "^5.1.0"
-    },
-    "eslintIgnore": [
-        "/src/commands/*"
-    ]
+  "name": "intbot",
+  "version": "1.3.0",
+  "description": "intbot",
+  "main": "./src/index.js",
+  "scripts": {
+    "start": "node ./src/struct/Shard.js",
+    "dev": "nodemon .",
+    "boot": "pm2 start src/index.js --name 'app' && pm2 log",
+    "repl": "pm2 restart app && pm2 log",
+    "test": "npm run lint && npm run lint:commands",
+    "lint": "eslint ./src",
+    "lint:commands": "eslint ./src/commands/ --no-ignore",
+    "lint:fix": "eslint ./src --fix"
+  },
+  "author": "team-int",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "latest",
+    "body-parser": "^1.19.0",
+    "child_process": "^1.0.2",
+    "discord-oauth2": "^2.6.0",
+    "discord.js": "^12.5.3",
+    "dokdo": "^0.2.0",
+    "dotenv": "^8.2.0",
+    "erlpack": "^0.1.3",
+    "express": "latest",
+    "express-session": "^1.17.1",
+    "global": "^4.4.0",
+    "mongodb": "latest",
+    "morgan": "latest",
+    "node-fetch": "^2.6.1",
+    "node-schedule": "^2.0.0",
+    "oauth-discord": "latest",
+    "querystring": "^0.2.0",
+    "serve-favicon": "latest",
+    "util": "latest",
+    "zlib-sync": "^0.1.7"
+  },
+  "devDependencies": {
+    "eslint": "^7.26.0",
+    "nodemon": "^2.0.7",
+    "pm2": "^5.1.0"
+  },
+  "eslintIgnore": [
+    "/src/commands/*"
+  ]
 }

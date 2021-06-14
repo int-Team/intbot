@@ -31,7 +31,9 @@ module.exports = async (client) => {
             { _id: stock._id },
             {
               $set: {
-                money: float2int(Math.random() * (stock_min * -2) + stock_min) + stock_v,
+                money:
+                  float2int(Math.random() * (stock_min * -2) + stock_min) +
+                  stock_v,
                 previous: stock.money,
               },
             }
@@ -39,7 +41,10 @@ module.exports = async (client) => {
           stockAvg += stock.money
         }
 
-        console.log(client.color('gray', '[Stock] ') + 'Update', stockAvg / stocks.length)
+        console.log(
+          client.color('gray', '[Stock] ') + 'Update',
+          stockAvg / stocks.length
+        )
       }, 600000)
     }
   })

@@ -41,7 +41,7 @@ module.exports = {
     });
 
     let i = 0;
-    const [_, option, subOption] = args
+    const [_, option, subOption] = args;
     if (!possibleOption.includes(option)) return message.reply(this.usage);
 
     const userdb = await client.db.findOne({ _id: message.author.id });

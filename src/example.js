@@ -7,7 +7,5 @@ module.exports = {
   description: '',
   usage: '',
   category: '',
-  run: async (client, message, args) => {
-		
-  }
+  run: async (client, message, args) => {},
 }
