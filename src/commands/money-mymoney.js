@@ -38,7 +38,7 @@ module.exports = {
         let mentionUserEmbed = new MessageEmbed()
           .setTitle(`${mentionUser.username}님의 지갑`)
           .setDescription('뒤적 뒤적 지갑속에 뭐가 있을까요?')
-          .addField('돈', `${numberToKorean(userDB.money) || '0원'}`, true)
+          .addField('돈', `${numberToKorean(userDB.money)+'원' || '0원'}`, true)
           .setColor('GREEN')
           .setFooter(message.author.tag, message.author.displayAvatarURL())
           .setTimestamp()
@@ -49,7 +49,7 @@ module.exports = {
           str += '```'
           mentionUserEmbed
             .addField('주식', str)
-            .addField('현재 시즌', '**SEASON 0 Start**', true)
+            .addField('현재 시즌', `**SEASON ${client.season.number} ${client.season.title}**`, true)
             .addField('뱃지', '개발중입니다.', true)
           m.edit({
             embed: mentionUserEmbed,
@@ -66,7 +66,7 @@ module.exports = {
           str += '```'
           mentionUserEmbed
             .addField('주식', str)
-            .addField('현재 시즌', '**SEASON 0 Start**', true)
+            .addField('현재 시즌', `**SEASON ${client.season.number} ${client.season.title}**`, true)
             .addField('뱃지', '개발중입니다.', true)
           m.edit({
             embed: mentionUserEmbed,
@@ -78,7 +78,7 @@ module.exports = {
       const embed = new MessageEmbed()
         .setTitle(`${message.author.tag}님의 지갑`)
         .setDescription('뒤적 뒤적 지갑속에 뭐가 있을까요?')
-        .addField('돈', `${numberToKorean(userDB.money) || '0원'}`, true)
+        .addField('돈', `${numberToKorean(userDB.money)+'원' || '0원'}`, true)
         .setColor('GREEN')
         .setFooter(message.author.tag, message.author.displayAvatarURL())
         .setTimestamp()
@@ -108,7 +108,7 @@ module.exports = {
         str += '```'
         embed
           .addField('주식', str)
-          .addField('현재 시즌', '**SEASON 0 Start**', true)
+          .addField('현재 시즌', `**SEASON ${client.season.number} ${client.season.title}**`, true)
           .addField('뱃지', '개발중입니다.', true)
         m.edit({
           embed: embed,

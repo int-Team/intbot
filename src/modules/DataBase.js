@@ -16,7 +16,8 @@ module.exports = async (client) => {
     client.stock = DBClient.db('intbot').collection('stock')
     client.data = DBClient.db('intbot').collection('secrets')
     console.log(client.color('yellow', '[Database] ') + 'MongoDB Connected.')
-
+	 client.season = (await client.data.findOne({ _id: 'season' })).data
+	 client.lotto = (await client.data.findOne({ _id: 'lotto' })).data
     if (client.mode == 'hosting') {
       setInterval(async () => {
         const stock_v = 5000

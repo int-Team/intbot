@@ -34,22 +34,21 @@ module.exports = {
    */
   async run(client, message, args) {
     const userdb = await client.db.findOne({ _id: message.author.id })
-    schedule.scheduleJob({ dayOfWeek: 1 }, () => {
+    /*schedule.scheduleJob({ dayOfWeek: 1 }, () => {
       let lottoNumber = ['1', '2', '3', '4']
-      // for (let i = 0; i < 4; i++) {
-      //   lottoNumber = randomIndex(1, 2, 3, 4, 5, 6, 7, 8, 9) + ""
-      // }
+       for (let i = 0; i < 4; i++) {
+         lottoNumber = randomIndex(1, 2, 3, 4, 5, 6, 7, 8, 9) + ""
+       }
 
-      // const result = userdb.lotto.num.map((num, index) => {
-      //   let result = 0
-      //   if (num[index] === lottoNumber[index]) {
-      //     result++
-      //   }
-      //   return result
-      // })
-      // console.log(result)
-      console.log('what')
-    })
+       const result = userdb.lotto.num.map((num, index) => {
+         let result = 0
+         if (num[index] === lottoNumber[index]) {
+           result++
+         }
+         return result
+       })
+      console.log(result) //자동은 원치 않아요.
+    })*/
 
     let i = 0
     const [_, option, subOption] = args
@@ -82,6 +81,16 @@ module.exports = {
         if (clc.size == 0)
           return message.edit(embed.setTitle('취소하였습니다').setColor('RED'))
         if (reaction.emoji.name == '✅') {
+			 client.data.updateOne({ _id: 'lotto' },
+				{
+				$set: {
+					data: {
+						count: (await client.data.findOne({ _id: 'lotto' })).data.count + 1,
+						previous: (await client.data.findOne({ _id: 'lotto' })).data.previous
+					}
+				} 
+			 })
+			 client.lotto = (await client.data.findOne({ _id: 'lotto' })).data
           client.db.updateOne(
             { _id: user.id },
             {
@@ -104,10 +113,8 @@ module.exports = {
 
     switch (option) {
     case possibleOption[0]:
-      if (userdb.lotto && userdb.lotto.length > 500)
-        return message.reply(
-          '로또는 최대 500장 까지 구매가 가능합니다(테스트)'
-        )
+      if (userdb.lotto && userdb.lotto.length > 20)
+        return message.reply('로또는 최대 20장 까지 구매가 가능합니다K.')
       if (now.getDay() >= 5 && now.getHours() + 8 >= 17)
         return message.reply('금요일 오후 5시가 지났습니다')
       if (!subOption) return message.reply('`자동/수동`을 선택해주세요')
