@@ -1,9 +1,42 @@
 module.exports = async (client) => {
+  const randomIndex = (array) => {
+    return array[Math.floor(Math.random() * array.length)]
+  }
   client.on('ready', async () => {
     console.log(
       client.color('cyan', '[Bot]'),
       `Logged on ${client.user.username}`
     )
+    setTimeout(async () => {
+      const userdb = await client.db.find().toArray()
+      let lottoNumber = []
+      for (let i = 0; i < 5; i++) {
+        lottoNumber.push(randomIndex([1, 2, 3, 4, 5, 6, 7, 8, 9]))
+      }
+      const result = []
+      userdb.map((user) => {
+        if (user.lotto) {
+          user.lotto.map((lotto) => {
+            lotto.num.map((num, indexNum) => {
+              if (num === lottoNumber[indexNum]) {
+                const resultIndex = result.findIndex((obj) => obj._id)
+                if (resultIndex === -1) {
+                  result.push({
+                    correctNumber: 1,
+                    _id: user._id,
+                  })
+                } else {
+                  result[resultIndex].correctNumber++
+                }
+              } else {
+                console.log('틀림')
+              }
+            })
+          })
+        }
+      })
+      console.log(result)
+    }, 3000)
     setInterval(() => {
       switch (Math.floor(Math.random() * 6)) {
       case 0:

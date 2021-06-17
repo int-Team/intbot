@@ -1,5 +1,5 @@
-const Discord = require("discord.js");
-require("dotenv").config();
+const Discord = require("discord.js")
+require("dotenv").config()
 
 module.exports = {
   name: "개발자",
@@ -14,6 +14,6 @@ module.exports = {
         .setColor("RANDOM")
         .setFooter(message.author.tag, message.author.displayAvatarURL())
         .setTimestamp()
-    );
+    )
   },
-};
+}
