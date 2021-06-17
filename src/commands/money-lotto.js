@@ -34,24 +34,6 @@ module.exports = {
    */
   async run(client, message, args) {
     const userdb = await client.db.findOne({ _id: message.author.id })
-<<<<<<< HEAD
-=======
-    /*schedule.scheduleJob({ dayOfWeek: 1 }, () => {
-      let lottoNumber = ['1', '2', '3', '4']
-       for (let i = 0; i < 4; i++) {
-         lottoNumber = randomIndex(1, 2, 3, 4, 5, 6, 7, 8, 9) + ""
-       }
-
-       const result = userdb.lotto.num.map((num, index) => {
-         let result = 0
-         if (num[index] === lottoNumber[index]) {
-           result++
-         }
-         return result
-       })
-      console.log(result) //자동은 원치 않아요.
-    })*/
->>>>>>> 9aff1c95195cf7656c93584842e57958a00624cd
 
     let i = 0
     const [_, option, subOption] = args
@@ -84,19 +66,6 @@ module.exports = {
         if (clc.size == 0)
           return message.edit(embed.setTitle('취소하였습니다').setColor('RED'))
         if (reaction.emoji.name == '✅') {
-<<<<<<< HEAD
-=======
-			 client.data.updateOne({ _id: 'lotto' },
-				{
-				$set: {
-					data: {
-						count: (await client.data.findOne({ _id: 'lotto' })).data.count + 1,
-						previous: (await client.data.findOne({ _id: 'lotto' })).data.previous
-					}
-				} 
-			 })
-			 client.lotto = (await client.data.findOne({ _id: 'lotto' })).data
->>>>>>> 9aff1c95195cf7656c93584842e57958a00624cd
           client.db.updateOne(
             { _id: user.id },
             {
@@ -118,7 +87,6 @@ module.exports = {
     )
 
     switch (option) {
-<<<<<<< HEAD
       case possibleOption[0]:
         if (userdb.lotto && userdb.lotto.length > 500)
           return message.reply(
@@ -254,141 +222,6 @@ module.exports = {
           )
         message.reply(embed)
         break
-=======
-    case possibleOption[0]:
-      if (userdb.lotto && userdb.lotto.length > 20)
-        return message.reply('로또는 최대 20장 까지 구매가 가능합니다K.')
-      if (now.getDay() >= 5 && now.getHours() + 8 >= 17)
-        return message.reply('금요일 오후 5시가 지났습니다')
-      if (!subOption) return message.reply('`자동/수동`을 선택해주세요')
-      if (userdb.money - 로또값 < 0) return message.reply('돈이 부족합니다')
-      if (subOption == '자동') {
-        let embed = {
-          title: '로또 자동 발급',
-          description: `${client.emojis.cache.find(
-            (x) => x.name == 'loading'
-          )} 발급중...`,
-          color: 'ORANGE',
-          fields: [
-            {
-              name: '메인번호',
-              value: '\u200b',
-            },
-            {
-              name: '보너스 번호',
-              value: '\u200b',
-            },
-          ],
-          timestamp: new Date(),
-          footer: message.author.tag,
-        }
-
-        let msg = await message.reply({ embed })
-        for (let i = 1; ; i++) {
-          embed.fields[0].value +=
-              randomIndex([1, 2, 3, 4, 5, 6, 7, 8, 9]) + ' '
-          if (i >= 4) {
-            embed.fields[1].value +=
-                randomIndex([1, 2, 3, 4, 5, 6, 7, 8, 9]) + ' '
-            break
-          }
-          msg = await msg.edit({ embed })
-        }
-        embed.description = `${client.emojis.cache.find(
-          (x) => x.name == 'black_verify'
-        )} 로또 번호가 발급되었습니다. 계속 진행하시겠습니까?`
-        msg = await msg.edit({ embed })
-        await msg.react('✅')
-        await msg.react('❌')
-        event.emit(
-          'pending',
-          msg,
-          message.author,
-          embed.fields[0].value.split(' '),
-          embed.fields[1].value.split(' ')
-        )
-      } else if (subOption == '수동') {
-        let embed = {
-          title: '로또 선택',
-          description: '이모지를 선택해서 숫자를 고르세요!',
-          color: 'GREEN',
-          fields: [
-            {
-              name: '고른번호',
-              value: '\u200b',
-            },
-            {
-              name: '보너스 번호',
-              value: '\u200b',
-            },
-          ],
-          timestamp: new Date(),
-          footer: message.author.tag,
-        }
-
-        let msg = await message.reply({ embed })
-        await msg.react('1️⃣')
-        await msg.react('2️⃣')
-        await msg.react('3️⃣')
-        await msg.react('4️⃣')
-        await msg.react('5️⃣')
-        await msg.react('6️⃣')
-        await msg.react('7️⃣')
-        await msg.react('8️⃣')
-        await msg.react('9️⃣')
-
-        let collector = msg.createReactionCollector(
-          (reaction, user) => user.id === message.author.id,
-          { time: 60000 }
-        )
-        collector.on('collect', async (ctd) => {
-          let { emoji } = ctd
-          if (!emoji.name in possibleEmoji) return
-          if (i > 5) return
-          i += 1
-          if (i <= 4) {
-            embed.fields[0].value += String(possibleEmoji[emoji.name]) + ' '
-            msg = await msg.edit({ embed })
-          } else if (i == 5) {
-            embed.fields[1].value += String(possibleEmoji[emoji.name]) + ' '
-            msg = await msg.edit({ embed })
-            let num = embed.fields[0].value.split(' ')
-            let bonus = embed.fields[1].value.split(' ')
-            let confirmMsg = await msg.channel.send(
-              new Discord.MessageEmbed()
-                .setTitle('확실합니까?')
-                .setColor('ORANGE')
-                .setDescription(`번호\n${num.join(' ')}+ ${bonus.join(' ')}`)
-                .setFooter(message.author.tag)
-                .setTimestamp()
-            )
-            await confirmMsg.react('✅')
-            await confirmMsg.react('❌')
-            event.emit('pending', confirmMsg, message.author, num, bonus)
-          }
-        })
-      }
-      break
-    case possibleOption[1]:
-      if (!userdb.lotto) return message.reply('현재 구매한 로또가 없습니다')
-      if (userdb.lotto.length <= 0)
-        return message.reply('현재 구매한 로또가 없습니다')
-      let embed = new Discord.MessageEmbed()
-        .setTitle('로또 구매 목록')
-        .setFooter(message.author.tag, message.author.displayAvatarURL())
-        .setColor('GREEN')
-        .setTimestamp()
-
-      for (let i in userdb.lotto)
-        embed.addField(
-          `${Number(i) + 1}번 로또`,
-          `${userdb.lotto[i].num.join(' ')} +${userdb.lotto[i].bonus.join(
-            ' '
-          )}`
-        )
-      message.reply(embed)
-      break
->>>>>>> 9aff1c95195cf7656c93584842e57958a00624cd
     }
   },
 }

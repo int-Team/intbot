@@ -59,9 +59,15 @@ module.exports = {
         message.channel.send(embed)
       } else if (isInt(amount)) {
         let total
+<<<<<<< HEAD:src/commands/money-gambling.js
         const num = Math.floor(Math.random() * 300)
 
         if (num < 80 && num >= 5) {
+=======
+        const num = Math.floor(Math.random() * 200)
+					
+        if(num < 80 && num >= 5){
+>>>>>>> master:src/commands/gambling.js
           total = Number(userDB.money + Number(amount))
           await client.db.updateOne(
             { _id: message.author.id },
@@ -80,6 +86,7 @@ module.exports = {
             .setTimestamp()
 
           message.channel.send(embed)
+<<<<<<< HEAD:src/commands/money-gambling.js
         } else if (num < 5) {
           total = Number(userDB.money + Number(amount) * 10)
 
@@ -90,6 +97,15 @@ module.exports = {
                 money: total,
                 lastGamblng: new Date() - 1 + 1,
               },
+=======
+        } else if (num < 2) {
+          total = Number((userDB.money) + (Number(amount) * 10))
+						
+          await client.db.updateOne({_id: message.author.id}, {
+            $set: {
+              money: total,
+              lastGamblng: new Date() - 1 + 1
+>>>>>>> master:src/commands/gambling.js
             }
           )
           const embed = new Discord.MessageEmbed()
