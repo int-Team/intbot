@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-const Discord = require("discord.js")
-require("dotenv").config()
-=======
-const Discord = require('discord.js')
-require('dotenv').config()
->>>>>>> 9aff1c95195cf7656c93584842e57958a00624cd
-
 module.exports = {
   name: '개발자',
   aliases: ['developer', '개발팀', 'dev', 'team', '팀', '만든'],
