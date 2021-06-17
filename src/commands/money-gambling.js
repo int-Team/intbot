@@ -1,13 +1,13 @@
-const Discord = require("discord.js");
+const Discord = require('discord.js')
 
 module.exports = {
-  name: "도박",
-  aliases: ["gambling", "ㅎ므ㅠㅣㅑㅜㅎ", "ehqkr", "dobak", "game"],
-  description: "도박을 해요.",
-  usage: "인트야 도박",
+  name: '도박',
+  aliases: ['gambling', 'ㅎ므ㅠㅣㅑㅜㅎ', 'ehqkr', 'dobak', 'game'],
+  description: '도박을 해요.',
+  usage: '인트야 도박',
   run: async (client, message, args, ops) => {
-    const amount = args[1];
-    if (Number(amount) < 0) return message.channel.send("자연수만 지원됩니다.");
+    const amount = args[1]
+    if (Number(amount) < 0) return message.channel.send('자연수만 지원됩니다.')
 
     if (
       (await client.db.findOne({ _id: message.author.id })).lastGamblng &&
@@ -18,7 +18,7 @@ module.exports = {
         2000
     ) {
       const embed = new Discord.MessageEmbed()
-        .setTitle("경찰입니다. 신고들어와서 왔씁니다.")
+        .setTitle('경찰입니다. 신고들어와서 왔씁니다.')
         .setDescription(
           `깡방에 ${
             ((2000 -
@@ -31,38 +31,38 @@ module.exports = {
             0
           }초 동안 계세요. `
         )
-        .setColor("RED")
+        .setColor('RED')
         .setFooter(message.author.tag, message.author.displayAvatarURL())
-        .setTimestamp();
-      return message.channel.send(embed);
+        .setTimestamp()
+      return message.channel.send(embed)
     }
 
-    const userDB = await client.db.findOne({ _id: message.author.id });
+    const userDB = await client.db.findOne({ _id: message.author.id })
 
     if (!userDB) {
       const embed = new Discord.MessageEmbed()
-        .setTitle("인트봇의 서비스에 가입되어있지 않아요.")
-        .setDescription("`인트야 가입`을 이용해서 먼저 가입해주세요!")
-        .setColor("RED")
+        .setTitle('인트봇의 서비스에 가입되어있지 않아요.')
+        .setDescription('`인트야 가입`을 이용해서 먼저 가입해주세요!')
+        .setColor('RED')
         .setFooter(message.author.tag, message.author.displayAvatarURL())
-        .setTimestamp();
-      message.channel.send(embed);
+        .setTimestamp()
+      message.channel.send(embed)
     } else {
       if (userDB.money < amount) {
         const embed = new Discord.MessageEmbed()
-          .setTitle("돈이 부족해요.")
-          .setDescription("저런....")
-          .setColor("RED")
+          .setTitle('돈이 부족해요.')
+          .setDescription('저런....')
+          .setColor('RED')
           .setFooter(message.author.tag, message.author.displayAvatarURL())
-          .setTimestamp();
+          .setTimestamp()
 
-        message.channel.send(embed);
+        message.channel.send(embed)
       } else if (isInt(amount)) {
-        let total;
-        const num = Math.floor(Math.random() * 300);
+        let total
+        const num = Math.floor(Math.random() * 300)
 
         if (num < 80 && num >= 5) {
-          total = Number(userDB.money + Number(amount));
+          total = Number(userDB.money + Number(amount))
           await client.db.updateOne(
             { _id: message.author.id },
             {
@@ -71,17 +71,17 @@ module.exports = {
                 lastGamblng: new Date() - 1 + 1,
               },
             }
-          );
+          )
           const embed = new Discord.MessageEmbed()
-            .setTitle("도박 성공!")
+            .setTitle('도박 성공!')
             .setDescription(`현재 보유 금액은 ${total}원이에요.`)
-            .setColor("GREEN")
+            .setColor('GREEN')
             .setFooter(message.author.tag, message.author.displayAvatarURL())
-            .setTimestamp();
+            .setTimestamp()
 
-          message.channel.send(embed);
+          message.channel.send(embed)
         } else if (num < 5) {
-          total = Number(userDB.money + Number(amount) * 10);
+          total = Number(userDB.money + Number(amount) * 10)
 
           await client.db.updateOne(
             { _id: message.author.id },
@@ -91,16 +91,16 @@ module.exports = {
                 lastGamblng: new Date() - 1 + 1,
               },
             }
-          );
+          )
           const embed = new Discord.MessageEmbed()
-            .setTitle("잭팟이 터졌다!!")
+            .setTitle('잭팟이 터졌다!!')
             .setDescription(`현재 보유 금액은 ${total}원이에요.`)
-            .setColor("GREEN")
+            .setColor('GREEN')
             .setFooter(message.author.tag, message.author.displayAvatarURL())
-            .setTimestamp();
-          message.channel.send(embed);
+            .setTimestamp()
+          message.channel.send(embed)
         } else {
-          total = Number(userDB.money - amount);
+          total = Number(userDB.money - amount)
 
           await client.db.updateOne(
             { _id: message.author.id },
@@ -110,22 +110,22 @@ module.exports = {
                 lastGamblng: new Date() - 1 + 1,
               },
             }
-          );
+          )
           const embed = new Discord.MessageEmbed()
-            .setTitle("저런... 도박에 실패했어요")
+            .setTitle('저런... 도박에 실패했어요')
             .setDescription(`현재 보유 금액은 ${total}원이에요.`)
-            .setColor("YELLOW")
+            .setColor('YELLOW')
             .setFooter(message.author.tag, message.author.displayAvatarURL())
-            .setTimestamp();
-          message.channel.send(embed);
+            .setTimestamp()
+          message.channel.send(embed)
         }
       } else {
-        message.channel.send("자연수만 지원됩니다.");
+        message.channel.send('자연수만 지원됩니다.')
       }
     }
   },
-};
+}
 
 function isInt(num) {
-  return num % 1 === 0;
+  return num % 1 === 0
 }
