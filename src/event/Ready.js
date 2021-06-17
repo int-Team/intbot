@@ -1,6 +1,42 @@
 module.exports = async (client) => {
+  const randomIndex = (array) => {
+    return array[Math.floor(Math.random() * array.length)]
+  }
   client.on('ready', async () => {
-    console.log(client.color('cyan', '[Bot]'), `Logged on ${client.user.username}`)
+    console.log(
+      client.color('cyan', '[Bot]'),
+      `Logged on ${client.user.username}`
+    )
+    setTimeout(async () => {
+      const userdb = await client.db.find().toArray()
+      let lottoNumber = []
+      for (let i = 0; i < 5; i++) {
+        lottoNumber.push(randomIndex([1, 2, 3, 4, 5, 6, 7, 8, 9]))
+      }
+      const result = []
+      userdb.map((user) => {
+        if (user.lotto) {
+          user.lotto.map((lotto) => {
+            lotto.num.map((num, indexNum) => {
+              if (num === lottoNumber[indexNum]) {
+                const resultIndex = result.findIndex((obj) => obj._id)
+                if (resultIndex === -1) {
+                  result.push({
+                    correctNumber: 1,
+                    _id: user._id,
+                  })
+                } else {
+                  result[resultIndex].correctNumber++
+                }
+              } else {
+                console.log('틀림')
+              }
+            })
+          })
+        }
+      })
+      console.log(result)
+    }, 3000)
     setInterval(() => {
       switch (Math.floor(Math.random() * 6)) {
       case 0:
@@ -70,32 +106,44 @@ module.exports = async (client) => {
     }, 10000)
   })
   client.on('ready', async () => {
-    setTimeout(async () => {
-      client.status = '정상 운영중...'
-      client.lastStockUpdate = Date.now()
-      const stock_v = 5000
-      const stock_min = stock_v - 2000
+    if (client.mode == 'hosting') {
+      setTimeout(async () => {
+        client.status = '정상 운영중...'
+        client.lastStockUpdate = Date.now()
+        const stock_v = 5000
+        const stock_min = stock_v - 2000
 
-      const stocks = await client.stock.find().toArray()
-      let stockAvg = 0
-      client.lastStockUpdate = Date.now()
+        const stocks = await client.stock.find().toArray()
+        let stockAvg = 0
+        client.lastStockUpdate = Date.now()
 
-      for (let stock of stocks) {
-        client.stock.updateOne(
-          { _id: stock._id },
-          {
-            $set: {
-              money: float2int(Math.random() * (stock_min * -2) + stock_min) + stock_v,
-              previous: stock.money,
-            },
-          }
+        for (let stock of stocks) {
+          client.stock.updateOne(
+            { _id: stock._id },
+            {
+              $set: {
+                money:
+                  float2int(Math.random() * (stock_min * -2) + stock_min) +
+                  stock_v,
+                previous: stock.money,
+              },
+            }
+          )
+          stockAvg += stock.money
+        }
+
+        console.log(
+          client.color('gray', '[Stock] ') + 'Update',
+          stockAvg / stocks.length
         )
-        stockAvg += stock.money
-      }
+      }, 1000)
+    } else {
+      client.status = '정상 운영중...'
+    }
 
-      console.log(client.color('gray', '[Stock] ') + 'Update', stockAvg / stocks.length)
-    }, 1000)
     setTimeout(async () => {
+      const season = await client.data.findOne({ _id: 'season' })
+      client.season = season.data
       client.status = '정상 운영중...'
     }, 2000)
   })

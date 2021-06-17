@@ -2,12 +2,23 @@ const Discord = require('discord.js')
 const util = require('util')
 
 module.exports = {
-  name: '실행', 
-  aliases: ['eval', 'compile', '컴파일', 'evaluate', 'ㄷㅍ미', '채ㅡㅔㅑㅣㄷ', 'ㄷㅍ미ㅕㅁㅅㄷ'],
+  name: '실행',
+  aliases: [
+    'eval',
+    'compile',
+    '컴파일',
+    'evaluate',
+    'ㄷㅍ미',
+    '채ㅡㅔㅑㅣㄷ',
+    'ㄷㅍ미ㅕㅁㅅㄷ',
+  ],
   description: 'JavaScript 코드를 바로 실행해요. (개발자만 가능)',
   usage: '인트야 eval <실행할 코드>',
   run: async (client, message, args, ops) => {
-    if (!client.developers.includes(message.author.id)) return message.channel.send(`${client.user.username} 개발자만 사용할 수 있어요.`)
+    if (!client.developers.includes(message.author.id))
+      return message.channel.send(
+        `${client.user.username} 개발자만 사용할 수 있어요.`
+      )
     let input = args.slice(1).join(' ')
     if (!input) return message.channel.send('내용을 써 주세요!')
     const code = `
@@ -25,12 +36,15 @@ ${input}`
       .setTitle('Evaling...')
       .setColor(0xffff00)
       .addField('Input', '```js\n' + args.slice(1).join(' ') + '\n```')
-      .setFooter(message.author.tag, message.author.avatarURL({
-        dynamic: true
-      }))
+      .setFooter(
+        message.author.tag,
+        message.author.avatarURL({
+          dynamic: true,
+        })
+      )
       .setTimestamp()
     let m = await message.channel.send({
-      embed: embed
+      embed: embed,
     })
     try {
       let output = eval(code)
@@ -41,19 +55,25 @@ ${input}`
       if (output.length >= 1020) {
         output = `${output.substr(0, 1010)}...`
       }
-      output = output.replace(new RegExp(process.env.BOT_TOKEN, 'gi'), 'Hamster TOP Secret Information')
+      output = output.replace(
+        new RegExp(process.env.BOT_TOKEN, 'gi'),
+        'Hamster TOP Secret Information'
+      )
       const embed2 = new Discord.MessageEmbed()
         .setTitle('Eval result')
         .setColor(0x00ffff)
         .addField('Input', '```js\n' + args.slice(1).join(' ') + '\n```')
         .addField('Output', '```js\n' + output + '\n```')
         .addField('Type', '```js\n' + type + '\n```')
-        .setFooter(message.author.tag, message.author.avatarURL({
-          dynamic: true
-        }))
+        .setFooter(
+          message.author.tag,
+          message.author.avatarURL({
+            dynamic: true,
+          })
+        )
         .setTimestamp()
       m.edit({
-        embed: embed2
+        embed: embed2,
       })
     } catch (err) {
       const embed3 = new Discord.MessageEmbed()
@@ -61,13 +81,16 @@ ${input}`
         .setColor(0xff0000)
         .addField('Input', '```js\n' + args.slice(1).join(' ') + '\n```')
         .addField('Error', '```js\n' + err + '\n```')
-        .setFooter(message.author.tag, message.author.avatarURL({
-          dynamic: true
-        }))
+        .setFooter(
+          message.author.tag,
+          message.author.avatarURL({
+            dynamic: true,
+          })
+        )
         .setTimestamp()
       m.edit({
-        embed: embed3
+        embed: embed3,
       })
     }
-  }
+  },
 }

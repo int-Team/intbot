@@ -1,4 +1,4 @@
-/* 
+/*
  * Console Color
  */
 module.exports.reset = '\x1b[0m'
@@ -9,7 +9,7 @@ module.exports.blink = '\x1b[5m'
 module.exports.reverse = '\x1b[7m'
 module.exports.hidden = '\x1b[8m'
 
-/* 
+/*
  * Defealt Color
  */
 module.exports.black = '\x1b[30m'
@@ -22,7 +22,7 @@ module.exports.cyan = '\x1b[96m'
 module.exports.white = '\x1b[37m'
 module.exports.gray = '\x1b[90m'
 
-/* 
+/*
  * Secret Color
  */
 module.exports.BgBlack = '\x1b[40m'

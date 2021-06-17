@@ -10,9 +10,10 @@ module.exports = {
       .setColor('ORANGE')
       .setTimestamp()
     let m = await message.channel.send({
-      embed: embed
+      embed: embed,
     })
-    embed.setTitle('PONG!')
+    embed
+      .setTitle('PONG!')
       .setColor('GREEN')
       .setTimestamp()
       .addField('Latency', `${m.createdAt - message.createdAt}ms`)
@@ -20,7 +21,7 @@ module.exports = {
       .setFooter(message.author.tag, message.author.displayAvatarURL())
       .setThumbnail('https://i.imgur.com/1Gk4tOj.png')
     m.edit({
-      embed: embed
+      embed: embed,
     })
-  }
+  },
 }

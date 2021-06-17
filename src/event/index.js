@@ -1,3 +1,3 @@
 module.exports = {
-  ready: require('./Ready.js')
+  ready: require('./Ready.js'),
 }

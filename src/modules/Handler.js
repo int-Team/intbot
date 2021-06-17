@@ -12,7 +12,9 @@ module.exports = async (client, prefix, Modules) => {
           }
           client.commands.set(pull.name, pull)
         } else {
-          console.error(client.color('red', '[Handler] ') + `${file} ❌ -> Error`)
+          console.error(
+            client.color('red', '[Handler] ') + `${file} ❌ -> Error`
+          )
           continue
         }
       } catch (e) {
@@ -31,7 +33,9 @@ module.exports = async (client, prefix, Modules) => {
       if (client.commands.get(args[0])) {
         client.commands.get(args[0]).run(client, message, args)
       } else if (client.aliases.get(args[0])) {
-        client.commands.get(client.aliases.get(args[0])).run(client, message, args)
+        client.commands
+          .get(client.aliases.get(args[0]))
+          .run(client, message, args)
       } else {
         let s = 0
         let typed = args[0]
@@ -45,7 +49,11 @@ module.exports = async (client, prefix, Modules) => {
           let cnt = 0
           let i = 0
           for (let curlet of curr.split('')) {
-            if (curlet[i] && typed.split('')[i] && curlet[i] == typed.split('')[i])
+            if (
+              curlet[i] &&
+              typed.split('')[i] &&
+              curlet[i] == typed.split('')[i]
+            )
               cnt++
             i++
           }
