@@ -11,15 +11,21 @@ module.exports = async (client) => {
       const userdb = await client.db.find().toArray()
       let lottoNumber = []
       for (let i = 0; i < 5; i++) {
-        lottoNumber.push(randomIndex([1, 2, 3, 4, 5, 6, 7, 8, 9]))
+        lottoNumber.push(
+          randomIndex(['1', '2', '3', '4', '5', '6', '7', '8', '9'])
+        )
       }
-      const result = []
+      let result = []
       userdb.map((user) => {
         if (user.lotto) {
           user.lotto.map((lotto) => {
             lotto.num.map((num, indexNum) => {
+              console.log(user._id)
               if (num === lottoNumber[indexNum]) {
-                const resultIndex = result.findIndex((obj) => obj._id)
+                const resultIndex = result.findIndex(
+                  (obj) => obj._id === user._id
+                )
+                console.log(resultIndex)
                 if (resultIndex === -1) {
                   result.push({
                     correctNumber: 1,
@@ -28,8 +34,6 @@ module.exports = async (client) => {
                 } else {
                   result[resultIndex].correctNumber++
                 }
-              } else {
-                console.log('틀림')
               }
             })
           })
