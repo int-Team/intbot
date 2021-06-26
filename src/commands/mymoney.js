@@ -50,6 +50,7 @@ module.exports = {
 				} else {
 				let str = '```diff\n'
 				for (let stock of Object.entries(userDB.stock)) {
+					if (stock[1] == 0)  continue
 				  const [code, money] = stock
 				  const stockDB = await client.stock.findOne({code: code})
 				  str += `+ ${code}\n   ${numberToKorean(money) || 0} 주\n   ${numberToKorean(stockDB.money * money) || 0} 원\n`
@@ -88,6 +89,7 @@ module.exports = {
 			} else {
 			let str = '```diff\n'
 			for (let stock of Object.entries(userDB.stock)) {
+				if (stock[1] == 0)  continue
 			  const [code, money] = stock
 			  const stockDB = await client.stock.findOne({code: code})
 			  str += `+ ${code}\n   ${numberToKorean(money) || 0} 주\n   ${numberToKorean(stockDB.money * money) || 0} 원\n`
