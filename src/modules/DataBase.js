@@ -1,4 +1,5 @@
 const MongoDB = require('mongodb')
+const Stock = require('./Stock')
 
 module.exports = async (client) => {
   const DBClient = new MongoDB.MongoClient(
@@ -18,33 +19,6 @@ module.exports = async (client) => {
 
     console.log(client.color('yellow', '[Database] ') + 'MongoDB Connected.')
 
-    setInterval(async () => {
-      const stock_v = 5000
-      const stock_min = stock_v - 2000
-
-      const stocks = await client.stock.find().toArray()
-      let stockAvg = 3000
-      client.lastStockUpdate = Date.now()
-
-      for (let stock of stocks) {
-        client.stock.updateOne(
-          { _id: stock._id },
-          {
-            $set: {
-              money: float2int(Math.random() * (stock_min * -2) + stock_min) + stock_v,
-              previous: stock.money,
-            },
-          }
-        )
-        stockAvg += stock.money
-      }
-
-      console.log(client.color('gray', '[Stock] ') + 'Update', stockAvg / stocks.length)
-    }, 600000)
-    
+    setInterval(() => Stock(client), 600000)
   })
-}
-
-function float2int(value) {
-  return value | 0
 }

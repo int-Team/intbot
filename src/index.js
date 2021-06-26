@@ -34,7 +34,6 @@ function color(color, ...string) {
     throw new TypeError(`There is no color ${color}`)
   else 
     return `${Modules.colorData[color]}${string.join(' ')}${Modules.colorData.reset}`
-  
 }
 
 // Booting

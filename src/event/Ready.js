@@ -1,5 +1,8 @@
+const Stock = require('../modules/Stock')
+
 module.exports = async (client) => {
   client.on('ready', async () => {
+    // TODO 이거 코드 정리 마렵네
     console.log(client.color('cyan', '[Bot]'), `Logged on ${client.user.username}`)
     setInterval(() => {
       switch (Math.floor(Math.random() * 6)) {
@@ -69,38 +72,15 @@ module.exports = async (client) => {
       }
     }, 10000)
   })
+
   client.on('ready', async () => {
     setTimeout(async () => {
       client.status = '정상 운영중...'
       client.lastStockUpdate = Date.now()
-      const stock_v = 5000
-      const stock_min = stock_v - 2000
-
-      const stocks = await client.stock.find().toArray()
-      let stockAvg = 0
-      client.lastStockUpdate = Date.now()
-
-      for (let stock of stocks) {
-        client.stock.updateOne(
-          { _id: stock._id },
-          {
-            $set: {
-              money: float2int(Math.random() * (stock_min * -2) + stock_min) + stock_v,
-              previous: stock.money,
-            },
-          }
-        )
-        stockAvg += stock.money
-      }
-
-      console.log(client.color('gray', '[Stock] ') + 'Update', stockAvg / stocks.length)
+      Stock(client)
     }, 1000)
     setTimeout(async () => {
       client.status = '정상 운영중...'
     }, 2000)
   })
-}
-
-function float2int(value) {
-  return value | 0
 }
