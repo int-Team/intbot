@@ -22,7 +22,8 @@ client.developers = [
   '418677556322107412',
   '552103947662524416',
   '647736678815105037',
-  '694131960125325374'
+  '694131960125325374',
+  '358204005316296706'
 ]
 client.commands = new Discord.Collection()
 client.module = Modules
