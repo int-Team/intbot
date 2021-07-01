@@ -25,7 +25,9 @@ event.on('stockUpdate', async client => {
   console.log(client.color('gray', '[Stock] ') + 'Update', stockAvg / stocks.length)
 })
 
-module.exports = client => event.emit('stockUpdate', client)
+module.exports = {
+  update(client) { event.emit('stockUpdate', client) },
+}
 
 function float2int(value) {
   return value | 0
