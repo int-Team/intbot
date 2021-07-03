@@ -10,13 +10,17 @@ event.on('stockUpdate', async client => {
   client.lastStockUpdate = Date.now()
 
   for (let stock of stocks) {
+    const stockMoney = float2int(Math.random() * (stock_min * -2) + stock_min) + stock_v
     client.stock.updateOne(
       { _id: stock._id },
       {
         $set: {
-          money: float2int(Math.random() * (stock_min * -2) + stock_min) + stock_v,
+          money: stockMoney,
           previous: stock.money,
         },
+        $push: {
+          lastStockUpdateData: [Date.now(), [stockMoney, stockMoney, stockMoney, stockMoney]]
+        }
       }
     )
     stockAvg += stock.money
