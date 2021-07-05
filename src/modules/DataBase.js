@@ -19,6 +19,6 @@ module.exports = async (client) => {
 
     console.log(client.color('yellow', '[Database] ') + 'MongoDB Connected.')
 
-    setInterval(() => Stock(client), 10000)
+    setInterval(() => Stock(client), 30000)
   })
 }
