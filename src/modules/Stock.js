@@ -17,9 +17,6 @@ event.on('stockUpdate', async client => {
         $set: {
           money: stockMoney,
           previous: stock.money,
-        },
-        $push: {
-          lastStockUpdateData: [Date.now(), [stockMoney, stockMoney, stockMoney, stockMoney]]
         }
       }
     )
