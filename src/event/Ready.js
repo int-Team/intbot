@@ -79,6 +79,7 @@ module.exports = async (client) => {
       client.lastStockUpdate = Date.now()
       Stock.update(client)
     }, 1000)
+    setInterval(() => Stock.update(client), 600000)
     setTimeout(async () => {
       client.status = '정상 운영중...'
     }, 2000)

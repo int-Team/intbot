@@ -40,7 +40,11 @@ function color(color, ...string) {
 // Booting
 (async () => {
   client.status = '부팅중...'
-  await Modules.dataBase(client)
+  await Modules.dataBase.connect()
+  const db = Modules.dataBase.db
+
+  for (let i of Object.entries(db)) 
+    client[i[0]] = i[1]
 
   console.clear()
   console.log('---------------------------------------------------------------------')

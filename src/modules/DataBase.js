@@ -1,24 +1,27 @@
+const { config } = require('dotenv')
 const MongoDB = require('mongodb')
-const Stock = require('./Stock')
+const { magenta, reset } = require('../modules/Color')
 
-module.exports = async (client) => {
-  const DBClient = new MongoDB.MongoClient(
-    `mongodb://int:${process.env.DB_PW}@cluster0-shard-00-00.gk8if.mongodb.net:27017,cluster0-shard-00-01.gk8if.mongodb.net:27017,cluster0-shard-00-02.gk8if.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-blbjze-shard-0&authSource=admin&retryWrites=true&w=majority`,
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
+config()
 
-  DBClient.connect().then(() => {
-    client.db = DBClient.db('intbot').collection('main')
-    client.goods = DBClient.db('intbot').collection('goods')
-    client.dbchannels = DBClient.db('intbot').collection('channels')
-    client.stock = DBClient.db('intbot').collection('stock')
-    client.data = DBClient.db('intbot').collection('secrets')
+const DBClient = new MongoDB.MongoClient(
+  `mongodb://int:${process.env.DB_PW}@cluster0-shard-00-00.gk8if.mongodb.net:27017,cluster0-shard-00-01.gk8if.mongodb.net:27017,cluster0-shard-00-02.gk8if.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-blbjze-shard-0&authSource=admin&retryWrites=true&w=majority`,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+)
 
-    console.log(client.color('yellow', '[Database] ') + 'MongoDB Connected.')
-
-    setInterval(() => Stock.update(client), 600000)
-  })
+module.exports = {
+  async connect() {
+    const DBServer = await DBClient.connect()
+    module.exports.db.db = DBServer.db('intbot').collection('main')
+    module.exports.db.goods = DBServer.db('intbot').collection('goods')
+    module.exports.db.dbchannels = DBServer.db('intbot').collection('channels')
+    module.exports.db.stock = DBServer.db('intbot').collection('stock')
+    module.exports.db.data = DBServer.db('intbot').collection('secrets')
+    
+    console.log(`[${magenta}Databas${reset}] Connected`)
+  },
+  db: {},
 }
