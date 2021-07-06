@@ -9,7 +9,7 @@ const Modules = require('./modules')
 
 // Variables 
 require('dotenv').config()
-const PORT = process.env.PORT || 3000
+// const PORT = process.env.PORT || 3000
 const prefix = process.env.PREFIX || '인트야 '
 client.status = '오프라인'
 
@@ -56,5 +56,5 @@ function color(color, ...string) {
   client.login(process.env.BOT_TOKEN)
   await Event.ready(client)
   await Modules.handler(client, prefix, Modules)
-  await Modules.web(client, PORT)
+  // await Modules.web(client, PORT)
 })()
