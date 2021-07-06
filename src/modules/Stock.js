@@ -17,6 +17,12 @@ event.on('stockUpdate', async client => {
         $set: {
           money: stockMoney,
           previous: stock.money,
+        },
+        ...(stock.lastStockUpdateData?.length > 10 && {
+          $pop: -1,
+        }),
+        $push: {
+          lastStockUpdateData: [Date.now(), [stockMoney, stockMoney, stockMoney, stockMoney]]
         }
       }
     )

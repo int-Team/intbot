@@ -74,12 +74,13 @@ module.exports = async (client) => {
   })
 
   client.on('ready', async () => {
+    const stockUpdateRate = 1000 * 60 // 600000
     setTimeout(async () => {
       client.status = '정상 운영중...'
       client.lastStockUpdate = Date.now()
       Stock.update(client)
     }, 1000)
-    setInterval(() => Stock.update(client), 600000)
+    setInterval(() => Stock.update(client), stockUpdateRate)
     setTimeout(async () => {
       client.status = '정상 운영중...'
     }, 2000)
