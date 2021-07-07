@@ -11,6 +11,9 @@ event.on('stockUpdate', async client => {
 
   for (let stock of stocks) {
     const stockMoney = float2int(Math.random() * (stock_min * -2) + stock_min) + stock_v
+    stock.lastStockUpdateData?.length > 10 && await client.stock.updateOne({_id: stock._id}, {
+      $pop: { lastStockUpdateData: -1 }
+    })
     client.stock.updateOne(
       { _id: stock._id },
       {
@@ -18,9 +21,6 @@ event.on('stockUpdate', async client => {
           money: stockMoney,
           previous: stock.money,
         },
-        ...(stock.lastStockUpdateData?.length > 10 && {
-          $pop: -1,
-        }),
         $push: {
           lastStockUpdateData: [Date.now(), [stockMoney, stockMoney, stockMoney, stockMoney]]
         }
