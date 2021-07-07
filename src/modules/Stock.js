@@ -22,7 +22,10 @@ event.on('stockUpdate', async client => {
           previous: stock.money,
         },
         $push: {
-          lastStockUpdateData: [Date.now(), [stockMoney, stockMoney, stockMoney, stockMoney]]
+          lastStockUpdateData: {
+            x: new Date().getTime(),
+            y: stockMoney
+          }
         }
       }
     )
